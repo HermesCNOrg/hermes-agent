@@ -1,0 +1,1076 @@
+[
+  {
+    "path": "getting-started/installation.md",
+    "status": "needs_review",
+    "priority": "P0",
+    "tier": "getting-started"
+  },
+  {
+    "path": "getting-started/learning-path.md",
+    "status": "needs_review",
+    "priority": "P0",
+    "tier": "getting-started"
+  },
+  {
+    "path": "getting-started/nix-setup.md",
+    "status": "needs_review",
+    "priority": "P0",
+    "tier": "getting-started"
+  },
+  {
+    "path": "getting-started/platform-support.md",
+    "status": "missing",
+    "priority": "P0",
+    "tier": "getting-started"
+  },
+  {
+    "path": "getting-started/quickstart.md",
+    "status": "needs_review",
+    "priority": "P0",
+    "tier": "getting-started"
+  },
+  {
+    "path": "getting-started/termux.md",
+    "status": "needs_review",
+    "priority": "P0",
+    "tier": "getting-started"
+  },
+  {
+    "path": "getting-started/updating.md",
+    "status": "needs_review",
+    "priority": "P0",
+    "tier": "getting-started"
+  },
+  {
+    "path": "user-guide/cli.md",
+    "status": "needs_review",
+    "priority": "P0",
+    "tier": "getting-started"
+  },
+  {
+    "path": "user-guide/configuration.md",
+    "status": "needs_review",
+    "priority": "P0",
+    "tier": "getting-started"
+  },
+  {
+    "path": "user-guide/tui.md",
+    "status": "needs_review",
+    "priority": "P0",
+    "tier": "getting-started"
+  },
+  {
+    "path": "reference/automation-blueprints-catalog.mdx",
+    "status": "missing",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "reference/cli-commands.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "reference/environment-variables.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "reference/faq.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "reference/mcp-config-reference.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "reference/model-catalog.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "reference/profile-commands.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "reference/slash-commands.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "reference/tools-reference.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "reference/toolsets-reference.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/checkpoints-and-rollback.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/configuring-models.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/desktop.md",
+    "status": "missing",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/docker.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/acp.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/api-server.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/batch-processing.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/browser.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/built-in-plugins.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/code-execution.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/codex-app-server-runtime.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/computer-use.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/context-files.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/context-references.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/credential-pools.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/cron.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/curator.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/delegation.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/deliverable-mode.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/extending-the-dashboard.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/fallback-providers.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/goals.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/honcho.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/hooks.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/image-generation.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/kanban-tutorial.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/kanban-worker-lanes.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/kanban.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/lsp.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/mcp.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/memory-providers.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/memory.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/mixture-of-agents.md",
+    "status": "missing",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/overview.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/personality.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/pets.md",
+    "status": "missing",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/plugins.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/provider-routing.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/skills.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/skins.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/spotify.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/subscription-proxy.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/tool-gateway.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/tool-search.md",
+    "status": "missing",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/tools.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/tts.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/vision.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/voice-mode.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/web-dashboard.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/web-search.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/x-search.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/git-worktrees.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/managed-scope.md",
+    "status": "missing",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/bluebubbles.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/dingtalk.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/discord.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/email.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/feishu.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/google_chat.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/homeassistant.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/index.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/irc.md",
+    "status": "missing",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/line.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/matrix.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/mattermost.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/msgraph-webhook.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/ntfy.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/open-webui.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/photon.md",
+    "status": "missing",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/qqbot.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/raft.md",
+    "status": "missing",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/signal.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/simplex.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/slack.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/sms.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/teams-meetings.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/teams.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/telegram.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/webhooks.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/wecom-callback.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/wecom.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/weixin.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/whatsapp-cloud.md",
+    "status": "missing",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/whatsapp.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/yuanbao.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/multi-profile-gateways.md",
+    "status": "missing",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/profile-distributions.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/profiles.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/secrets/bitwarden.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/secrets/index.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/secrets/onepassword.md",
+    "status": "missing",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/security.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/sessions.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/windows-native.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/windows-wsl-quickstart.md",
+    "status": "needs_review",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "developer-guide/acp-internals.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/adding-platform-adapters.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/adding-providers.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/adding-tools.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/agent-loop.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/architecture.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/browser-provider-plugin.md",
+    "status": "missing",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/browser-supervisor.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/context-compression-and-caching.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/context-engine-plugin.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/contributing.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/creating-skills.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/cron-internals.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/extending-the-cli.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/gateway-internals.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/image-gen-provider-plugin.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/memory-provider-plugin.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/model-provider-plugin.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/plugin-llm-access.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/plugins/index.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/programmatic-integration.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/prompt-assembly.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/provider-runtime.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/secret-source-plugin.md",
+    "status": "missing",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/session-storage.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/tools-runtime.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/trajectory-format.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/video-gen-provider-plugin.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/web-search-provider-plugin.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/automate-with-cron.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/automation-blueprints.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/aws-bedrock.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/azure-foundry.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/cron-script-only.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/cron-troubleshooting.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/daily-briefing-bot.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/delegation-patterns.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/github-pr-review-agent.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/google-gemini.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/google-vertex.md",
+    "status": "missing",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/local-llm-on-mac.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/local-ollama-setup.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/microsoft-graph-app-registration.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/migrate-from-openclaw.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/minimax-oauth.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/oauth-over-ssh.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/operate-teams-meeting-pipeline.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/pipe-script-output.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/python-library.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/run-hermes-with-nous-portal.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/run-nemotron-3-ultra-free.md",
+    "status": "missing",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/team-telegram-assistant.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/tips.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/use-mcp-with-hermes.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/use-soul-with-hermes.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/use-voice-mode-with-hermes.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/webhook-github-pr-review.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/work-with-skills.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/xai-grok-oauth.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "index.mdx",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "integrations/index.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "integrations/nous-portal.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "integrations/providers.md",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "user-stories.mdx",
+    "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  }
+]

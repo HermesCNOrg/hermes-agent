@@ -1,0 +1,2137 @@
+{
+  "upstream": "NousResearch/hermes-agent",
+  "upstream_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4",
+  "refreshed_at": "2026-07-16T08:12:08.461498+00:00",
+  "documents": {
+    "developer-guide/acp-internals.md": {
+      "source_sha256": "38bf07f5a0b0ad62b553cb953c9bfbacfbb85531024ca54b60fb8b3c47427973",
+      "translation_sha256": "e623b66a06a411baa85df3dddeefe4490b7f2bb00a6822f3a230bb1344d1e5d1",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/adding-platform-adapters.md": {
+      "source_sha256": "4054fb60369aa090506a5bfd8f82612b6dd2f1da87258e498b3d7285235b9dfe",
+      "translation_sha256": "cb6dcc87175ba09158a2ede7b4f8c57eaa50c8d43c168e5a20865a7cf833b74a",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/adding-providers.md": {
+      "source_sha256": "b12383579c7768aeec9aef8892940aa1113fa7d702b03fb7bdae014bf0468342",
+      "translation_sha256": "42dff18e139a598e0c4f8dfb6e617b071c9e94b41f058e2eac83ba2e98db3bd5",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/adding-tools.md": {
+      "source_sha256": "fa3338099d99805a119db9b1de18a75aff8b0fdd03d6d0c55610bb8fe5f77e3b",
+      "translation_sha256": "6b0aee07f8626bc336a7f3305daec3603e1c771167c3f73c8047b976605a1d0d",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/agent-loop.md": {
+      "source_sha256": "4206a4b3e7e1d4100546b7b742415a9f129736fc98c81c35ae3603f04acbabe6",
+      "translation_sha256": "b9a6da7b1cf24d65cd87618746cf34c1f118d55b67fa3450c5685a60a2e8b902",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/architecture.md": {
+      "source_sha256": "278d5511050726a87d6a1a3fdb3dbbcd2c2f2f5c3d43712d8b4c016c73558b7f",
+      "translation_sha256": "6eb8206b46f6a980aed5465b9054405769df2a451dcf7ff900cd92253989a25c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/browser-provider-plugin.md": {
+      "source_sha256": "9b071314a26c2819d92454e725851b05e9c66fa03a55bf43b049d89cd1a6a139",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/browser-supervisor.md": {
+      "source_sha256": "49ef24ee72b1ea2941d5ed4ca6518efdbfdce15515aadd916bd052798fa2857c",
+      "translation_sha256": "e381ca284fa142383a42b6a40d08db9a54c934dda8da41a744d700b5ad8544df",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/context-compression-and-caching.md": {
+      "source_sha256": "cc6ba0f64b0c553af0acbdd18978283ae016e7dc3f83e69de9f58172fb07bd1c",
+      "translation_sha256": "4378cb7daec8747cad0118c15d287039849e3625b6218fc14d98e6a8b96512c3",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/context-engine-plugin.md": {
+      "source_sha256": "6a981f36461a82f1d9aebcabe824ad98579b8fcfc19b63edf6b2b2a5e4621cc7",
+      "translation_sha256": "7cb039c4fac11ffd8ab0f51c093f911e9409a241c7f325ab181f32e3aa2ee65c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/contributing.md": {
+      "source_sha256": "6a0f3f617290927eca104051d63ae1fe8aa35f8f4339abca7ee00f7b131aac2d",
+      "translation_sha256": "84ae6bc5979b3f0a64d59683b0c6c9a8ae6182b82da383dfa9b8448ab1e56c0c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/creating-skills.md": {
+      "source_sha256": "8c02803ab101e1af3893df4876ca50b5a4fb36c0de871c28c9de92662baa9a95",
+      "translation_sha256": "b1efa85b964f9b04a7ebe5985587367a8f611c315993b85223a203d88e649df3",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/cron-internals.md": {
+      "source_sha256": "7cff24ff972486be2de9ddae9218051e4ed690b260cadfaaa8fbda3c779a6ccf",
+      "translation_sha256": "f106c94dd42248e4c0e7a9b3a2e408a0b560c9372142fde6ca4c72d0878aabff",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/extending-the-cli.md": {
+      "source_sha256": "081b9570364ef53b70eb5f3748fd5566817efcfbe79abc3006191aef039ef8e9",
+      "translation_sha256": "e0b9e2092430678a7faf5a15e7b9851bc008b5a78767c5608f8009db91914b58",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/gateway-internals.md": {
+      "source_sha256": "ae645a85f18612c7bc9659144d079eea871a783f4898533e85ab1b47c8d2d619",
+      "translation_sha256": "e17b97897b18eab008c9f8be7eed5b2f2fc105a67cce7bf109927bf20d734a47",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/image-gen-provider-plugin.md": {
+      "source_sha256": "98b4c845b8f0a40ef7ac7a1c0e07c629dc0a879ed5d45ca202b261520fc2dcaf",
+      "translation_sha256": "835cf3009d3adccec8106e4c230c3fb73dd0ca7626a1d794a84ffee7d51c8f5a",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/memory-provider-plugin.md": {
+      "source_sha256": "b494494a268486f1772e45fa11537d9db389a7c0d634be5a007e0dca89d7afd6",
+      "translation_sha256": "cc6c579846940fe88961cc2aea06c12a24b13e858b1380c48c57b5d21c77e7f4",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/model-provider-plugin.md": {
+      "source_sha256": "9a4aa44df299c7958fc53763777904b6e7a7ed8e5e70cb9f023139865974e43f",
+      "translation_sha256": "d6353d678afee5c811a3ad7d74ee10f2a143179e9fc195ab68fd7c230571e24d",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/plugin-llm-access.md": {
+      "source_sha256": "8299d3570267116a518ea9fe69818c612ea13879436fdf0a3e1f1996b183ccc8",
+      "translation_sha256": "13884eca7c1e9f48b794313bbfd975315d6e3cd314d5acf5c9c53f581cce60e7",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/plugins/index.md": {
+      "source_sha256": "91c6a12c965d3724191047dc64d8c73eaf017583697bd618e780daae76cd75f8",
+      "translation_sha256": "e66586afea18f8ddabc410ef8c305b7f8d28e92bd68a65fb0ab4ff55a1e10e0e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/programmatic-integration.md": {
+      "source_sha256": "d4954eb29c11938bcb32a007ae5d256ee41d78df9e80632c78ce2835e2aa99cb",
+      "translation_sha256": "24e9e4e9dc47f68b77b2293464d7153abdae25817215bdc5f2b80ceef042bedf",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/prompt-assembly.md": {
+      "source_sha256": "fa5dd1d2e285e45dbf9fdc0a4d52b1f7c0ae3ffc9055a4dbeb646334819e4c07",
+      "translation_sha256": "b024887b3aa45360c7eb6fbe6b13f0427a3bd0058fbb32fcd70d5c7b547d3da6",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/provider-runtime.md": {
+      "source_sha256": "194d6a13417c9f17f237f57642fc9383ea36ec91330bfd259e857c772672e8a7",
+      "translation_sha256": "8a01c7cd510eb2a9a6feb1630bff797a532075c4ab2d40c50f3f2db851616851",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/secret-source-plugin.md": {
+      "source_sha256": "236527eaa08a9cf0a9f1744fdc2793a16ad6ef05803c42f564c63474c97538c3",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/session-storage.md": {
+      "source_sha256": "bb2f944d4c2839af94f26d2176ecdac241a6bac269ca836bd440177b649f7114",
+      "translation_sha256": "199d64a979e0ac8d49d8f6078193e6429a82b9de259ad9b7a068e9c6611648e5",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/tools-runtime.md": {
+      "source_sha256": "38f53c729e0809d98440befcd94aea3299ed8a958d9e1b84cc800b3aca7fe5c7",
+      "translation_sha256": "a3e921c1eabe8760f0621b85c404e80140d9d35c45f8fdff840bc8f36cfb18b4",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/trajectory-format.md": {
+      "source_sha256": "a0b0bb2b69643b728b65864180477e474266fa316f1bf2c05ef0c373dc05a531",
+      "translation_sha256": "ab1354c9b26bee35e968d92941e9380e17ba48215f3648d89aaa2fe8471d1b26",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/video-gen-provider-plugin.md": {
+      "source_sha256": "0a8fdcc07738849316c61462ca10ba51eef5c08228c2b618021bdf215ee64c52",
+      "translation_sha256": "73f545591ce20a004a69baf5f520df91eafa595c7019fb0888708e2ff2947ced",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "developer-guide/web-search-provider-plugin.md": {
+      "source_sha256": "1df60d62d2fb96a61b3edbf1094df5d0039fe67e22e682defd900c596d21c2a9",
+      "translation_sha256": "1a1d8a4611812c2a06b8dd5d3a49744a090345d89229ce5afafde786c5402f6c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "getting-started/installation.md": {
+      "source_sha256": "a27bccd0bcf4eaa84c57a1e45653cdd73ed42f4ef497ce1ec76e5bfb9859a12a",
+      "translation_sha256": "73e047707ce38747b919b75df540da1bf659d101dae00c1924f0ae58ecc077ae",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "getting-started/learning-path.md": {
+      "source_sha256": "8870510fe15751bb95804c025016d360e328dc4e974435b41c93b4a165cce802",
+      "translation_sha256": "8e18e8419b536dd2482df542e9a7345607d3bd546dd7c28326c333e89e170548",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "getting-started/nix-setup.md": {
+      "source_sha256": "4598c6d22b8cf9f52145b3f5468c0d8260719448bc0400e73ab93878786a6ee6",
+      "translation_sha256": "9d48ae7d69912a73a5bd8b65b478caa90a3e39db09cd32017b083d3b77a7b410",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "getting-started/platform-support.md": {
+      "source_sha256": "06bbb03f214b13156dc2ae19dd585ebc75a8d3dcbb870c1922a1de7211bea717",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "getting-started/quickstart.md": {
+      "source_sha256": "9d69276d59584e61b7a20b93f53f6dc00ed776691bf063591492d71c69217237",
+      "translation_sha256": "e2714b71eecc10f449e270fda7a1ff28e06c236cdea5b1ac356446a74c506fc3",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "getting-started/termux.md": {
+      "source_sha256": "22faf5314404d5621004114e7a5e4e96543594dfea64e1e553af16d801e78253",
+      "translation_sha256": "7e2b7f62fdb202c516adbc0fe920938769e37771befa9ab6093589a1d488c46e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "getting-started/updating.md": {
+      "source_sha256": "802ad3d638582a7602dbbae63da4555c990cca089e8f6f728913c0d6c5126fd8",
+      "translation_sha256": "94731681d758611bb8cb87fbe20126bfc1c3fa1666b87c598fc7249acc452eed",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/automate-with-cron.md": {
+      "source_sha256": "599eaa175dab8163433017066732ec33c1b958560997cef02a111db88d01468c",
+      "translation_sha256": "be92b65fb17fab9e19d683c98988a3ba3366fdf449d7d1126ab2dfefcb8a95a8",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/automation-blueprints.md": {
+      "source_sha256": "ffac82cf1cba907ce0c979b00cfd3f27711a401a70081828c1cf0ed166163c03",
+      "translation_sha256": "059beb9786b67adc39b9c5b511fc1a9b9356935e0e8a5909da8edc9bf23c206e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/aws-bedrock.md": {
+      "source_sha256": "900ba1f05b0978be59b5af046614965dd7e3429fc6814c04152b661afa3fceed",
+      "translation_sha256": "2146050479f87fb20c326900be1c5b2de4dd173c2dbb91877965d5ff8f93110d",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/azure-foundry.md": {
+      "source_sha256": "19e244a13935b48c8a7103ff4307199a49cb15a7ac9645999c329b38862e4977",
+      "translation_sha256": "8c73117b2155c603c347d014742580bd9e6244f50007df2ba39f8a2d2b37604e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/cron-script-only.md": {
+      "source_sha256": "baa6196d35fb0089ebda6771e06473846a7b5c7ef16c5bcc18dfb97e43aa86c2",
+      "translation_sha256": "c8172a8ea371a7e6221b67118f307b098e3ac317c097265cff32685762e00dc9",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/cron-troubleshooting.md": {
+      "source_sha256": "810e7c7cad10fc46700726c0a413eff6b78da8530ef1b6a6f877f21de98f3ce1",
+      "translation_sha256": "7b1cd2a723dfd7e286644d62017bca71c10fda50a9d7026b239fb5a575c19eee",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/daily-briefing-bot.md": {
+      "source_sha256": "89f501e71ac691084cc5144aad5fcc78028a8b1a96043e90f7d953782d8d1384",
+      "translation_sha256": "4b2b333f25c0acacae0494fa053a726bc80848a28c6e204547074c949232a9f8",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/delegation-patterns.md": {
+      "source_sha256": "bb37ba65b4f22eef425bdcdd85064d884b328ad7a0b27daedee821a6b94f53b9",
+      "translation_sha256": "ba315c865cf5bc1dc328a056d3d184fe7c9b65c7d7d7bc23794e496244b46448",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/github-pr-review-agent.md": {
+      "source_sha256": "e1aa5c4b1eec0c8992758be41e945cdd4bce41a822ea0870a6e880b145d867cb",
+      "translation_sha256": "31ada852b04bbce8efeb026c663e047574b1af0ec07d653510c2ab172ac0e4ab",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/google-gemini.md": {
+      "source_sha256": "630e8270354e730dfd44c2704332f51a25cca5a868b401f0eff1ddb657148329",
+      "translation_sha256": "fd58008ebdf1c65a966905d2a2b2c3e4c64cc625525249fec549c090b5656fc0",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/google-vertex.md": {
+      "source_sha256": "f9294933e2f0372b4315f7986fc8be1429ebf62dc44bd6428c2ea4d7906797a7",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/local-llm-on-mac.md": {
+      "source_sha256": "7922f0cc7b63426590c0d56f31df8c292db2e364a132836c55ae468f0f74f4e4",
+      "translation_sha256": "7b757b1551fd9b8e38e5ce54c1f6ab1311c7c8609f5a38cf83324abf2d7003af",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/local-ollama-setup.md": {
+      "source_sha256": "dd80b07fb7428182702ebdb625f5f82970f6ffdde473e7090a08f6fa0b8ce616",
+      "translation_sha256": "e08232bcaf62feb6b5bb1f8146406a10f95076cae40f2372379fbc6ecf369a7a",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/microsoft-graph-app-registration.md": {
+      "source_sha256": "e7ec03c55afe9ebac16f763bc0b927f75fd08c1eed9ea8cc39c92ed5bfc9442f",
+      "translation_sha256": "32ccb1e2f67bc477ea85e47de93d676767df9235ffc2545f82c244c93fea6242",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/migrate-from-openclaw.md": {
+      "source_sha256": "b46c35deb0df289037aee816f157ee22ad57712a801a2ffb6f64377338057e73",
+      "translation_sha256": "4f5f61935f0962d1da0bdb86fa915c656e637875eb277f6decf87f29cf68ac56",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/minimax-oauth.md": {
+      "source_sha256": "661652f6302003294fd2b735b784f1c1748c532aac32a5e93f3fc7887aab92cb",
+      "translation_sha256": "98b8c7152df227f9a7b4a9e99a0d092e1db3fa98601b2381cb1f0bfe32dddbab",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/oauth-over-ssh.md": {
+      "source_sha256": "01920b582d8debb24d5a69c1152af41a2bd73158357dae9bda0ec44d7132426f",
+      "translation_sha256": "2f7874254ac351fddcade0e19251d4f1a2402eb6a5fa2b174355aa27e8b0b3cb",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/operate-teams-meeting-pipeline.md": {
+      "source_sha256": "97d5f1531707c39b547e7b189c4f2cdc2c863543e198246008d3e88d1b9f8f66",
+      "translation_sha256": "b3bcee5adb910f3766f262ae5ee8a3d4011adcc2b1db733a8f315a8b686c11bb",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/pipe-script-output.md": {
+      "source_sha256": "7bc184e9657cf40ee3b22154afad08763fd5bb52b61ed9c8127070024ed9c6b0",
+      "translation_sha256": "5d5f12c0440bcefb01aa8db738431bdd4a2e14d90f005292685e980f5793f98f",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/python-library.md": {
+      "source_sha256": "beee4224f25189fb04979b625c1038aa46fc44a66bea4505a1499adfdfb3d5b2",
+      "translation_sha256": "db73e5ed03af1f9e49f6f5d308c3bc8ec4208e5ba2c3a528918bbe5f2a61a60f",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/run-hermes-with-nous-portal.md": {
+      "source_sha256": "0f6a8ae46ae45e289f851d72b12d6020fd4f82677bf0a8d91d963975d7e2d593",
+      "translation_sha256": "bfae878d957ebe6af584b59a81879e1a8e5b749aebdca36a215dccca360d35fe",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/run-nemotron-3-ultra-free.md": {
+      "source_sha256": "dcb819e98e99fe7bcb0a9fc4475c22cb6bc9a9ef9f2f61658841ed5557d0423d",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/team-telegram-assistant.md": {
+      "source_sha256": "451fbf51a910c1045ddbbfb33cd5c1f9139fef9dda2a1768f1adb8de66867dfc",
+      "translation_sha256": "9258010ab45f9092df904ff804f9780e134316b0d57ed8d2c22d98d2fb8e310b",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/tips.md": {
+      "source_sha256": "4487ccc4f5ddc1a191382f4f0896a89447af04fdab6127415afd85fe682eaebc",
+      "translation_sha256": "f845776945940dec62e765af1a76e9f4e305fd9a2e3b6bc6da78b18956b8c24c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/use-mcp-with-hermes.md": {
+      "source_sha256": "050bf6f1e6aa9271e5f56647389e7a68138bdeae81895983767492a0ad9eaf3f",
+      "translation_sha256": "24e8d1c73881b967444262c967b236ad133fe3429f361777e141574c31d31d5c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/use-soul-with-hermes.md": {
+      "source_sha256": "58fc31669c526c27c3aaeecdd4b74722e8a82f0cd21ebb0272d6de8987bb7ea7",
+      "translation_sha256": "92b14ebbc90bc22af720ca46edaed0085e3ffd423ae11a852e0caeb8a7d22a3f",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/use-voice-mode-with-hermes.md": {
+      "source_sha256": "a62bc733f684906718f2453700019f3f1195a2fa77eeebcaaae13d8952112fbe",
+      "translation_sha256": "ad3f0647cf04667a47e9867c968dbcd915e5f052499a9cc4a4ed030814d8e996",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/webhook-github-pr-review.md": {
+      "source_sha256": "cb79954cc3cb6ca883d257ed4a037e14482909eb8f15f9031cee3585ee22dc08",
+      "translation_sha256": "85d09ad223cadb76e6807eba19ff2c312e85ea7220ac77d34f51c9d939469109",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/work-with-skills.md": {
+      "source_sha256": "c98b5b692fce655fd60d682a33236cc7d14a438fa39a35e93c1b9308201a61cd",
+      "translation_sha256": "61c260b0e68c89a4f1c31a7c3d64913d202a32718b540fa5e238c029502edb8a",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "guides/xai-grok-oauth.md": {
+      "source_sha256": "dfe6c8c6baa18c4fb5f359c5700b6acd3666546ee08963077398a5b58fa0fa85",
+      "translation_sha256": "fa5bfd0da867a2982436075b0a48d799e73537f27b019a3164f29e668d9b36d7",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "index.mdx": {
+      "source_sha256": "443d4db6fad0cd92760e3f193275ce6acae1b557e0fb4e6494cfc9fd36eaa6e7",
+      "translation_sha256": "e290ae305c94d4761b0c17cd5f71245cb4fb82d708b9f8ac54abbc1814f21a9f",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "integrations/index.md": {
+      "source_sha256": "30b409d737a94d8f48f208007073c5486a5f4df32655b3e8d0e117641c7081f5",
+      "translation_sha256": "1f429754e5973b3ece3e054547689bf202fc345348c566f25ffbf30af801bcee",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "integrations/nous-portal.md": {
+      "source_sha256": "486ad2baca703b7b228d60e87974aeec7283806dc0d8115820b7b060c47061a4",
+      "translation_sha256": "5ac1cd7258f0d67265d7349041f6fec154d70de3a86cf5748b7f9c173c187e35",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "integrations/providers.md": {
+      "source_sha256": "8ac459586423b46f6a524153f1c5b186252d1fa8c949e3cdccb203b89ff09c5e",
+      "translation_sha256": "1eb76156ef4bee1b990e4792800cb9c663f9d4b159748c70d7f57b05e7615f71",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "reference/automation-blueprints-catalog.mdx": {
+      "source_sha256": "273d9e920820d618425ab7f41dc9fe227fc97a86e2cf35a1ee1a1204b71451c4",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "reference/cli-commands.md": {
+      "source_sha256": "885b4fc278f9d98236171a03e65035b1fa2d6632544f3e3609b88cecbd79cea0",
+      "translation_sha256": "f1c87f1ffcacde4c3abbc064e3bea58fc9f05e5a27c537af718509182509b120",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "reference/environment-variables.md": {
+      "source_sha256": "f3c32a063679facea3c97c2c31eea168c7029677f9194009018fd98ddef671ce",
+      "translation_sha256": "fd226be97cfd6f3ebee95d45508d01b9644ad583f4a49a49d4bb2e7f87a9e020",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "reference/faq.md": {
+      "source_sha256": "4f00280bbfac6128dd8cbb089eac6835a35326a3e90e526db745cc59edfbf46b",
+      "translation_sha256": "7f3c78514798cba1fbfa147d27c8a448e3d9f6f42ba31885c8457ebc5b2558a2",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "reference/mcp-config-reference.md": {
+      "source_sha256": "dea6a7c947acab44a15f01b895c56995e7d86f8412d8d216acb5d5fd61214064",
+      "translation_sha256": "3c280e67b0336e45a4e8bc1e5f66dd6771809f5a7f278edfc0d1eeb7c427ea1f",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "reference/model-catalog.md": {
+      "source_sha256": "c25003025326c91926718681f219b6371b1e1d2feb8d0f636fa94476bbc341e2",
+      "translation_sha256": "e8132409a270090412d211c6878ced095c066ce20a9c844abcde164e6ca81d00",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "reference/optional-skills-catalog.md": {
+      "source_sha256": "9db28a7167ed2346cb431f768c71526c0edaea7d0a9bd46b62ad93930e3ece49",
+      "translation_sha256": "7ddceff0e259f5a732f5a7e1e1a9eef7136b22843d60f40801ab985d9bc3fef8",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "reference/profile-commands.md": {
+      "source_sha256": "44393ea61892d2dd9057fd8317fbb69b8b8aa1fdc6b71d411de14c6ac8be1553",
+      "translation_sha256": "f2778b6bfd2cd482023bd3668a381a10b6cdf9eb3e4e912b80bc88a4ab0b39d5",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "reference/skills-catalog.md": {
+      "source_sha256": "3e09bd22311b363e219f918c69f7314fbf862495c40cc8c3faa4f1d7c36bd106",
+      "translation_sha256": "ce3f5e147b77f656d4a1a719e25f5bcc1bf8bbcb0ecdc62bbfdfd2f98e033d71",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "reference/slash-commands.md": {
+      "source_sha256": "10483d30e6d09dae1675f0c23749fad4d6ca871450f6a6934115b52adb8d4349",
+      "translation_sha256": "fe012442f8f3cf8401fe49e9d8d1b3cb1da7450b87a882117a27bae8ba25a431",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "reference/tools-reference.md": {
+      "source_sha256": "8e58898ea682b1c0cebe75d31ff85a037b4739fc709fae351b97d4c4e6aadd23",
+      "translation_sha256": "464f7bd4783ee2c44ffdf89fe55b0545f80e3a4431b63bebc9c1edb67c344581",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "reference/toolsets-reference.md": {
+      "source_sha256": "d5e64d73f1052f70fb2253f6b3be0bb3a4752bbae26a3cf84fda3e8894165a47",
+      "translation_sha256": "3d3a06e869123763778c015c3e8b93aff0f66452c29609ead9a95260625d9dbb",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/checkpoints-and-rollback.md": {
+      "source_sha256": "ca5cac11884aa423bea52ccb81f5ed6127ba12e3db0deacaefc8736c7caf3669",
+      "translation_sha256": "ddd28ecb0352a2209cbca703c35a1004441064ae484d53f4eb805f0aecba1e63",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/cli.md": {
+      "source_sha256": "8d61e44a2656343c7761f933cb5819c0ec885e899cff42922f6349c20fd6a634",
+      "translation_sha256": "b20be9a9f722127a17fa43f7cc5da0898a4015298bb6916369f8bf9b6c9cd717",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/configuration.md": {
+      "source_sha256": "1bc90b394e8c2aafa31a912fd66033c7c3375f90fd8a0302dac68ae414e43aca",
+      "translation_sha256": "543ee317926ed88ac33cefc68228b69cb6706964ddba345ce952cc4e79d92550",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/configuring-models.md": {
+      "source_sha256": "4960590af4e01b6c32f53276802df6fb37d226cdbc132da6abeb410743f005d8",
+      "translation_sha256": "591d567f1f3b76e9503c5ba8985f40cbb9b9f99e860da8b3a02c23a10f069f0b",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/desktop.md": {
+      "source_sha256": "060831db79302b377f7344e9966a600b5754d2e02a9be9522ea1775d6548768f",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/docker.md": {
+      "source_sha256": "f834767edc36f183912c7161f1ed2b0274dd248523a84cc7f9570e7dfabf9b39",
+      "translation_sha256": "75e682c07fca135f850e33644c1563cd1a3ce74d5d62249fa712c02613130f41",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/acp.md": {
+      "source_sha256": "16f1a186a681e3b85f40f8bb12023fe24d4ae261ccba341f7812824e335e481f",
+      "translation_sha256": "b8c327bd90f645b83199249d9e89edaa5a2f815a32af626a663f7b7510d3a143",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/api-server.md": {
+      "source_sha256": "051780024be27cd31ceddb917f596e698f2bbd7dd577d27251a59aec0d76fc00",
+      "translation_sha256": "90683bd5a40696c014d63a711e6fd995827bdb6058e269a7a187ecaf20c1e741",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/batch-processing.md": {
+      "source_sha256": "128c4d5aeb4a2a6f4a0096c53e739b003df4178dfe224576b943bd59a1dc5e7e",
+      "translation_sha256": "89a5ca7474367219121fe6cd8ac90c9dc4f17b42bcef772bb4bb2b22b316f144",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/browser.md": {
+      "source_sha256": "457df6df5eccc6121896fb7a082111b3296bf1dd5ae199173b7fce193f2986f2",
+      "translation_sha256": "c1c8eb81f820c396f197263d5e1e30701b0fa026b229e85e4a217ec5f8a802ce",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/built-in-plugins.md": {
+      "source_sha256": "9b2ca9e39755da1ae72b4f179636b37b35e0970c5e7f7c225147a3def13749fc",
+      "translation_sha256": "d5b41311f69baa03c9e2d5a9347fc18be4f6d19491694e893e9aaecc8fc5d4fa",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/code-execution.md": {
+      "source_sha256": "f0276380b15565068c0a956d2241776387bd4a9407fafab1820f73d4665472b7",
+      "translation_sha256": "1222a979a7d1bc28036d7b925c13e1d11e543ed752f37814130adb0f46f84b9d",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/codex-app-server-runtime.md": {
+      "source_sha256": "a2aad0ef1ac48ea2ee33f23c0d488291ac2a8af9c20bdb225cae4d2fe377d541",
+      "translation_sha256": "dd598e338da286b31751682caf35e6aec3d8420e697ab75b310b6603dbafef41",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/computer-use.md": {
+      "source_sha256": "accfabf9be37a0f279c549478cdbed3b256a384b9a320b9e8b81fbf0a55e8850",
+      "translation_sha256": "f1d6750f5d6fd02e11aadea81c1ab1524b50fdeafd682f8bd7c4b75cfa952730",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/context-files.md": {
+      "source_sha256": "68feee92c54771acec2d4c1ab960e420872783c29f9f74c46450dfd7c2b1fb5e",
+      "translation_sha256": "0d35200222496a5d9a91790d864c8a0ec1e8424d04ca9109c4b4df9eecd42862",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/context-references.md": {
+      "source_sha256": "ada9b7f98c0825b8ffa0dba35bfbf86cb48de04a74a8dceffb25a9a979283486",
+      "translation_sha256": "4b35c3deb5bfed37ffd3c98a04f469418e8cb32d678f102e41614e06e7acb33c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/credential-pools.md": {
+      "source_sha256": "ca7e839aa321eece389f5a24c594998927d54e1192481ba1e6741faaf828014c",
+      "translation_sha256": "d271478c1f91f5aadd66769e779b6fe2549e8b07fae6a6364f18575ce4b7c50f",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/cron.md": {
+      "source_sha256": "e0fb87791803e6b42c2da74b76a9f83f316780ebd8714668f5990e10492d4969",
+      "translation_sha256": "fcf59ecfdc3f7f0d4c884c5baf8fe024a7be78a99c85d771f47c746c92f3174a",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/curator.md": {
+      "source_sha256": "d53c5f8c37622873c4415a55ab8c4e806405c5096b85866295bc930725d1859f",
+      "translation_sha256": "b115adebc88300fe15a4010c5fd0ea359c138aea9a7a9d722b467e4765d7f963",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/delegation.md": {
+      "source_sha256": "b6fa9a084d337df1f85dce091382d5c594204da0c46a19390e78285d01a9230f",
+      "translation_sha256": "8f52d9bf4d9a010f2a262013432253e051df167aab9b76bd4c7765dee32daffa",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/deliverable-mode.md": {
+      "source_sha256": "d294d97029c214ebb741ff7f31309056e8a5020ad2981243751dcbe76462159b",
+      "translation_sha256": "eb0c1730c1c3e3102aed9878485342128f316f8ba1c6daf0a5c65323282fcad4",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/extending-the-dashboard.md": {
+      "source_sha256": "4870392bcba37bad51129f2ab7d26f5d635382312556e61af4ef4474507a0e05",
+      "translation_sha256": "0b040f18153cd9e239edf5fba3386079dbd4c21397b3f208bf338e1d3ed53603",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/fallback-providers.md": {
+      "source_sha256": "2e1407f34042aa2f59f67b4709fda91f4d5765e8ccd16a92aabddc59482aec8f",
+      "translation_sha256": "54bcc5eb0aa4b2d52510879fbd593ac61c505289cc2513402a4aa791f0b06e4a",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/goals.md": {
+      "source_sha256": "6865e20962cce5186adf67f1853a0566d47013fb07495c7c8bb404f45e8f723d",
+      "translation_sha256": "80d04f5eedd13fb406b51a5dcb0a8c7c1d8360e26f1ebd0ea3afbec8427046fd",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/honcho.md": {
+      "source_sha256": "fe1661c59a4da6a3fe2082f9ac5c5cf3ccd45b020fc2c7d21040926d31df5525",
+      "translation_sha256": "bea0bbe0bd69b686bbcfa08e386f58de85aad25013a7e3635e415fec126d5864",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/hooks.md": {
+      "source_sha256": "5f58750ed8f785b9d7564257a57a9cec2451c711b4204adf66afeab3d6943de8",
+      "translation_sha256": "4df9cf1e2d93c189cfb11c3695942ace1ee98801d427da5dae20985750359eea",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/image-generation.md": {
+      "source_sha256": "7bc2ac1ac5b0bdf46d6566ec3e09c83732767db338174d5ef67ab542f270f2e4",
+      "translation_sha256": "97bd939fa160a09e767ad9a32e2f207346e635884a1ab0af7e8e7546bfc5062c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/kanban-tutorial.md": {
+      "source_sha256": "8c7cf666918ecfefa86ea9565b4530d67cfdb35819d7926730c66d1d4de709dd",
+      "translation_sha256": "c5bddb5491f5c392cfa04d383d391280589ef91edb07d252e65e99e54a36d094",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/kanban-worker-lanes.md": {
+      "source_sha256": "0aa24f93ab497ebd1057add3ac6dc8b3b95a798480134221672d7f4b155aa152",
+      "translation_sha256": "5966df42bc33227b698322d7702b6b2a6eb7e003666fe1b110317c990137ad50",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/kanban.md": {
+      "source_sha256": "2c25a6ad72550b32496e72095440aa6c8b241907ca5da6ebbdb4f56f47cfd888",
+      "translation_sha256": "170bc496a668dac724e9bad105d86e8512cdb90b0d4f811eac5f3cd43de18609",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/lsp.md": {
+      "source_sha256": "3e67b23e7fb5821e43a739416dea291cad45c6366bc084c0c326248dfaffede0",
+      "translation_sha256": "0f4821b990c9d4844541278114422edcc3bb6ddd42eedb5ff6857d9f9a3ee741",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/mcp.md": {
+      "source_sha256": "68d48597eb956270420e9c9808109a450dd17084ca2262851cdda83d74d25e8c",
+      "translation_sha256": "26bafadf237e259d8ba81bd3a129ae96b744868ebe24a93d449023148bf5bc39",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/memory-providers.md": {
+      "source_sha256": "ed8ee82ca723a0a1007db9c2a847abf315c652ce7c77048c3e2cfd607bda3c27",
+      "translation_sha256": "ed98b60b764b4e7f334181328d33e5c85ab753e1c67fe55023a75061a819b437",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/memory.md": {
+      "source_sha256": "7ad95de41208c26ad19b5a7d97b345c4743e106268b89a189b5c59f3efb10e79",
+      "translation_sha256": "ae3e04dad15fd20a9f948b78409db1d590d3a6a9b9925ed320b15dac0edd81f9",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/mixture-of-agents.md": {
+      "source_sha256": "aa573ed50db7f0b4b4fb2fc6f41b0334852aeaf03222a62b45d43cb637fc51ae",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/overview.md": {
+      "source_sha256": "7de014bdccd444a11ec5d35a0179cc6eae914092c30f66463bb1c25d1bbdd1bd",
+      "translation_sha256": "acb70b8f9f9679db5d07c076dd5df405f5ae186a0d18e801659ab47af4a94766",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/personality.md": {
+      "source_sha256": "418485a8aac76fb11b40dc0df042c7d99541d6942f54c4c76cf08a7f409d9da8",
+      "translation_sha256": "3380d14b7c4c6358091f4dd4ececd8f54902a15699a70a89c318240f353af04d",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/pets.md": {
+      "source_sha256": "f02748b17909b71174a8fac775718d239b23b44b7beed4a7be7802f864039e76",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/plugins.md": {
+      "source_sha256": "9fcf00caffff2f8e203a73727d138f1e8635681012b94e6dee9f7079105a06fb",
+      "translation_sha256": "bec993e94f0c11191ad52a39c7dc91be5191991b04f6defa1f9f93f2973b3515",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/provider-routing.md": {
+      "source_sha256": "8e15a71564b175dc6a7147a756f831da6bc0507f5ed3e28372a6a52abfb140ee",
+      "translation_sha256": "f9fd4a0fdc956878354182ad8fe916ef470bc21e15bbf3ec005e5ebb0d7290de",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/skills.md": {
+      "source_sha256": "081bba3dbe1751a00b408670abfa910c9587c0563b597d786e58b5c693e6197e",
+      "translation_sha256": "07a671c78cfe30f7cbc4b1116c9ba5f5236b6fadc6a59b7ce27b21c7984d38f0",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/skins.md": {
+      "source_sha256": "24bbe9921dcc5a009dc075d96bfd1518d6d13f0d04352ade9b64d9a1ed2c1ccc",
+      "translation_sha256": "b7da7cf27559c3438aa86e341f0d5089f6e54dda9efef1abc84bea353e7ed712",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/spotify.md": {
+      "source_sha256": "6b605d8df40f6980dd534b88f0cd20bb4b716f167bf95e6eb7b7503d2bf74d7d",
+      "translation_sha256": "f04cc6a3c4557fc091aa8822e183dd66e2280c9458a18d4e7f00199a7e3a21b3",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/subscription-proxy.md": {
+      "source_sha256": "4f50f9fb932d426d10af810730252258db50e4eeb34b91f8d67b5f94191a4a9b",
+      "translation_sha256": "aae3bd7fd97ccfb932883dd5148581ebec9e6575756b63a5228bac442eef4406",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/tool-gateway.md": {
+      "source_sha256": "76c41d6e425d81ad0264bf66b1170a14e3cf21feebeb0cbef05aa4862b09edb2",
+      "translation_sha256": "b141b6194c696f2e64059f28a12f5b59e4566ffe16e2346ef44327098a69d506",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/tool-search.md": {
+      "source_sha256": "26e55a6802b2f4c5b558b544a206b621ff36179018bbcf7b720958ef73b4974f",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/tools.md": {
+      "source_sha256": "fcf193e884f16283aafcaacf0cf554eaec7d25c12518f8863e33caf1f30ade09",
+      "translation_sha256": "c3a0da76c17752e84ae3916698bb616e5d72e0c954e6b0b1368abba8df6c4d35",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/tts.md": {
+      "source_sha256": "a3398b49255b353ba0a7a4c66b1db69ca730d21d2e838021a734d900cb8f84c4",
+      "translation_sha256": "4573a895073af01b3f8168c80b181c1d1bea0ebc8cb6e6796c390d8f8e4740c7",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/vision.md": {
+      "source_sha256": "49d97063e019d2ab76ef05c276da40e6f022c988db5f2bd3e29da06c77f1520b",
+      "translation_sha256": "e38436de4eaa84fc9130477b0973357a6b9e8a04eca0231bc445aa4fe2502f5b",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/voice-mode.md": {
+      "source_sha256": "1e4a299ecf5738b74fa935e7af236085dacca88434656c19141861e83bc2eca5",
+      "translation_sha256": "b348bdd6bb910d782b42dc1e6e561f0ebc0a85d444aefac8f384630c9c0d3f85",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/web-dashboard.md": {
+      "source_sha256": "3788935910db0353dbf4fa1abe052e04910550799ef3105c95b471d37812af44",
+      "translation_sha256": "b7d8a68ccadb54f5700cf41b7136f5125c47fc40244a1b071e960a0c30c63789",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/web-search.md": {
+      "source_sha256": "6bbc2fc6cf260048761dc9366306069be2e78cbe6e03ff2628d37458f6596301",
+      "translation_sha256": "63dd0e9d4e883a2a2c1c484daa0a0dffbb71b00c36cffb34cbfaf38eb46d4c6e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/features/x-search.md": {
+      "source_sha256": "4d8ad06d00e04156bf0ddb0f5086f14d6ba5a62ab5e1676503e46b38d9fbade2",
+      "translation_sha256": "104a2396a71743433a20ef560cff1f91c79aac1f033367e6f4696495bf4345a1",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/git-worktrees.md": {
+      "source_sha256": "de7da2166060425b229ee0bae4be13e40531f08f78057c5ad65dc71172ea1a52",
+      "translation_sha256": "b0b0dffd46080c43ccb1475eb2ba2b12618cb8b559d94979f0a97477e503099b",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/managed-scope.md": {
+      "source_sha256": "fe11d044d33f2e241dac703bef38bf8c983c6bb0843c7061da95034c7efc8d8f",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/bluebubbles.md": {
+      "source_sha256": "2f3acf4d8c5c0bb22fce104e1f7d2587e514e686fdef1e70c62794a8822e5a2c",
+      "translation_sha256": "dede0cdab37fb4b81ec66d233332c85ec0ec5984a62a2a91913a61fdcd34cb87",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/dingtalk.md": {
+      "source_sha256": "da5c7ea873d9335063e36eac25ef6ca84343cdc13ffcc316433c6d86b4c58bea",
+      "translation_sha256": "0ddfb42cef1e13c6cc347c1680faad26d1997de76c508bbc7e5141404b64c010",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/discord.md": {
+      "source_sha256": "6e43349bfb5069eb6bdce6fcc82f8cf4f6666408736952f241a356ab5356c292",
+      "translation_sha256": "98211d538c186d162b01081fe59018266d4b87ba7fa71ec960d5b209e4932629",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/email.md": {
+      "source_sha256": "6574a3ca91533681a9a5e83e07b63147d5a17ece5c75360d5e520b154af70a3d",
+      "translation_sha256": "5ecf2d0bc9e031ffa9fb13b9d3a4bc0c9c92d1923476085a8d812e77843bbf2e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/feishu.md": {
+      "source_sha256": "35d737fcb51442eaac98e4e77c3afd275b697fa841f852e059e7d51355beae34",
+      "translation_sha256": "52e623d5f30b1f5430707a52e06b0632dee9c0519542726dc08e7705961b6053",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/google_chat.md": {
+      "source_sha256": "47d551c23ce7c1120261e4762c71657827a9b766fe50d51b93a1a121537c7d52",
+      "translation_sha256": "60f529de885601732091c7138be378591c8a2514ef11ef0dd4cfa7ab4cead81d",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/homeassistant.md": {
+      "source_sha256": "cc3d995455ef625dc3b735a3b30f3c5f1420765ed4e9734f7f326e8101c2e61f",
+      "translation_sha256": "d1c0b52c49b6658ac0e0417acd27844a93518804213b6c60c90b2f420939fb89",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/index.md": {
+      "source_sha256": "4a8ad8c8084d462ca47459eea29340a0b1bf57c0addf3c129a5dc60d62ef8b02",
+      "translation_sha256": "25153b0409929974fea0aad6cc7167798e9e0b643a7b56739087bac5fd73c01e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/irc.md": {
+      "source_sha256": "876cf3c9f8431c716bed6d42382d0a821aa9135620154e3622393b35cb58006c",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/line.md": {
+      "source_sha256": "3e1954622056e9c2ae6085d72f669b4f17bf6084fcbe90b87efa4bdfdeb739ac",
+      "translation_sha256": "793974a6859ef678d0432a8205cb16addc3864e0e0fc211159694e876cd81259",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/matrix.md": {
+      "source_sha256": "76ae60d5c8822efbb4dc1d27cfd50cdc2305132d599dec054d9b04bace2857ba",
+      "translation_sha256": "fb9d8a56ddc72d444d9e61c386737ce6182ab20b8c71038876f0604e1186f0d2",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/mattermost.md": {
+      "source_sha256": "9d90cbcb3e17f3bff49d4c00377d954a5ddd915c6df934d4468eefd512e9a2f2",
+      "translation_sha256": "74ff872e0c602566b9fd04abb2f9cf02f7d1303ba964ddc0a1bc9b2b4b8bcec9",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/msgraph-webhook.md": {
+      "source_sha256": "7afdd856dd89e909b3b2d63b646c91b0fbe43b0ec64770dbd859204def52cc9e",
+      "translation_sha256": "4855adfa3386c35524cd8f6fbfee0caa2a22cd0367a01bda5fb651ccf9ce4bfb",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/ntfy.md": {
+      "source_sha256": "69230294da8a4192cb5ef5c3b0f9bd0beb4b1f178558449d6ae5a350a35cc120",
+      "translation_sha256": "bce5dca17fb4224765e641813570f2e644528c41dffcbc6def2e027e4f96f84e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/open-webui.md": {
+      "source_sha256": "5c351f8c84b816361415d2dd437e04a5f173eedf97ac48c8de838ab6901be06a",
+      "translation_sha256": "4c2be25cf14dd06b77ef3b833acd581902a166a844cdecb633fe9189ccd289e0",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/photon.md": {
+      "source_sha256": "629156c65012c4fe28710e308098e5be04c3092c53b420e82a138588ea7006d2",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/qqbot.md": {
+      "source_sha256": "86dff6ca388f09eb109afe1c1bce7326253e73a155d9398d84c6c7d74dffb481",
+      "translation_sha256": "9f26a9aeb1b884d94efbae55d8dc73500628b5322f49b7cb7a17553938308932",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/raft.md": {
+      "source_sha256": "98a22c82114b7e2e287498c72672757118e17859f52b251e8d36ccc365e70739",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/signal.md": {
+      "source_sha256": "3e30b4e3eca17713183be71689c94885034f95b3557107408500af8ce573f87b",
+      "translation_sha256": "ea3bd0e82b0be83d62c06e9e495b2458977845a284cb3aae64b22fea3b606978",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/simplex.md": {
+      "source_sha256": "93842ddf578950dfb4405ecab78df3ac0f0de3563bd77815925f670e10c5b8f6",
+      "translation_sha256": "d37953ffe93e05dc99f3d2352dfd91d72b296f3c653ad6631d9dbfc3096d6cc7",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/slack.md": {
+      "source_sha256": "463d43d826b2598d4ab3d8742eeb03e033ae7e3cc9c175623bcc2b1f214b2573",
+      "translation_sha256": "5c801b86a7e56b4b4749f44b73f41424699efa7ede0641bed21012c30017b99a",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/sms.md": {
+      "source_sha256": "c2d69cb0ce49d7085001cbc535ea2b77b6ea0f1480046e603c36b837d360ffc4",
+      "translation_sha256": "2fe2f365cd33be891713b239d97aa32285f884038fb78dc21ce4b51e9bae7c70",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/teams-meetings.md": {
+      "source_sha256": "c68889cb06848956ebb9f2a5b78fef6396c24e16ee069551a66466cc0dbac748",
+      "translation_sha256": "0dca7db460067f70a94a70e0037e1c77918b9a4a72421cb62b0bee9126874041",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/teams.md": {
+      "source_sha256": "2f2a1cfd130c5c7edf3f3f9f5d8484c153feb57b139aa100cc7c56a021ae4e3b",
+      "translation_sha256": "c665cf81903474de55110ef6570bae7eb2fbf597c61ca290924490c657411838",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/telegram.md": {
+      "source_sha256": "38ac8b8919a73b18cc5f240e582eb5faa2ee84bc369a4e2a2294f3e6c15c56be",
+      "translation_sha256": "359befaeb498c1befc7d129c7fdbf4711b04b88ed8e5531b00ac1df5c4a4ae5e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/webhooks.md": {
+      "source_sha256": "45f331b863205de6a76719164f38238cf64f15b5fd35904395ae6f9641ca8fc9",
+      "translation_sha256": "ea2ba90934f51687d22136e60e111f0c460f132f8b8c6b8188a16580469bf643",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/wecom-callback.md": {
+      "source_sha256": "8cdddd2b7d9ed7da43b2b0a652672f42c6db292187ecbf920a8be9a6781fcdf7",
+      "translation_sha256": "1b467b5b36cea6de07cb7e1620059b03ca21d78e38d52b16f0a54561196ed3af",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/wecom.md": {
+      "source_sha256": "49a3a4cf371336095fc2944d7741cc1bba2b4000b4c229d57130f8b0c798b71c",
+      "translation_sha256": "e0c98413228cd367ed561f4a53c39b61a160913dd8cda9c0216d3251a35ff0cf",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/weixin.md": {
+      "source_sha256": "6eff917273277644a477b2fcceda4c48c7154632da5bfac72913ae3bd4d5a506",
+      "translation_sha256": "56c02d4d5eedcedacdf8ee1daa7e8d689627f1b0bef3cf942264c65a8a5aa094",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/whatsapp-cloud.md": {
+      "source_sha256": "6d39c7f5c9f5040137eeff19d4d5fbed9b223fa3d761d22463340a66d65bed37",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/whatsapp.md": {
+      "source_sha256": "5f3639722464f574e0c3977fe9debc48d8c44336785ef17b1e64200b04c5527c",
+      "translation_sha256": "3665e9a605648ec9520fbd8483ff65c78b5d351ceefec37276c936933ce9c77e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/messaging/yuanbao.md": {
+      "source_sha256": "b8ae1f1956706941f06dc69a46aa95e82bf4eb680e4fa79f61df158f48284a75",
+      "translation_sha256": "d7ebdbc83b0693c43e315a12dd24473fc94ade31b0371b2ef436e133b93cb1d0",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/multi-profile-gateways.md": {
+      "source_sha256": "1bb1e80be244eb1ca6b55fd602042863409588f6cf303d95fb0243203e1f0d08",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/profile-distributions.md": {
+      "source_sha256": "0e872a70a70978b61275c460a08bd7bbc2da38cbe0a884dbfee43b0b274a4664",
+      "translation_sha256": "058dece19938159c885662bf43cecf3aa9197f60b33af12ef98f679c6acf92b6",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/profiles.md": {
+      "source_sha256": "358e7b7a96930399d55f906d7bae4e5b059b5b00aecb5e6c2152f18f8baf2daf",
+      "translation_sha256": "d0e610a66f5cda50662a9e7ba89f461ae51d6b5e20e50322f7efff059bea6250",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/secrets/bitwarden.md": {
+      "source_sha256": "a9dc34370f12d65136b99c253a833290d3038cce78ca54f7274606a85007e549",
+      "translation_sha256": "a5f625d88155b005af28290cc0c689aa48bf99fb2e7dddf968d3e2df3eac011a",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/secrets/index.md": {
+      "source_sha256": "60f449ab3ea4571c66e7701e415a13f16d4d7b22e52e45e2176c2f43ad8dc5fe",
+      "translation_sha256": "0700c81df409112ed583cafb3e12298f7ff6fefc724c6e387e388cf7533a21f9",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/secrets/onepassword.md": {
+      "source_sha256": "de341d10c66f683aad6b0642b038ecb8b0d83e9bbc82f59392d4a0e3aaca0c0a",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/security.md": {
+      "source_sha256": "f2a30d4d932d081ee09acdb762dd19ada5b40e389a8e23150ad55ff2c48e3acd",
+      "translation_sha256": "ad364c6d0bf8d0277227a43ccc64a8265aa89de5c73b8cb809d39dcc3aa5e4e6",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/sessions.md": {
+      "source_sha256": "9133b9ad02511f62810c360387fb4221aa6047468044f71382c76871848eac1b",
+      "translation_sha256": "4f69efbeff663155358d726f83c7bd3ac01c6cfef0a434c523df1e994a2677ff",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/apple/apple-apple-notes.md": {
+      "source_sha256": "a3f2750bbba9cd0864eb2e102a3dad56a9e70871aad7911977df85cc30308aa7",
+      "translation_sha256": "f9b43c5b00aea89fead1b0e59bf0bcb93521ba7c9067d81d45ccce9e243de75d",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/apple/apple-apple-reminders.md": {
+      "source_sha256": "550f5ef9cec6571760635357debc655ea23310325be368687fea2291efaea6b0",
+      "translation_sha256": "07328294b8e2fceff25f5bd6158602eb514cbe2966b076eefdf2d15ed7762a5e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/apple/apple-findmy.md": {
+      "source_sha256": "017d5447cad6d6d0df80b935c8b3af51648d944ff29466f1030e37a2629b0282",
+      "translation_sha256": "99646b5d4a15249ef58dcbadf033a90a14b6c7344982c777864ef8b8b83d74d7",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/apple/apple-imessage.md": {
+      "source_sha256": "c96027eb127ff636c52c345b6b9e5a301dbba8cb40e3cfaa037d6c527ae9c90f",
+      "translation_sha256": "a55e02b90d115ccea355e3c94f098cc642ff8480f5968fc88f362aa12c14e150",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/apple/apple-macos-computer-use.md": {
+      "source_sha256": "292b8e53a15250c8d04ee2a6a06a9cd9bd4a13b10e8573045a8ba67e36b0f6a0",
+      "translation_sha256": "66ef89cdd243ce8f5fe139d62101109570b764abcdbe2c68be630d4207aa5149",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-claude-code.md": {
+      "source_sha256": "1791b5fb3c83bc861e6523dc4db8e7b344028f8838a9ba12db8d068d25811d0c",
+      "translation_sha256": "1bf1898cfb82ca61b820483124ef1a38c53bb036358cf067f4837c6b045d9a9c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-codex.md": {
+      "source_sha256": "28874363063db3a36cd91b7d70efed61825fb855b0e9814943a7c6aeaad99041",
+      "translation_sha256": "e639ce7be51e44d9771ef4ad75fecb080cde7027e483e3c54e07d071805318d0",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-hermes-agent.md": {
+      "source_sha256": "080ffeb447c0d6b0961fafb95509ad48b38c85704b086598579ef711279b1b01",
+      "translation_sha256": "72217788397cf3d2bd55542139224e58c9eeb8e4ef57b6f5d3ddb14ee352a3ca",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-kanban-codex-lane.md": {
+      "source_sha256": "9fff93ed60ffc315cc996e9dd0d85c9d2f61f38e97663966b460b9480d948a79",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/autonomous-ai-agents/autonomous-ai-agents-opencode.md": {
+      "source_sha256": "46b9a7e7bc7efc1ee3005fab490fea66bc6fff69ba19780c406af566df3993bb",
+      "translation_sha256": "51edcaeb06f7ce239be145f0805828e77d3cf2f85b38020f3280f275b088b61c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-architecture-diagram.md": {
+      "source_sha256": "4d3b19a34b441c5a0c9c8b77e590cdcb4760712c345a5354c1e57c1881d7c862",
+      "translation_sha256": "eba2d98f8c33d3789c9b5576149965db2d4d16b77da383ca5af6a52c90fda952",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-ascii-art.md": {
+      "source_sha256": "c542bfedb102fea4209f0f3e23f2835a46064e12ca0b80a2a282875982f871a3",
+      "translation_sha256": "fc2e5da5ec4a6f17c59b50c7671c4c8cb38e4b978562ea46ab80734d07e0b24e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-ascii-video.md": {
+      "source_sha256": "2fee8f6305983c9e946e69018b8c2bb932a58cc6c691a6fe65b86f19be45623e",
+      "translation_sha256": "fd63b03c61c5e9c8882ce7f3c2e1e36f4a2b40148695a84e0e416e378a96d6c1",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-baoyu-infographic.md": {
+      "source_sha256": "29a3990ca739fea2ce2a204be81720684036b01f56712eb7dfd2855f30e8c5d2",
+      "translation_sha256": "0acfe39ae9a2b3aeffd6ef42ac13bddbb2618106b9a9067d47bda9cdd15dfa44",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-claude-design.md": {
+      "source_sha256": "fe4c431f8dbd1c674bfa449f197068a820488f1041aefc6e226fc80fb1770be0",
+      "translation_sha256": "e5be1ed627f176122b21c9af9256c037676fdf1b3ceac4435d594d386c48490a",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-comfyui.md": {
+      "source_sha256": "5673f1e8e97941530034db4c5d8a190d366664566de0694c1f467679c771bb68",
+      "translation_sha256": "f657b35899dc8e152de2fe2127f717c680205d9937251766de6cfe687eb7b018",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-design-md.md": {
+      "source_sha256": "af8cd2d9c1c1d4b851d8b29b3f4306a1b1ba507b28eff1b18c0d38d7009b77c6",
+      "translation_sha256": "bb3da42346c2e9095301ba033e8ef73670380a21bdb40bea2cb0589186506e96",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-excalidraw.md": {
+      "source_sha256": "1431ac235e5a9a63bad58575297cb2a163aa5a8006152d508e1c01084fd6f70a",
+      "translation_sha256": "7653628ce3e12ea691a8e3231d948d411812b1116f8c9b22def36469500a18a3",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-humanizer.md": {
+      "source_sha256": "84ff3c41550904e5f82f134ea71d569c5fdc5e42b866bd009419c258d8a23743",
+      "translation_sha256": "970c73157936b59a74bdde74a68f7690b45715cf0ea231cafbffab0b00376f3d",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-manim-video.md": {
+      "source_sha256": "2f4fe67d5de8e06702e3554691695602b4bdba99303e98e71eefe8e10d9d95ea",
+      "translation_sha256": "45da121737b03c8741a547ca14fe0517a01d3c84816e9c2b8e0b6d23c3f47ff6",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-p5js.md": {
+      "source_sha256": "315b801d7cecb444d10e2a1d309e0c2de659df7d00011446a02900eead009593",
+      "translation_sha256": "39883cd043a90571f386c36f9a44557e935da7c6cfb349d5284ff8e57219aa95",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-popular-web-designs.md": {
+      "source_sha256": "d5632de51a31ecf3deffab7bd7dcb585575e28750ce3620ff1b325c8da6ab3d0",
+      "translation_sha256": "04890d9bde20fce2073b0dca9ef71e1224a4447f2e7856579181e0cf7243db6b",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-pretext.md": {
+      "source_sha256": "2e02866c104281dd7f47bd85625116af21f2f32c263af50966f59d0e27e873b2",
+      "translation_sha256": "ce7276d9351b314b3a0e30eff5453df11f5f14fc5b60de50b1d3b28589641c6e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-sketch.md": {
+      "source_sha256": "b8e3083e6f02617ff83b372cc07dde6c19d51237001cee920e4ce76fddfa05ee",
+      "translation_sha256": "95351d2a4e6fd4947247d55f41b1a9fc386cb90597b0ba09f29952f90095cef9",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-songwriting-and-ai-music.md": {
+      "source_sha256": "bc9f13cec0ccdb9ea25a3b94c5a81d5871477fb03f2250b2a8d89a1f988b7bfb",
+      "translation_sha256": "0d62db2fc42c8a694a72db02d3a8a7f55b00b8030f5dd9e123c880de46eaa3e2",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/creative/creative-touchdesigner-mcp.md": {
+      "source_sha256": "c2dfcc7cf933c1fec898f78205902fa3f51808deec808d13f72281c729a077d3",
+      "translation_sha256": "f0b55093770482b1604975a22fc0c0fd90c1a7eff58663d05bbeb0c54b8c980c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/data-science/data-science-jupyter-live-kernel.md": {
+      "source_sha256": "1b359648e51c9c72a2622cecf9b8e437688699b7aa229b63efca78b939385964",
+      "translation_sha256": "0b66fb5c5f4ba3712a1d0300b86c465dea24144275f82521579531191550d8c1",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/dogfood/dogfood-dogfood.md": {
+      "source_sha256": "9908a900a9b9c40da68d28d0fabf9ee431dcf1233ceda256f44fa3b1772efc8c",
+      "translation_sha256": "4ef34483ce26587b6b23d86793d77ea9a5dc53d9dfc754462e6f93e91019777a",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/email/email-himalaya.md": {
+      "source_sha256": "023908f36fdf093705c1f2095b865ae7700db6ef241f63c20d59a2daea93c343",
+      "translation_sha256": "68860a2f99fa2fdf87860d08f02ef603bc3c26fb3826cac225c8b553d9587d48",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/github/github-codebase-inspection.md": {
+      "source_sha256": "835c10a40d645cd8e4f9d91e63b1aea92905a1a3514a645eb1a77f07566c8a3c",
+      "translation_sha256": "75ab46a4d4afe17a5960f961a91553cbdbf29b48b680fb6754a09b0dd26d0c12",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/github/github-github-auth.md": {
+      "source_sha256": "c4236b6b1e1d5e4e2a40d46203457234613542baec04b291c85fe055412c58f8",
+      "translation_sha256": "6dbe556cbae1346098015ac2a0f9e71a8a85d679dbc85fc5a70ea1a9f7229136",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/github/github-github-code-review.md": {
+      "source_sha256": "d17ab369f7f9bd46e19493dd056adcff2e5d943c163f28a7f0c15243fd064753",
+      "translation_sha256": "c163dfe36a95f9d20226a560edb821035a47dff70c1b8722525fbfa9e31a19cd",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/github/github-github-issues.md": {
+      "source_sha256": "34ac2d961ccd37fe50b89d9bc78d7917246a5d4288dee0cd58d0ffbdbc305db6",
+      "translation_sha256": "265464d959d37fbd44df04316bbddbaf519e5d2a5a4b70e7cecbd35c7e1fef23",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/github/github-github-pr-workflow.md": {
+      "source_sha256": "f6c511da893c5709065a1fce12179f22b2a6cb0afb9af600a0b45f8f4b027121",
+      "translation_sha256": "8a3a5c93d2a2484a82dc4428617c29973b085b89d55fb6c2ed0125515436d589",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/github/github-github-repo-management.md": {
+      "source_sha256": "0cd4988f1b0c8ac6bfb60aed5a509ebab4a1d463d21d988984b1af49438d72d5",
+      "translation_sha256": "fbdcf19e64ddf4569fe4bba2a67e363266c131601e4a57d4388c0d98dd7564eb",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/media/media-gif-search.md": {
+      "source_sha256": "f18af44231d43cfa183f81e991eb9e3b6112e24afed4e0d5314a3fab4198fc58",
+      "translation_sha256": "d3e47246af017a323642df2faa47e9be044c651944a23393c9a6fa9839d23239",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/media/media-heartmula.md": {
+      "source_sha256": "b456d02e5bb90ca1aa7f54615971a2d3c5f080f81bc4ae2bf3b3b2eb418428ab",
+      "translation_sha256": "e07286da7974a36a718cf1a290aa63e812be8effbdacae166e54803d05de8f32",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/media/media-songsee.md": {
+      "source_sha256": "25086cb0d70fdffda455f00f73be366574eb252e3a99dd6c661d3d79221099c7",
+      "translation_sha256": "86b22e651a5e4bc6792614993a6b04d903c2d56b42953ed3e47735482a440202",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/media/media-youtube-content.md": {
+      "source_sha256": "be9399801c7072fc391e67258c3722b7311f26f173451aa0d6440fb3f4042562",
+      "translation_sha256": "506b4fef4dcfde806b79449a3ef6a9839414a4e1e8a22fb790086555ef4fd30e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/mlops/mlops-evaluation-lm-evaluation-harness.md": {
+      "source_sha256": "c684c0c40601a13471f26edb86d0cdde49bb132adc574b372b1a11bae3b87331",
+      "translation_sha256": "43b35efd8eb1ecfb9dbd4636812e4676e81f1f8fa0a7b2e277135e58ae002570",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/mlops/mlops-evaluation-weights-and-biases.md": {
+      "source_sha256": "6df5e27c7d7892d7992c0338654caba567363245c6a998cfe72452e0228c89e8",
+      "translation_sha256": "2afdf8eab0efdf0c000a2ae46283ef30cd4b14cc5c11330f4fab0c58f25905e3",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/mlops/mlops-huggingface-hub.md": {
+      "source_sha256": "facdef2409ed66ab55cf9af6fe036084c5de05fcd85f87808165b1b80b400175",
+      "translation_sha256": "29eab3aaa02966632566debd29f54ae17052f12b78d3b5becd481eab45795b1f",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/mlops/mlops-inference-llama-cpp.md": {
+      "source_sha256": "5c61ac81d351daf3e16f94bd61c7c25c35c8cb9759d1a572a3fa973fa76fa068",
+      "translation_sha256": "0a568a4cd0bbbeb78b8f2e14068530d48a7f0b55d229e253979142178f0f481b",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/mlops/mlops-inference-vllm.md": {
+      "source_sha256": "a02adf7975af59c7d066a4dbced0c1ae38917dc39fcc3802126155d1e449e9f5",
+      "translation_sha256": "4978b0e063e9406d3f79180f0e19a026668d2e8cd106e95169ef3e7a900882ee",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/mlops/mlops-models-audiocraft.md": {
+      "source_sha256": "e57f4c6b68dbd74587ac1766e4dca650f4c517a3f370a9ffbaca3f6fd7926009",
+      "translation_sha256": "3965d2036b1ada0de8e8cf9326bb38edf239c44e149dc4c48135b1b373ce1fa2",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/mlops/mlops-models-segment-anything.md": {
+      "source_sha256": "18ca91c4f921b362c99c277451b50b716b08d62886e3a5efdb0a1f7a76d6436a",
+      "translation_sha256": "68ab63b65a33d66af4d87b3cbb3fd3fc9e9a54e5c8ebfc59e0e41f51fc59636c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/note-taking/note-taking-obsidian.md": {
+      "source_sha256": "92da2684426ee47ed9d38ee39456285983e0457c8e7fee61d6fde6f17a97b0f1",
+      "translation_sha256": "93a1c9cb59035fac6c58717968461faf011b2ee869935a689e51e9a7acd06f44",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/productivity/productivity-airtable.md": {
+      "source_sha256": "e1c316d1a16906b5b859b3f8e20785e6e14ed22c25a7d7279c967a4ff4940d09",
+      "translation_sha256": "1f82c9f226053b455e2be96776d3aef1964e61a9aac5b1f5c4a8dbeb97c6f4d7",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/productivity/productivity-google-workspace.md": {
+      "source_sha256": "6663dfa62c69baa910a60baf37407b4f4138e6d62c169dbc2bab91197d12994a",
+      "translation_sha256": "5494e923c28bc2cdcb11065d23e1ffff25afc9ff7ec53e729f47c69e58908235",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/productivity/productivity-maps.md": {
+      "source_sha256": "b7bbcb5b6bab510865a7d9265535dd8d3a4d78abc74a3fa4af07176f1768f1c5",
+      "translation_sha256": "1e3d56b1f76443e20035a6be742262cbf95f1119245bbbca42ca99531d328ee9",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/productivity/productivity-nano-pdf.md": {
+      "source_sha256": "2d5fff74bfebe5765431d010a65886c7839f04d864acdcbbf80a320d83b1290e",
+      "translation_sha256": "025d5031e43a1127e0187f1e2b4ef4725ff5e7f2769b719b6f2e6164379791e4",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/productivity/productivity-notion.md": {
+      "source_sha256": "dbc8943a8fcf9b8a9df4b1bd505f29d17cb0a24f6493f7519b1d08e109f0509a",
+      "translation_sha256": "d2a202704715554dfa069ee7b592e7640b767429a1e8620c89dcbc69e80e60f0",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/productivity/productivity-ocr-and-documents.md": {
+      "source_sha256": "2332ec8e573b3e7030142feccbbd02b9c4e7a9f7920f3616fcb9e0a2b7158440",
+      "translation_sha256": "29df4c89dc91481122626da088ceea85c33c6417c1a9930e98b5c25af8224465",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/productivity/productivity-petdex.md": {
+      "source_sha256": "00dc25214c36a6e6307f0e4392810f70cf7782ddf6f864e4196e6364274c35f5",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/productivity/productivity-powerpoint.md": {
+      "source_sha256": "c2fea8f04cbf3f8ad5c66163da34e70d655d5c5616f0a03499c1e4142d0f083b",
+      "translation_sha256": "02352bb0f47277da0578c610fe139d8753bb5921e2d713bdf58e41e46ce4259a",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/productivity/productivity-teams-meeting-pipeline.md": {
+      "source_sha256": "c0ede8bb8888b4da75b42cba550f0bbc80dd3d274b15d8fc990a4c1ccbfc3a75",
+      "translation_sha256": "35919a7e8f1a49581b5807dd25307172e4f5c2254b4fd53dfef9005e964b5f73",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/research/research-arxiv.md": {
+      "source_sha256": "8f9479dcaaf7d231b6f7f5c61efbe1620ea268b798e203d5caaead6e4c4cae09",
+      "translation_sha256": "d08b42c74d608e77f37dd53647a83acd74f94e51a560a049f618602aae5a0000",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/research/research-blogwatcher.md": {
+      "source_sha256": "28b8c3cf12ae43b311f0106f3517371065a0c8f2f481b3522510ead084d848dc",
+      "translation_sha256": "e4ce782bc8f8866e0a7a43dfb6130c5b74402135e96f9f540de2cbb9cd171089",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/research/research-llm-wiki.md": {
+      "source_sha256": "2d030e754a30977f5a247ec4a3d96509b6d9fd3a97d0ee14fac010b40043f380",
+      "translation_sha256": "af2b35900ea9bf6e1bcfdb8febbc3593cb40863609b96e37901a8770faac15f9",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/research/research-polymarket.md": {
+      "source_sha256": "92118aca93481a449b7786683a42b40baf7b7f159d2b21a28140b8d5441db33e",
+      "translation_sha256": "2f26622dc51728dde33c33681fe9139f3b77c24c4955c334f288be7c40a352a4",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/research/research-research-paper-writing.md": {
+      "source_sha256": "629676bbf096716298bb99123a790404fddb9ac92cc75686cc9dec12cc8e48ef",
+      "translation_sha256": "4ce21df789ec1502d7a33738d34ff66470f054e726c59d3e91592e4592067767",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/smart-home/smart-home-openhue.md": {
+      "source_sha256": "fa6d927b35d1c6d550459b755e4a65a37752a5f03491a519411d4f594411c8e0",
+      "translation_sha256": "1c0ae86cacdae16a5a09b3a190a49bb111ac0039301fa23923e5701741ffe921",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/social-media/social-media-xurl.md": {
+      "source_sha256": "eedde12caadcfd740600e13a41961ae865e1dba155dd0e0d9ae27ca552bf7e8f",
+      "translation_sha256": "d332621c3d291bbc941ae5b9d3e1aaeab6cfdcf1f2dc40a1c479043efd32e03d",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/software-development/software-development-hermes-agent-skill-authoring.md": {
+      "source_sha256": "4a43ea447087f385dcfb9caa6dc1e99d2f3d5be4dcd35d3125e94752e63e037e",
+      "translation_sha256": "0e7c445e239a61fc3f20e18f7b9aab6a7260bb0131b7b8197c4dbae8fc682874",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/software-development/software-development-node-inspect-debugger.md": {
+      "source_sha256": "fff412e321e5033699cc30738a0f17f26f791084889d041b06741ae9513c36fb",
+      "translation_sha256": "52f90dba4712163787ce454b777945e39f4794d33cdec2023f2d9e27e4a86db8",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/software-development/software-development-plan.md": {
+      "source_sha256": "9e3ce73d7d6b028272143b3ff8e510727256d79a54937276eb0fb3aed173fb46",
+      "translation_sha256": "40f99406e1cba28986ce6dae4e34fa5c274c74a7cf65692c6f929d3dc4aed1bc",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/software-development/software-development-python-debugpy.md": {
+      "source_sha256": "22739f630283d41155e521b61053d192051934d9274ee01de35ec8e2ed8bcc10",
+      "translation_sha256": "4b9c2651894174fd82140da1b77ce6134a7e0c8e393e2349082056474424ae84",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/software-development/software-development-requesting-code-review.md": {
+      "source_sha256": "d572eb05286668674534a7ef52a70d6cd5ab1bc1046865b966a6040553ebd303",
+      "translation_sha256": "5ad19c15feb256144ac80b9fd683401ecee611e731eb19cb3d8af69df229c858",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/software-development/software-development-simplify-code.md": {
+      "source_sha256": "1e164c323501512e9e565c18d1682e674cfb9a5b912ce0b99a88d55f332d2d7b",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/software-development/software-development-spike.md": {
+      "source_sha256": "88fbc4a7ae11ab89a58348af1921f11ef4b1051804001566ce4aa55c1ea87489",
+      "translation_sha256": "3f6fb520fd8134ca94db307996c5348f6ee5e581cad0cd4b2e01d6ba02733192",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/software-development/software-development-systematic-debugging.md": {
+      "source_sha256": "3a90830b0cddfa0b13263085bfd57b0b254c6b4ef387b23241cb9bc763d17f8d",
+      "translation_sha256": "a2d91e55ce06171b6db50d20a657af08980cd85b41726e4440b8050ada6452f8",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/software-development/software-development-test-driven-development.md": {
+      "source_sha256": "f9a7668cd59d826815c08eb33ac06d02bf9985ffe1f15157b6ade405baec23d9",
+      "translation_sha256": "d008827d94c87db6d28e1a9fd0821b439b4d930446aed1d0854609e5e229f745",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/bundled/yuanbao/yuanbao-yuanbao.md": {
+      "source_sha256": "cb0e5a225020e845fd2415d94daa5839341d60b6c542ca360bc18a5182eae61b",
+      "translation_sha256": "57641dd7d549c7447d0bf4c7db17bc9369845b5e613d004a9953fc0592aea186",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/google-workspace.md": {
+      "source_sha256": "018b7300cac47e1b0fb773df710e5a7b160103b3c9e3359572a952e8f53a22f8",
+      "translation_sha256": "19b8cb318f30b1bf304b9fbc3e3af5b3ef516912c4c60ceaab88d2e4b341750b",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-antigravity-cli.md": {
+      "source_sha256": "1fb35151cd5682b920bd588ca43f852113a977b3a779291c0a701483c4449cf6",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-blackbox.md": {
+      "source_sha256": "707727386e6e2be052399a377303336004a90d8723d7e79a790898f4cb934ecb",
+      "translation_sha256": "3b2b54b7660795bfa0371a7feca4845bb3875b950e1a35202d92d16ef1b4236f",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-grok.md": {
+      "source_sha256": "2c7ae4405145682fd40a3ae6eab8f8edec8aa5146e9b68f2c1a40042b1ee0d6f",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-honcho.md": {
+      "source_sha256": "e34b18ee2b6f46d193419a0d7651c8e60c6cf09a9866396ea7f2174ac79dec80",
+      "translation_sha256": "2b81421892dfba289f902d4bc06a016e8da7b97e2e2c95ff9a3a1bd0dd014725",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/autonomous-ai-agents/autonomous-ai-agents-openhands.md": {
+      "source_sha256": "9c4ab6a0f70b39f16a9677733abab63692951faafa4f57e59e73afb40fa2985a",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/blockchain/blockchain-evm.md": {
+      "source_sha256": "0498c9c6cf2403f1cf6e748e9f78f63bbdd80bc7fa207715260aebdf575bdb81",
+      "translation_sha256": "f39ce35fe64858d2016d76e0590932250b12d8e940ad995eb3293ce95c3ce40d",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/blockchain/blockchain-hyperliquid.md": {
+      "source_sha256": "20569f1e3cacb7312ec0609a2f19379a957f68c6f321cd9c5c8d66ef628b7c7d",
+      "translation_sha256": "7ff3aa915d1f7879b1bfde8b9bded85b370abcde2a8a3172e94b80fc6c0b1939",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/blockchain/blockchain-solana.md": {
+      "source_sha256": "82c7c76d7c349dbda1cd15ec79270d157fc0917bb746781fe5b2a56dcda912b8",
+      "translation_sha256": "9667e7c26e968632a597678387795a2eb57d7341e1458be8eda7f2d147f7b650",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/communication/communication-one-three-one-rule.md": {
+      "source_sha256": "918ddcb16ab7bfbefa102f64b0cb3e6290c6c2c07e5c87ea01c20ea43858c38a",
+      "translation_sha256": "ed02e5c6406cbae33322fc792d3486f84d8056992626fdad09998b68d1df88fa",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/creative/creative-baoyu-article-illustrator.md": {
+      "source_sha256": "2fd3e24c7913a026088a0cd5c369d32385233bc2854330c0d115234351d8902a",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/creative/creative-baoyu-comic.md": {
+      "source_sha256": "189ddd60c0da1a6da67c79d5abf498e9b8d56449c23a67438bba717b1bddbd88",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/creative/creative-blender-mcp.md": {
+      "source_sha256": "0e0b7cfa75898c5595bf3afe4193287226f810bf9fe1793ea65810cf5b274a4f",
+      "translation_sha256": "047294d6eaa365b3a441be762499fc9ddf8dfe0887674b4c5261311b2666973c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/creative/creative-concept-diagrams.md": {
+      "source_sha256": "122a9f89f6f6802c9a1b403e1efdbb7c72a8468985ba244fb9177fe2ec668899",
+      "translation_sha256": "92d20acd9f05f1ac8dbd47a7b9c6636ee2e80fea238b995fdf4370f5705336e2",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/creative/creative-creative-ideation.md": {
+      "source_sha256": "7a9b4d840068b54438657d5c552928095b15887f7ef9a6a3cbb2002abafa4811",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/creative/creative-hyperframes.md": {
+      "source_sha256": "714e1468f3d268cb5dc174d9563238536958f95d75d4318ad0678602efa3b756",
+      "translation_sha256": "45398b86ad838565762fb7e2c620cb54bf89634c926b110eb6d97a0b527264b6",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/creative/creative-kanban-video-orchestrator.md": {
+      "source_sha256": "0bd745614e938ec3370e220ab8a65ff51be9296ec34b854cd096b511f45b2e62",
+      "translation_sha256": "e156ab4e28719c4d20013fa610468016f64b1eea8584e548e937f7c298ab6d4a",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/creative/creative-meme-generation.md": {
+      "source_sha256": "d89898e29c6d07a10a858a6d29106c06a10f49c50518b81cee7e1007ab64f2cf",
+      "translation_sha256": "959918141b58ea31f057519d3968e3eadc50427fa8c89f26cafddab90f9d1a7b",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/creative/creative-pixel-art.md": {
+      "source_sha256": "05a55a69b825e64fcb2600b9e1794956f34b415987f0e970072e6152020b72ee",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/devops/devops-cli.md": {
+      "source_sha256": "def25f65c06a1d072396f9ce2981db249da16be956ecf375d131c131b1dbd49a",
+      "translation_sha256": "188f6aab14bb0feec8cabbab27f20af67e6fff730717944b570c6f607b60b2ac",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/devops/devops-docker-management.md": {
+      "source_sha256": "c3bb2c126fc4f2339037f4771fa1b29b6550c2045b837e5d43552a5d506e9bd0",
+      "translation_sha256": "0e341f130934cdde09d583e2e0db9e6e97abc4a8119e91f3fce064abdc5e7585",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/devops/devops-hermes-s6-container-supervision.md": {
+      "source_sha256": "58c8ace0c7e0cf0ab768546badc6b837329901e25bfe3a0714c9490139866a5d",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/devops/devops-pinggy-tunnel.md": {
+      "source_sha256": "231fe09414dc51f85e5833e65686c1162bfc516c4be579ec98022ce51ac58501",
+      "translation_sha256": "ddaf03b82cb3079b8c6b2ba7e6ae1065580e92f01c13aba413913397361d8d61",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/devops/devops-watchers.md": {
+      "source_sha256": "3db8b4d0beab6791ba5e4c81eaa5e168aca1e15a5351789dd99a95fac1192e27",
+      "translation_sha256": "d57ec04c368b0588a7a828c8e86e3ee28ae75b0b5813ae6705250c5999e17d49",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/dogfood/dogfood-adversarial-ux-test.md": {
+      "source_sha256": "e2c1e9f01781448ee5b0844052d8b6bc8cc3365193e118bebd47c814ccf91bfc",
+      "translation_sha256": "38add3534f4eb23f328da449bbd8bedfc0e6852d9327978501d916c7bb3a0d1e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/email/email-agentmail.md": {
+      "source_sha256": "fd975e24a07c2b69eed2f8d49139668a6ac804618b41ac66342ec14cac9d6efc",
+      "translation_sha256": "8527f6df29e7bf4f9d7fe4a0ba01537ac4bd52897e6ccd97dd4fadc843ab289c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/finance/finance-3-statement-model.md": {
+      "source_sha256": "e471f700fcb66a05c9cc3c36b9ef270d31aadeceb04b787c8448fb934a4d3495",
+      "translation_sha256": "a9232c39d8ccef5d4eb9d6eb247ee51fe96fb85e706fc9877d10beaa29cb08b0",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/finance/finance-comps-analysis.md": {
+      "source_sha256": "56a535794b7945b1d9d194e67ec8699b463c670713496fa0f34ff4311d0d5c28",
+      "translation_sha256": "8d82af418fc9b033045c573df9e54a542ca99d824479f467a7c21b80d0b3f8bd",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/finance/finance-dcf-model.md": {
+      "source_sha256": "0662ee3b58a9d046078ff0b97b2048549e9af17a72619c99db544f1cb56c7838",
+      "translation_sha256": "7a1142f55a9447dcac548561f74de61fa08252bde79a04a58b5172e1ffcf5509",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/finance/finance-excel-author.md": {
+      "source_sha256": "44e5958c8245ebc07664634af220f28ac23b65940c5af88079da1818278e0110",
+      "translation_sha256": "bb6c51b52b5c8a9ab21afd3d040411e3811a08f75f97c07472a732f831558b19",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/finance/finance-lbo-model.md": {
+      "source_sha256": "c189926b6200cd1da19dbe49f2d1006a7dac2f87424cb71ff2ad017d3d26d8f7",
+      "translation_sha256": "f5bc20b77e8e2092ae3277927c83c407b0fd2c32bc85295b6a2e60fdece5fc4f",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/finance/finance-merger-model.md": {
+      "source_sha256": "3bb8cda38a26b6b3f02816a7c7dfae4c39e84a7ff3c2df3a7c6fc3b304b1f635",
+      "translation_sha256": "14bb6c90f76e92f98c50ebf0dbfe157c16131012429c35ee8194533be0e31248",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/finance/finance-pptx-author.md": {
+      "source_sha256": "22eea81602b9b64df092249b988b74dc6ca40655f512d7ce6af9b24e085b1f3c",
+      "translation_sha256": "9fe8e3896a09981d0c675de18b9bee3b1d721257fcad74f25cba22ca13beda89",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/finance/finance-stocks.md": {
+      "source_sha256": "6c62bbf369b2039c6ceedad60e92aa8852ffcd3b8ed28d5e9e4334b9a80ac8d7",
+      "translation_sha256": "9f40fd6b474c6a78fbd1c63f3f6b376d754c1e387f114fdc69e815847781d0b9",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/gaming/gaming-minecraft-modpack-server.md": {
+      "source_sha256": "afc4385b3409a85cdbb8d99d4641f40ca8e3f6063efecbfb9e7dc0caac21cb28",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/gaming/gaming-pokemon-player.md": {
+      "source_sha256": "0eed55a7c790a813aa85ea0756b6420ac5b283b7b5cfddeb886f90369bf66579",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/health/health-fitness-nutrition.md": {
+      "source_sha256": "f49ecedbd4ff0ef8c0127ef080449cf3d400112186b6899257647104616f455b",
+      "translation_sha256": "8e1c3ee8d422adfca3b992188f322e2999d0d78f08fa1cf5f1704685f1e33d3c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/health/health-neuroskill-bci.md": {
+      "source_sha256": "c4cfe1586c0fa41bf52bf7ea24b496b6b7e1a8994c95fa6a5c9d1616987aba10",
+      "translation_sha256": "81280f9e6a8e2a409b6832c44e4ee9d6182b9cbaca4a205f10012d0fc243782f",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mcp/mcp-fastmcp.md": {
+      "source_sha256": "2bffdafceb320eb99dc92a58040e16362f34fa7e3a60b9ac4be88fe54f963af8",
+      "translation_sha256": "e542bc34ca5ff22fd0e7a332e6ba7f790d25cb486d8922bee8e02e475f438a58",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mcp/mcp-mcporter.md": {
+      "source_sha256": "9d418c222482fbda8373f6f278be0bbf94d9716b3a177493920f2d3445719a08",
+      "translation_sha256": "d484bd811cdbfe2ca19d89c68f3ae25dfe9288d6010627250e81f2106ae8c3c4",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/migration/migration-openclaw-migration.md": {
+      "source_sha256": "e04217adc57484f649fcf73102dae483e04febb7ad982e5f5b656665aa6961c4",
+      "translation_sha256": "856c451bf7b8449605eb6dd4061e4f065e81151b960566484e4549becf6e839e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-accelerate.md": {
+      "source_sha256": "0124796ac3dd0182968657ab04e8195f8c4979759c1d2319876c3117cf1a7572",
+      "translation_sha256": "5156352f5ab46d088bfa7ac2f614bb2df7169de083c9560fd11fc27df06dc471",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-chroma.md": {
+      "source_sha256": "56688d6b6d6e3e6adf4ddb46a4d1c4cffb91391fb26568ab23694defc07eaa78",
+      "translation_sha256": "ea9e1b3a6698f00ed525d61df0b406a52b52a17315860fc7abe0982b65baa776",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-clip.md": {
+      "source_sha256": "273d1a8b4198722a2d6b2e54af77d5160867f5ccfb3591b17c9149da8964d3ee",
+      "translation_sha256": "5bda94d8af059ee4e6d8f542785d0c645c00eb3433b3587b2002b09750ad00ac",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-faiss.md": {
+      "source_sha256": "c8a726b900fb63556bc0d1caac75a776401a8e068efe5537fbbb1a32aecf3a1b",
+      "translation_sha256": "d1172465754c4c4db3874bba3a0c1a1daeb63f383be9ac55ff1c093413fb94a8",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-flash-attention.md": {
+      "source_sha256": "ce3e93e82f082a799c9b5d5c9c43e098d9dd4d0ad4cdc4cd128eed500539a8bc",
+      "translation_sha256": "1698b5d31a90df0b36101617b2eeccfdff2052029d4de62b12b40849c30e9ba2",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-guidance.md": {
+      "source_sha256": "cfc47f8e75e1348a4f1f973ea20ebc452a5d0bd57ce03cc3f733998f116f8e6f",
+      "translation_sha256": "1009d55aa69a3f334d6385f5fbcf4c14818549703556f79981ba703b41557f50",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-huggingface-tokenizers.md": {
+      "source_sha256": "b1f1d0551d22e8c00cd4e1c3444b7c33880fa3fec89188c94d283dd03ed7b721",
+      "translation_sha256": "4fa21f52505c49d48e38ff62be90b49049cf6887ec70f9c95a1000f566588026",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-inference-outlines.md": {
+      "source_sha256": "34f899bc2d0e54e2cd7867bebc365414129f64381c1e730778839023df78f009",
+      "translation_sha256": "f2976349c1ce37f8fc12b15f07fa004b96dbbfd3396022fc9eabad3baff21093",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-instructor.md": {
+      "source_sha256": "0083295b4e5ef02abcccb128e567efd27ec34daad02e6b4545c6b9b42cebae6f",
+      "translation_sha256": "747ed77ecc91178061ac2a7f86c64e9b2ef63d86598b12f0b0d35e2f10ddb5a8",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-lambda-labs.md": {
+      "source_sha256": "f57ccc7951bcdc3025ee7ab4aff45c5a3da4a2f4e6a1fba570a5df27e62399ec",
+      "translation_sha256": "8361646a5107daaef7b6428b1fc9ce8d2780c27df88785a88f6d6c5157476e09",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-llava.md": {
+      "source_sha256": "dbfaf195fe4b08980510ce3b3359e2dae87e69efbd2047af961a80390b656a6d",
+      "translation_sha256": "b1d9c92119a48bbe76899d91718e882bc365d28532c0c90c2cd294d8115431e5",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-modal.md": {
+      "source_sha256": "a7c939b83d137e5148528625a36e00f8a5cc2c8a59c8d5c0b81fdb99062fe8af",
+      "translation_sha256": "dc479b000ca31cb37d05c9dd8ca0a3d4387fe59c56abd8fd98487efb282c0c48",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-nemo-curator.md": {
+      "source_sha256": "216e7309d9719df713c9ed0b5ca826e92838a0164c342dcf78967e08929f1148",
+      "translation_sha256": "2c881e63bc117f6812d31c35be59770bd1bf2f72d03b8811ea96d24a098ea113",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-obliteratus.md": {
+      "source_sha256": "a95378b96bd21e1f6dedb819fe0a6be89a86fee8fe5c05408a4ff16ddf62b83e",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-peft.md": {
+      "source_sha256": "da081fab3cf9ed645bc0234eb554a09618c28dd248b3c1bcd2833c321ff207ad",
+      "translation_sha256": "62d4a8a8ef1a6eb21c6be4be5b46da3b9bf68e56fffa5c0fed8c813398058854",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-pinecone.md": {
+      "source_sha256": "9c6e76efb653c466201f6ce6d4d7f01fe7800acc5392e6192e6d4f9f5c443a50",
+      "translation_sha256": "b18d374e13770ad4b534e5deb5c93bf645d76b78f640b38ca4347d6a5b20f524",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-pytorch-fsdp.md": {
+      "source_sha256": "bbc9da69e45a1f27d405cadd27dd8867ed70c74b8244d71ac12072986004e4c2",
+      "translation_sha256": "69b17f3b58db55497846a2c70325eb3dda5e06b12e8433808d8721fd5f5b7104",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-pytorch-lightning.md": {
+      "source_sha256": "ef41b45da12e0571e06594ba01ade66265494699d7f962b1433dd960c36a31ef",
+      "translation_sha256": "ae1837f5bf10bad409b1dfc4b7f55650eadc82047ee9457a76fd6081e96753b1",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-qdrant.md": {
+      "source_sha256": "f275d30090ac18aabfdb377d9415348f4c136cf405d153ec6edc5b168621df40",
+      "translation_sha256": "950768234c841a043b8dd941ebe5d04d4bbb77b15dff232ed83cd62b5834f869",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-research-dspy.md": {
+      "source_sha256": "c46a9df1711e3e1515939998adf31c6f4713152ba2d1d89bb75300519b3bffe3",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-saelens.md": {
+      "source_sha256": "8f0aec8f4f998b62c074dc900fdd3fbec45f72c0569a97bd4511c553b0b1e6ee",
+      "translation_sha256": "5c6ca172b6d0ac1dbe1a91595263b3aa960702683a96800c36d2663be4d3a206",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-simpo.md": {
+      "source_sha256": "163c96193a31a0a08a9ea00074f9b00ac8700c46a240b115e3f782e081da496c",
+      "translation_sha256": "a811b4f6a2fb077c6a127ea2ef47bcd4df1dd7b082c8f55034bf58020fac1e55",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-slime.md": {
+      "source_sha256": "1fffaf95c283e351cce70ad4b13fc05c04baae23db93a5fe7db96bd665c3fd01",
+      "translation_sha256": "4bf0c50ba9ec28b1206a7b76109514a71651e651e797a0d9ec8a19d4760e2883",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-stable-diffusion.md": {
+      "source_sha256": "5d7d086d3cf75d16cb14fd2f33a81653ebe08f8e1c8411eedcabcabe7403b686",
+      "translation_sha256": "eaa2622e8912abb90f8b33c4c82534d3c05dcc077ac702592ea6175379eaf558",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-tensorrt-llm.md": {
+      "source_sha256": "d866ea4b186314fb200c54d35e3adc67c9d687ff1d7b823a6b881dcc76a04ec5",
+      "translation_sha256": "9d6db699349e03cfd63b1adf84e74e723b0d2a533269e639919bdba106554afc",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-torchtitan.md": {
+      "source_sha256": "d6ffb3a615cbc169dad82d55d8992408561d66a682aa3ebe60fc685e8112150c",
+      "translation_sha256": "cfa7d173ec8f353a6adea6e7335d5fd50c3d834e340a2a9fe82adeaa28170df3",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-training-axolotl.md": {
+      "source_sha256": "48e37acc77dbc1de93fec429079d6bc7c86e03fa8fa11218ddddd78b32e1f9bc",
+      "translation_sha256": "c75b712667f4a1b4ff6a24d8ddd4ee985e703b327bb0a2124c7cf8c9200e9469",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-training-trl-fine-tuning.md": {
+      "source_sha256": "0f665647cb432180d3b7365949466a178e7e27762a58f200961e6699168bb69c",
+      "translation_sha256": "23fd80a6181752eab1151b73d717d9931dfc4f2e04f6ca96b88e6e5cf5e7df17",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-training-unsloth.md": {
+      "source_sha256": "a60e50add09ebed9962fac0b6b8b105eed16aacc3ee7b5743e0e49f102d9fa38",
+      "translation_sha256": "a91a984a82a872ca35a40f6d346205f34ab4aaba78921cf1214f7acd843c432e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/mlops/mlops-whisper.md": {
+      "source_sha256": "bcbd1299de5120383d54cb137da97619ac5a9d94b5fcd041d9c3471f20d2626a",
+      "translation_sha256": "a4fab0d3b58bb055c884bf162e09c316845f2a36be8d392c268e89e1feb9bc7d",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/payments/payments-mpp-agent.md": {
+      "source_sha256": "41ae119645fe1a0f1926dd2b18c52856cdfa158ddd47d0315ae7f26adc891fb2",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/payments/payments-stripe-link-cli.md": {
+      "source_sha256": "aa914c43d9eb3c9de541fb8514a7a9e51731ef6b5e6f9a7a023b95b8878723b7",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/payments/payments-stripe-projects.md": {
+      "source_sha256": "4e2dee3f85e66d3fc776c3d8867b04307e7a1fdce08df1f4b9ebe324f85a3d2b",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/productivity/productivity-canvas.md": {
+      "source_sha256": "a36276351986d154918d234839fd6c2a2d65fd0f7f23e20980543dfc162feb9b",
+      "translation_sha256": "f7f7cbd41e052e34cad8d4b1956ac765deff7de9c1c6d062d18cc9351922580a",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/productivity/productivity-here-now.md": {
+      "source_sha256": "fee19b6bc8ee3004b0155de35b9f6b72b9a908a6b211d648f8fcb3d8e5ead106",
+      "translation_sha256": "efe282284c589b2439cbe567563a116abe896631d32f7a2620ca997b345386fa",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/productivity/productivity-memento-flashcards.md": {
+      "source_sha256": "1bc456b5f24f5b13ea0930e1209512534a7cfe257b26eeead045b3e854250410",
+      "translation_sha256": "703b7ad532de8d22e64fbc18c3dfd9ea83c671b318f0b46f4cec4623f5d77481",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/productivity/productivity-shop.md": {
+      "source_sha256": "d9107726b730504c2823882af92f7085e052760dc8a8f54a6548e87ef3e24ab6",
+      "translation_sha256": "3b92067811cc8da57cb7d3a778ee761a5aa471a51a6b17cedb998752d09684e6",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/productivity/productivity-shopify.md": {
+      "source_sha256": "0b2430b36fd6a3869684a2f60c9c4a7f385d32993d19037891e6b608834c7706",
+      "translation_sha256": "431621e00afb2ce988cfcd8f7895a25a566d89ed26e0afaadc3ef6bee7f2ff0c",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/productivity/productivity-siyuan.md": {
+      "source_sha256": "415fe9305ae26b92fa5a6050f72531cd5f8ad6e80effaab13a8a32752547dec6",
+      "translation_sha256": "3dd3bc33d46d5459ed0c8ebe918ff29d1368d0ba6758f83e410051183581fbaf",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/productivity/productivity-telephony.md": {
+      "source_sha256": "2e917b1dedf60d8fd1310ad8f24d05c6dfbaf6c851795f8d7bcf020d58e6f27d",
+      "translation_sha256": "4f36319e332d70b1cadc880c3df2ff573756086f8d4d3625a64c46f41e3a07a3",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/research/research-bioinformatics.md": {
+      "source_sha256": "be045237ffccea197ac8acce950078731b2c9a71d5870d6a9654ab4fb2288b9f",
+      "translation_sha256": "17df133ab10ae05f8c229d3d33e371af273dbb01e9cfb9821b159f12c6de4f0e",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/research/research-darwinian-evolver.md": {
+      "source_sha256": "9b20be306ec5ec29b3f9a3113c15cc152f46a4cf5e1d46071194a096ff29600b",
+      "translation_sha256": "393d5283244f6fd491859e11ad7e065744a1428d3e6f2fdf4190c615ea016ecf",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/research/research-domain-intel.md": {
+      "source_sha256": "dc144466d5c1da1c146b99fff6c536d6833cfab70f13af2e94367cf8d75a0f13",
+      "translation_sha256": "73d11f4a0f93c02ceb9bb0acb0303d291c6496aae5cf8154e425b1705a921c5b",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/research/research-drug-discovery.md": {
+      "source_sha256": "3dbd03326e8c97fb9a23fb31332945936561f65cea79774703293ef9bf678913",
+      "translation_sha256": "ffad436a4383f06d404246498454eae5e2255c2447858705f2ea6f75d8c5b3d2",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/research/research-duckduckgo-search.md": {
+      "source_sha256": "6c278ce600fee21cf3f19f0e241692eeddb6b06cf91462cc4bbb8aeb7d67616b",
+      "translation_sha256": "9aaafbd9a9d654de3bc8fc5481c7057050c186fff3aa634d5a0ae6a7b49d5d11",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/research/research-gitnexus-explorer.md": {
+      "source_sha256": "69e5dab81277024048fbcfd559b477c63c1024f9e4f43e805b5623151a56cb6a",
+      "translation_sha256": "f019ffd475f8eaab8583733cc9c4edb2315fc4cb48070a5cdb305cbad4b61ff7",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/research/research-osint-investigation.md": {
+      "source_sha256": "334e20adb31f3b9cab6dfe18b5556a991768447933b7d423f0d3af4acb452561",
+      "translation_sha256": "503e6a90cdbf1024df063500dcbb248974f9f87728f5d985aaf374c0df434d35",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/research/research-parallel-cli.md": {
+      "source_sha256": "e1f6d1b1d74e2a150337938f486700c49d01b62988eab30e115df47717d07035",
+      "translation_sha256": "9ad6cbfcb86c68d1aa664499d21a11ee1a609cefade1bd957812aa8c322f78c7",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/research/research-qmd.md": {
+      "source_sha256": "c0b35096c272d6a26a90619700642f2218ae12663d7636cf8c32d1bd000c4beb",
+      "translation_sha256": "2e83836faa1fc03121b7f99a4acb973dac2b30a46a228d8dc1e357b203ee4a73",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/research/research-scrapling.md": {
+      "source_sha256": "e03561a818e6ac8cfe20430a7879aa6c07a71086050a0ba41db9a32e82556502",
+      "translation_sha256": "fdae39018f0e828e6e933d70fa114aa336c37278621be12df06a79faa6c313ff",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/research/research-searxng-search.md": {
+      "source_sha256": "1fef2a20318620e72853c60d61cdb76b609c844c4c310f6719849764950a1772",
+      "translation_sha256": "bdfde832b6d76deaec0261227a79860058b9c161a24f70362ef1c3e072ef4313",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/security/security-1password.md": {
+      "source_sha256": "8bcd52134efc441d177687a54c1c776ced5b482bbc8bb267a1b681e722a00fef",
+      "translation_sha256": "b295d5893cd4adb5c049742bfc9987bb2474d701277900882d5422fd1c9ca363",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/security/security-godmode.md": {
+      "source_sha256": "e61e9a5f310f0608ee74022c7fc2fb534d0594f24215ed527da1b0b947765936",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/security/security-oss-forensics.md": {
+      "source_sha256": "1b18de331c9308c1bc814a1c61467cc2bc1a0baa417ed6fb1e3027364da6972b",
+      "translation_sha256": "f7064f74de88b303a4f939acebb74aea2ef5ee676d3a939afbcf7abbc58ee038",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/security/security-sherlock.md": {
+      "source_sha256": "ac4222502f512b0f1d80e87b210a0808e89245c6cb60fa9271e4701a211a8779",
+      "translation_sha256": "2113a7d92ffc80f7e53bf038c3d66f736f7ef9b370a410934436f528191a6db0",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/security/security-web-pentest.md": {
+      "source_sha256": "f0fe861c97b0691731939ace3323417f683832ab04bd65d13939839e1d2a482b",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/software-development/software-development-code-wiki.md": {
+      "source_sha256": "ae9aa0a030312366f1ead92adcb663c860bed999e187f70927fc4cd6acfada33",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/software-development/software-development-rest-graphql-debug.md": {
+      "source_sha256": "dc667e6ba83183bed1e59558773d23576736802620617763af1e146d24652c5a",
+      "translation_sha256": "7beb1109c06207f1ffdf03bedb0b7f11d4d5ac7a5c2c1e6f7d6053dc555e2a63",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/software-development/software-development-subagent-driven-development.md": {
+      "source_sha256": "c3b9b455c25114300d750a7da8eb1dd56930d3c0faa8444012cfb9e5a91d0151",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/skills/optional/web-development/web-development-page-agent.md": {
+      "source_sha256": "75d0062d6ab1dcc3e4c28a4f96bbdfb9f9469d854151efedb7ae130cf377d62b",
+      "translation_sha256": "3e8933c4b173eff54fb887c2ea9b1a0bfb249f1a2bcbf1bdb4430ff451f72815",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/tui.md": {
+      "source_sha256": "3fe7784bb6a193b7a10b7c200f343573afaa70980e29f80182dd1198791decfa",
+      "translation_sha256": "aa9b0e3fd260768a209c1d2ccb97d96f5b8a0b05f7e588fe94821dcd2acbd4e7",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/windows-native.md": {
+      "source_sha256": "c32299a610d939ff0965a92bc5eca977e0edb04bf0c1aba6c281576eabe6583e",
+      "translation_sha256": "12b6145c45d115978ab43cb6d0965eb153f79c8688796a34015ce4468fa8758d",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-guide/windows-wsl-quickstart.md": {
+      "source_sha256": "dbc4476de42e7709c316164ecd2545ab062d43390d2df12204c526da4694053d",
+      "translation_sha256": "4b1b6918591e3a84131a41fa5fe9ce68a109fe40e95afcd58af71338fb501f7f",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    },
+    "user-stories.mdx": {
+      "source_sha256": "7fbebb89ef9a31b5b96914ec89ade5ded2a462beb618e9956027b14a67b5d7e8",
+      "translation_sha256": "137878a0403089504d830d9de0389ef430cadadf50a3c7a084c347e9d917b791",
+      "status": "needs_review",
+      "source_commit": "f8bf40b18b4c3e15b848a1fd3c4fbc5b67ae6ef4"
+    }
+  }
+}

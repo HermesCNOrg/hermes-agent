@@ -1,0 +1,66 @@
+name: Sync upstream for Chinese docs
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync-upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Merge complete Hermes upstream
+        env:
+          BRANCH: automation/sync-upstream-main
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git remote add upstream https://github.com/NousResearch/hermes-agent.git 2>/dev/null || true
+          git fetch upstream main
+          git checkout -B "$BRANCH" "${{ github.event.repository.default_branch }}"
+          git merge --no-edit upstream/main
+          python3 website/scripts/zh_docs.py refresh --commit "$(git rev-parse upstream/main)"
+          python3 website/scripts/zh_docs.py queue >/dev/null
+          git add website/translation
+          git diff --cached --quiet || git commit -m 'docs: refresh zh-Hans translation state'
+
+      - name: Verify translation state
+        run: |
+          python3 -m unittest website/scripts/tests/test_zh_docs.py -v
+          python3 website/scripts/zh_docs.py validate
+
+      - name: Build Chinese docs
+        working-directory: website
+        run: |
+          npm ci
+          npm run build -- --locale zh-Hans
+
+      - name: Push synchronization branch and open PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: automation/sync-upstream-main
+        run: |
+          git push --force-with-lease origin "$BRANCH"
+          if gh pr view "$BRANCH" >/dev/null 2>&1; then
+            gh pr edit "$BRANCH" --title 'docs: 同步 Hermes 上游并刷新中文翻译状态'
+          else
+            gh pr create \
+              --base "${{ github.event.repository.default_branch }}" \
+              --head "$BRANCH" \
+              --title 'docs: 同步 Hermes 上游并刷新中文翻译状态' \
+              --body '完整合并 NousResearch/hermes-agent 上游；中文维护层只刷新翻译状态和队列。needs_update/missing 文档需要后续翻译。'
+          fi
