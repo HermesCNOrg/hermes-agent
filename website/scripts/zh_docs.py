@@ -135,6 +135,19 @@ def build_queue(state: dict[str, Any], include_generated: bool = False) -> list[
     return sorted(queue, key=lambda item: (item["priority"], item["status"] != "needs_update", item["path"]))
 
 
+def filter_queue(queue: list[dict[str, str]], changed_paths: list[str]) -> list[dict[str, str]]:
+    """Keep only docs changed by the current upstream synchronization."""
+    prefix = "website/docs/"
+    normalized = {
+        path.strip().replace("\\", "/")[len(prefix):]
+        if path.strip().replace("\\", "/").startswith(prefix)
+        else path.strip().replace("\\", "/")
+        for path in changed_paths
+        if path.strip()
+    }
+    return [item for item in queue if item["path"] in normalized]
+
+
 def validate(repo_root: Path, strict: bool = False) -> int:
     state = read_json(repo_root / STATE_RELATIVE, {"documents": {}})
     source_root = repo_root / "website/docs"
@@ -191,8 +204,9 @@ def main() -> int:
     check = sub.add_parser("validate")
     check.add_argument("--strict", action="store_true")
     translate = sub.add_parser("translate")
-    translate.add_argument("--limit", type=int, default=5)
+    translate.add_argument("--limit", type=int, default=0, help="0 translates every selected document")
     translate.add_argument("--include-generated", action="store_true")
+    translate.add_argument("--paths-file", type=Path, help="Only translate docs listed in this newline-delimited file")
     translate.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
     root = args.repo.resolve()
@@ -227,7 +241,15 @@ def main() -> int:
     if args.command == "validate":
         return validate(root, args.strict)
     if args.command == "translate":
-        queue = build_queue(read_json(state_path, {"documents": {}}), args.include_generated)[: args.limit]
+        queue = build_queue(read_json(state_path, {"documents": {}}), args.include_generated)
+        if args.paths_file:
+            changed_paths = args.paths_file.read_text(encoding="utf-8").splitlines()
+            queue = filter_queue(queue, changed_paths)
+        if args.limit:
+            queue = queue[: args.limit]
+        if not queue:
+            print("No changed English documents require translation.")
+            return 0
         for index, item in enumerate(queue, 1):
             rel = item["path"]
             print(f"[{index}/{len(queue)}] {rel} ({item['status']})")

@@ -1,17 +1,24 @@
-name: Sync upstream for Chinese docs
+name: Daily upstream sync and zh-Hans translation
 
 on:
   schedule:
-    - cron: '17 */6 * * *'
+    # 02:17 UTC = 10:17 Beijing time (UTC+8)
+    - cron: '17 2 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
   pull-requests: write
 
+concurrency:
+  group: daily-upstream-zh-hans
+  cancel-in-progress: false
+
 jobs:
-  sync-upstream:
-    runs-on: ubuntu-latest
+  sync-translate-pr:
+    # Translation uses the authenticated Hermes CLI on a controlled runner.
+    # Keep repository Actions disabled until this runner has been provisioned.
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -23,44 +30,145 @@ jobs:
           cache: npm
           cache-dependency-path: website/package-lock.json
 
-      - name: Merge complete Hermes upstream
+      - name: Prepare persistent synchronization branch
         env:
-          BRANCH: automation/sync-upstream-main
+          BRANCH: automation/daily-upstream-zh-hans
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
+          set -euo pipefail
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git remote add upstream https://github.com/NousResearch/hermes-agent.git 2>/dev/null || true
           git fetch upstream main
-          git checkout -B "$BRANCH" "${{ github.event.repository.default_branch }}"
-          git merge --no-edit upstream/main
-          python3 website/scripts/zh_docs.py refresh --commit "$(git rev-parse upstream/main)"
-          python3 website/scripts/zh_docs.py queue >/dev/null
-          git add website/translation
-          git diff --cached --quiet || git commit -m 'docs: refresh zh-Hans translation state'
 
-      - name: Verify translation state
+          if git ls-remote --exit-code origin "refs/heads/$BRANCH" >/dev/null 2>&1; then
+            git fetch origin "$BRANCH"
+            git checkout -B "$BRANCH" "origin/$BRANCH"
+          else
+            git checkout -B "$BRANCH" "origin/$DEFAULT_BRANCH"
+          fi
+
+          OLD_UPSTREAM=$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('website/translation/zh-Hans-state.json')
+          print(json.loads(path.read_text())['upstream_commit'] if path.exists() else '')
+          PY
+          )
+          NEW_UPSTREAM=$(git rev-parse upstream/main)
+          if [ -z "$OLD_UPSTREAM" ] || ! git cat-file -e "$OLD_UPSTREAM^{commit}" 2>/dev/null; then
+            OLD_UPSTREAM=$(git merge-base HEAD upstream/main)
+          fi
+
+          echo "OLD_UPSTREAM=$OLD_UPSTREAM" >> "$GITHUB_ENV"
+          echo "NEW_UPSTREAM=$NEW_UPSTREAM" >> "$GITHUB_ENV"
+          if [ "$OLD_UPSTREAM" = "$NEW_UPSTREAM" ]; then
+            echo "HAS_UPSTREAM_CHANGES=false" >> "$GITHUB_ENV"
+            echo "No new upstream commit."
+            exit 0
+          fi
+          echo "HAS_UPSTREAM_CHANGES=true" >> "$GITHUB_ENV"
+
+          git diff --name-only --diff-filter=AMRT \
+            "$OLD_UPSTREAM" "$NEW_UPSTREAM" -- website/docs \
+            | grep -E '^website/docs/.*\.mdx?$' \
+            | sort -u > /tmp/changed-english-docs.txt || true
+
+          git merge --no-edit upstream/main
+          python3 website/scripts/zh_docs.py refresh --commit "$NEW_UPSTREAM"
+          python3 website/scripts/zh_docs.py queue >/dev/null
+
+          if [ -s /tmp/changed-english-docs.txt ]; then
+            echo "ENGLISH_DOCS_CHANGED=true" >> "$GITHUB_ENV"
+            echo "Changed English documents:"
+            cat /tmp/changed-english-docs.txt
+          else
+            echo "ENGLISH_DOCS_CHANGED=false" >> "$GITHUB_ENV"
+            echo "Upstream changed, but no added/modified English Markdown document requires translation."
+          fi
+
+      - name: Verify Hermes translation runner
+        if: env.HAS_UPSTREAM_CHANGES == 'true' && env.ENGLISH_DOCS_CHANGED == 'true'
+        run: |
+          command -v hermes
+          hermes --version
+
+      - name: Translate only changed English documents
+        if: env.HAS_UPSTREAM_CHANGES == 'true' && env.ENGLISH_DOCS_CHANGED == 'true'
+        run: |
+          python3 website/scripts/zh_docs.py translate \
+            --include-generated \
+            --paths-file /tmp/changed-english-docs.txt
+          python3 website/scripts/zh_docs.py refresh --commit "$NEW_UPSTREAM"
+          python3 website/scripts/zh_docs.py queue >/dev/null
+
+      - name: Validate translation state
+        if: env.HAS_UPSTREAM_CHANGES == 'true'
         run: |
           python3 -m unittest website/scripts/tests/test_zh_docs.py -v
           python3 website/scripts/zh_docs.py validate
 
-      - name: Build Chinese docs
+      - name: Build Chinese documentation
+        if: env.HAS_UPSTREAM_CHANGES == 'true'
         working-directory: website
         run: |
           npm ci
-          npm run build -- --locale zh-Hans
+          # Skip the data-refreshing npm prebuild hook in this validation job.
+          # A 1.5 GiB Node heap and no minification keep self-hosted runners stable.
+          NODE_OPTIONS='--max-old-space-size=1536' \
+            npx docusaurus build --locale zh-Hans --no-minify
 
-      - name: Push synchronization branch and open PR
+      - name: Commit generated Chinese documentation state
+        if: env.HAS_UPSTREAM_CHANGES == 'true'
+        run: |
+          git add website/i18n/zh-Hans website/translation
+          if ! git diff --cached --quiet; then
+            git commit -m 'docs: update zh-Hans translations for upstream changes'
+          fi
+
+      - name: Push branch and create or update Draft PR
+        if: env.HAS_UPSTREAM_CHANGES == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-          BRANCH: automation/sync-upstream-main
+          BRANCH: automation/daily-upstream-zh-hans
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
+          set -euo pipefail
           git push --force-with-lease origin "$BRANCH"
-          if gh pr view "$BRANCH" >/dev/null 2>&1; then
-            gh pr edit "$BRANCH" --title 'docs: 同步 Hermes 上游并刷新中文翻译状态'
+
+          DOC_COUNT=0
+          if [ -f /tmp/changed-english-docs.txt ]; then
+            DOC_COUNT=$(wc -l < /tmp/changed-english-docs.txt | tr -d ' ')
+          fi
+          {
+            echo '## 自动同步摘要'
+            echo
+            echo "- 上游范围：\`$OLD_UPSTREAM..$NEW_UPSTREAM\`"
+            echo "- 发生变化的英文文档：$DOC_COUNT 篇"
+            echo "- 中文翻译：$([ "$DOC_COUNT" -gt 0 ] && echo '已自动更新，状态为 draft' || echo '无英文文档变更，不触发翻译')"
+            echo '- 验证：翻译状态检查与中文 Docusaurus 构建已通过'
+            echo
+            echo '## 审核要求'
+            echo
+            echo '这是 Draft PR，不会自动合并。请 Ray 人工检查英文 diff、中文译文和构建结果；确认后再手动标记 Ready for review 并合并。'
+            if [ "$DOC_COUNT" -gt 0 ]; then
+              echo
+              echo '<details><summary>本次英文文档列表</summary>'
+              echo
+              sed 's#^website/docs/#- `#; s#$#`#' /tmp/changed-english-docs.txt
+              echo
+              echo '</details>'
+            fi
+          } > /tmp/zh-sync-pr-body.md
+
+          if gh pr view "$BRANCH" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh pr edit "$BRANCH" --repo "$GITHUB_REPOSITORY" \
+              --title 'docs: 每日同步上游并更新简体中文文档' \
+              --body-file /tmp/zh-sync-pr-body.md
           else
-            gh pr create \
-              --base "${{ github.event.repository.default_branch }}" \
+            gh pr create --draft --repo "$GITHUB_REPOSITORY" \
+              --base "$DEFAULT_BRANCH" \
               --head "$BRANCH" \
-              --title 'docs: 同步 Hermes 上游并刷新中文翻译状态' \
-              --body '完整合并 NousResearch/hermes-agent 上游；中文维护层只刷新翻译状态和队列。needs_update/missing 文档需要后续翻译。'
+              --title 'docs: 每日同步上游并更新简体中文文档' \
+              --body-file /tmp/zh-sync-pr-body.md
           fi

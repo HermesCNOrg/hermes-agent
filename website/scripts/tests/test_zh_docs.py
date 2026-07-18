@@ -83,6 +83,23 @@ class ZhDocsStateTests(unittest.TestCase):
 
         self.assertEqual([x["path"] for x in queue], ["getting-started/quickstart.md", "guides/x.md"])
 
+    def test_filter_queue_only_keeps_paths_changed_in_this_upstream_sync(self):
+        queue = [
+            {"path": "getting-started/quickstart.md", "status": "needs_update"},
+            {"path": "guides/new.md", "status": "missing"},
+            {"path": "reference/old.md", "status": "needs_review"},
+        ]
+
+        selected = zh_docs.filter_queue(
+            queue,
+            ["website/docs/guides/new.md", "getting-started/quickstart.md", "README.md"],
+        )
+
+        self.assertEqual(
+            [item["path"] for item in selected],
+            ["getting-started/quickstart.md", "guides/new.md"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
