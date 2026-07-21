@@ -100,6 +100,11 @@ class ZhDocsStateTests(unittest.TestCase):
             ["getting-started/quickstart.md", "guides/new.md"],
         )
 
+    def test_hermes_subprocess_env_pins_terminal_tools_to_repo_root(self):
+        env = zh_docs.hermes_subprocess_env(self.root)
+
+        self.assertEqual(env["TERMINAL_CWD"], str(self.root.resolve()))
+
 
 if __name__ == "__main__":
     unittest.main()

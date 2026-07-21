@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -188,6 +189,13 @@ def git_upstream_commit(repo_root: Path) -> str:
     raise RuntimeError("Cannot determine Git commit")
 
 
+def hermes_subprocess_env(repo_root: Path) -> dict[str, str]:
+    """Pin nested Hermes file and terminal tools to the requested repository."""
+    env = os.environ.copy()
+    env["TERMINAL_CWD"] = str(repo_root.resolve())
+    return env
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[2])
@@ -256,7 +264,12 @@ def main() -> int:
             if args.dry_run:
                 continue
             prompt = f"""Read website/TRANSLATING_ZH.md. Translate website/docs/{rel} into high-quality Simplified Chinese at website/i18n/zh-Hans/docusaurus-plugin-content-docs/current/{rel}. Preserve front matter keys, MDX/JSX, code, commands, URLs, anchors, admonitions, and structure. Compare the existing Chinese file when present. Edit the destination in place and verify Markdown fences before finishing."""
-            subprocess.run(["hermes", "--yolo", "chat", "--toolsets", "file", "--query", prompt], cwd=root, check=True)
+            subprocess.run(
+                ["hermes", "--yolo", "chat", "--toolsets", "file", "--query", prompt],
+                cwd=root,
+                env=hermes_subprocess_env(root),
+                check=True,
+            )
         return 0
     return 2
 
