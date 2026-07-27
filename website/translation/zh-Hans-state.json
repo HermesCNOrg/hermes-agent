@@ -1,7 +1,7 @@
 {
   "upstream": "NousResearch/hermes-agent",
   "upstream_commit": "f4df260f26c93f15694698869f3ea8e965eea301",
-  "refreshed_at": "2026-07-21T08:40:17.309454+00:00",
+  "refreshed_at": "2026-07-27T10:55:42.534950+00:00",
   "documents": {
     "developer-guide/acp-internals.md": {
       "source_sha256": "38bf07f5a0b0ad62b553cb953c9bfbacfbb85531024ca54b60fb8b3c47427973",
@@ -81,6 +81,12 @@
       "status": "needs_review",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
+    "developer-guide/desktop-plugin-sdk.md": {
+      "source_sha256": "273df233de75331611f1b87c390b59007fff82cce9191049dcae3e3df56305ce",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
+    },
     "developer-guide/extending-the-cli.md": {
       "source_sha256": "081b9570364ef53b70eb5f3748fd5566817efcfbe79abc3006191aef039ef8e9",
       "translation_sha256": "e0b9e2092430678a7faf5a15e7b9851bc008b5a78767c5608f8009db91914b58",
@@ -118,15 +124,15 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "developer-guide/plugins/index.md": {
-      "source_sha256": "91c6a12c965d3724191047dc64d8c73eaf017583697bd618e780daae76cd75f8",
+      "source_sha256": "bc22cd21859dead72454b9be3b2f1def897952d3cecf5f832e851ec2036dbfb9",
       "translation_sha256": "96a23a1696f626eb156f3d699df4e4a566adb43992b56c14705c02fe09c5b2f3",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "developer-guide/programmatic-integration.md": {
-      "source_sha256": "d4954eb29c11938bcb32a007ae5d256ee41d78df9e80632c78ce2835e2aa99cb",
+      "source_sha256": "d7f878175e0cbb82b47528e75ec8caf6651b9fd460fa5dc8557fdf488e5fc786",
       "translation_sha256": "54cd138dd7cb99a22aa0dbf7f2a597fb8e87b5c515734b8a371ded47c75dfb2c",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "developer-guide/prompt-assembly.md": {
@@ -148,9 +154,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "developer-guide/session-storage.md": {
-      "source_sha256": "bb2f944d4c2839af94f26d2176ecdac241a6bac269ca836bd440177b649f7114",
+      "source_sha256": "9aa5e53873b7bd4513515cc0cd097c20b9ec0d7118636fd4521ef891583c0320",
       "translation_sha256": "199d64a979e0ac8d49d8f6078193e6429a82b9de259ad9b7a068e9c6611648e5",
-      "status": "needs_review",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "developer-guide/tools-runtime.md": {
@@ -177,10 +183,16 @@
       "status": "needs_review",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
+    "developer-guide/worktree-ui-dev.md": {
+      "source_sha256": "cc5213efcc8bcf191b09765c5fb15e16b3ec7bb8abb253d9d861ff409bd8a33e",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
+    },
     "getting-started/installation.md": {
-      "source_sha256": "a27bccd0bcf4eaa84c57a1e45653cdd73ed42f4ef497ce1ec76e5bfb9859a12a",
-      "translation_sha256": "9389992e85ee976762f23cc37217309deb407630aeb4ffa55bae646bf3045d13",
-      "status": "draft",
+      "source_sha256": "3784560ba165be0ea37c3d5962894519b1e9dfbfca7f8750e49de0e3559bda4d",
+      "translation_sha256": "14e04233d042375798a5b0a828fcefd8dd67b2c38d9a2589dcf2960c73df1585",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "getting-started/learning-path.md": {
@@ -214,9 +226,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "getting-started/updating.md": {
-      "source_sha256": "802ad3d638582a7602dbbae63da4555c990cca089e8f6f728913c0d6c5126fd8",
-      "translation_sha256": "38b2a158a98c78b9d78596bc95a734e92ba914d0e7275e2e2e5adc2bd139b2c5",
-      "status": "draft",
+      "source_sha256": "988616de7cff9e505f4447e2f6206354ef999357e2b7f999e3e648a37686845b",
+      "translation_sha256": "e5e4b1fb0cd8bb7b6a715aa512134d786c7790599d64f117183f720873533c1f",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "guides/automate-with-cron.md": {
@@ -250,9 +262,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "guides/cron-troubleshooting.md": {
-      "source_sha256": "810e7c7cad10fc46700726c0a413eff6b78da8530ef1b6a6f877f21de98f3ce1",
+      "source_sha256": "887baad72c28ef951e6399a6ea2b6acf241792e8d3e0fc40155f9c658fda1e92",
       "translation_sha256": "d9cac3b486f5358f72ab311daabfb5faad7004c7f9767d1bd195a3f673497fa8",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "guides/daily-briefing-bot.md": {
@@ -262,9 +274,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "guides/delegation-patterns.md": {
-      "source_sha256": "bb37ba65b4f22eef425bdcdd85064d884b328ad7a0b27daedee821a6b94f53b9",
-      "translation_sha256": "ccc05d06879c74386182799e6d7d2e9a975496a944370eca2974d0b024b50a2f",
-      "status": "draft",
+      "source_sha256": "e394353b1672bd3d1733596c022a9ec0c1807e788ab157a6fb878f7d9764d7a1",
+      "translation_sha256": "9c5fccf11dd5606beeff7274f39470c06654044304de8b611a26df87a8319514",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "guides/github-pr-review-agent.md": {
@@ -340,9 +352,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "guides/run-hermes-with-nous-portal.md": {
-      "source_sha256": "0f6a8ae46ae45e289f851d72b12d6020fd4f82677bf0a8d91d963975d7e2d593",
-      "translation_sha256": "bbd42b9b86a05b290f9cf5602993d24386a077be4d1d99c1898168711459ed8e",
-      "status": "draft",
+      "source_sha256": "6eba21b70aff58e7ea0ddbf05f040dc0f19b5ba2b6c3026054746b862e24cf8f",
+      "translation_sha256": "d0bcdde0183fa6c5455646845a6d66d1ebdc3793af2dbaad6da0b7df43d1d060",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "guides/run-nemotron-3-ultra-free.md": {
@@ -352,15 +364,15 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "guides/team-telegram-assistant.md": {
-      "source_sha256": "451fbf51a910c1045ddbbfb33cd5c1f9139fef9dda2a1768f1adb8de66867dfc",
+      "source_sha256": "6cb51548ffe34c9fac9eb3121733f2b54f715a95ae09fc7365a62a2067c0eb1a",
       "translation_sha256": "9258010ab45f9092df904ff804f9780e134316b0d57ed8d2c22d98d2fb8e310b",
-      "status": "needs_review",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "guides/tips.md": {
-      "source_sha256": "4487ccc4f5ddc1a191382f4f0896a89447af04fdab6127415afd85fe682eaebc",
+      "source_sha256": "6489646b60cf441ebae205526e5cecd60b92108dbb5758d1bff5cf2ccadafa5b",
       "translation_sha256": "d1c7e0cbcb432d0f5a44bd5c2fe62916999e4bd8efd3bbfc18082f2284980ec5",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "guides/use-mcp-with-hermes.md": {
@@ -388,9 +400,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "guides/work-with-skills.md": {
-      "source_sha256": "c98b5b692fce655fd60d682a33236cc7d14a438fa39a35e93c1b9308201a61cd",
+      "source_sha256": "e5a7933490e8820d83eb66207bc77d1c346fb9fb7d7362e0dee7755620951803",
       "translation_sha256": "e877b6f0dc3e66661ee6b70b5c60bd1195879c1806a50e03c437adb31bc8c45b",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "guides/xai-grok-oauth.md": {
@@ -406,21 +418,21 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "integrations/index.md": {
-      "source_sha256": "30b409d737a94d8f48f208007073c5486a5f4df32655b3e8d0e117641c7081f5",
+      "source_sha256": "c8d828c07aef389bc29c1e86398845657b2476cef2b05ae9dfb78526302c8c2d",
       "translation_sha256": "07d48250464d82fad409a635eec8204158f445f1101417f700c06d5358e23665",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "integrations/nous-portal.md": {
-      "source_sha256": "486ad2baca703b7b228d60e87974aeec7283806dc0d8115820b7b060c47061a4",
-      "translation_sha256": "1e89fc50b903f21d897798c314923379f1901300e24052f1a35261ed0eb5f820",
-      "status": "draft",
+      "source_sha256": "ca95d776cbd8ac93ef51fcdfbf2859a008245824e8843abfce96a20d4d2b01ef",
+      "translation_sha256": "d21a1eeca1503fe577150dc05245de18e370c5158b0402fe7675a710ae668758",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "integrations/providers.md": {
-      "source_sha256": "8ac459586423b46f6a524153f1c5b186252d1fa8c949e3cdccb203b89ff09c5e",
-      "translation_sha256": "c8d3e98a188528a9770aee056414da5d82cb2fc8817f32fd808073fae64a4cc9",
-      "status": "draft",
+      "source_sha256": "b95e9d71d9af9e4dfe95b9331f5175eb2208df5e1b4c9bf8dc40f6b12aa29d6d",
+      "translation_sha256": "a9543b083e769327d38d2ab763ba869567d6af9ccff21c58a8d3075bc0c0eb1b",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "reference/automation-blueprints-catalog.mdx": {
@@ -430,15 +442,15 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "reference/cli-commands.md": {
-      "source_sha256": "885b4fc278f9d98236171a03e65035b1fa2d6632544f3e3609b88cecbd79cea0",
+      "source_sha256": "b4722c8552e147a57b772d1d6dff655a1719ab3695593fecb8a97d423f95a6c4",
       "translation_sha256": "e07d308618c23968e890fa191ff2616c956a893162b2d20aeeaca056641cfa1f",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "reference/environment-variables.md": {
-      "source_sha256": "f3c32a063679facea3c97c2c31eea168c7029677f9194009018fd98ddef671ce",
+      "source_sha256": "5a0ce708ad02ae20ec476675c628af50fbabae725be6020b69a52576695ff238",
       "translation_sha256": "37e29247a5183b2fec3f6f0b2c3a2da3ec08e5257f6153b5de5c5a1f37cdff0e",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "reference/faq.md": {
@@ -454,15 +466,15 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "reference/model-catalog.md": {
-      "source_sha256": "c25003025326c91926718681f219b6371b1e1d2feb8d0f636fa94476bbc341e2",
-      "translation_sha256": "4cfdfcd9cdcde018e69df5adf821015fe977b90b691a4dd97f90789e4796ead3",
-      "status": "draft",
+      "source_sha256": "c57808a243c523c6973603685cc6a350348f0d1d0c75e31e2c2b9145608e2c84",
+      "translation_sha256": "e4d7bb91c28b43dd2b895b1d888116afbf1355705cd5cbbaad9eb4963f3dfb68",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "reference/optional-skills-catalog.md": {
-      "source_sha256": "9db28a7167ed2346cb431f768c71526c0edaea7d0a9bd46b62ad93930e3ece49",
+      "source_sha256": "3244711f63ea4480e6c03395481336809ad089a3410a9d15df9dc9b8a91a54e7",
       "translation_sha256": "d572c1089432eed234f4ab5a7b9f73a29e2997103d5113082a6d86288fae4f2f",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "reference/profile-commands.md": {
@@ -478,15 +490,15 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "reference/slash-commands.md": {
-      "source_sha256": "10483d30e6d09dae1675f0c23749fad4d6ca871450f6a6934115b52adb8d4349",
+      "source_sha256": "1a6f247444e23afccc3f8d52121955c29704790885da7ba0057652d00335ef46",
       "translation_sha256": "6babfd5512b90555f86dfa608135f56655d8680e5c4578f8629482a1ca595379",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "reference/tools-reference.md": {
-      "source_sha256": "8e58898ea682b1c0cebe75d31ff85a037b4739fc709fae351b97d4c4e6aadd23",
+      "source_sha256": "333918781685d2dcadea01897b3700723543a58589d28f6549f83db7cee64a80",
       "translation_sha256": "a4b2d64c544e0bbf4d1fc6c719fe2f23b16beed5e7264578e394948d05c509db",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "reference/toolsets-reference.md": {
@@ -508,21 +520,21 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/configuration.md": {
-      "source_sha256": "1bc90b394e8c2aafa31a912fd66033c7c3375f90fd8a0302dac68ae414e43aca",
+      "source_sha256": "ff6bbed3abcba35edd2d8026bd2e081185a70b557df0373a8fc9a5ffb4bddad5",
       "translation_sha256": "81e47e6481797ae28a7a2e4c476f97f1cf33491b4f2af343e05e7d93c80ca79f",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/configuring-models.md": {
-      "source_sha256": "4960590af4e01b6c32f53276802df6fb37d226cdbc132da6abeb410743f005d8",
+      "source_sha256": "0e7ec8b52726e2d9d3642238aa9042331f7d7156861b6e42b8075fcbc5560394",
       "translation_sha256": "2f30af9af349408812329f1cdbdd4d66dd215306aa7f36821a7012e1c3fea452",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/desktop.md": {
-      "source_sha256": "060831db79302b377f7344e9966a600b5754d2e02a9be9522ea1775d6548768f",
+      "source_sha256": "7402659381fcbc2c3f50f4a14906006603983dc789a124fc245ca0cab625d4ee",
       "translation_sha256": "fc07f2c2cd17432825da3f8c56516e9c4f9afc2e66339d52f7f7bad9c815c0bf",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/docker.md": {
@@ -550,9 +562,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/browser.md": {
-      "source_sha256": "457df6df5eccc6121896fb7a082111b3296bf1dd5ae199173b7fce193f2986f2",
-      "translation_sha256": "555ef0e625850ff39457d87972851cb6e4c6b89e289692267f410c033a58b45d",
-      "status": "draft",
+      "source_sha256": "0cf4537abbae1c296fbe04d3aa135423d782b6d94050f50c9efb0a919345ba15",
+      "translation_sha256": "208543263177e8ef35fdeed660ab6fd92aa060d32509f5407883e418fd8fb102",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/built-in-plugins.md": {
@@ -568,9 +580,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/codex-app-server-runtime.md": {
-      "source_sha256": "a2aad0ef1ac48ea2ee33f23c0d488291ac2a8af9c20bdb225cae4d2fe377d541",
+      "source_sha256": "385808a6caabc31fff9cb05f879aecbd2b03f3c25411505f29d7c13af15a25ac",
       "translation_sha256": "aa19d5663b82cdb4fa51cb8363efeaddde0f7ee097a1e9a84e9f0da9e603ef04",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/computer-use.md": {
@@ -598,9 +610,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/cron.md": {
-      "source_sha256": "e0fb87791803e6b42c2da74b76a9f83f316780ebd8714668f5990e10492d4969",
-      "translation_sha256": "0e88cf25f5210c5880211cd587a651cb4a3c38db57b17b4cc43764a60d72af8d",
-      "status": "draft",
+      "source_sha256": "f9daaa2468d3d30a7ef5aa705bbd27f9d6b9b1926c08ab2647a93b3b6ec42ee3",
+      "translation_sha256": "8fde03c12a3410eb462fdcf00c9e7ca0e515b2ab93a9a4acc0d0c7eb51d10053",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/curator.md": {
@@ -610,9 +622,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/delegation.md": {
-      "source_sha256": "b6fa9a084d337df1f85dce091382d5c594204da0c46a19390e78285d01a9230f",
-      "translation_sha256": "cd1e57f1e849bf94e48421003698cbb238a39f03e608d78f6dfdac2d47dbc7f5",
-      "status": "draft",
+      "source_sha256": "27679dceca9821c7dfbe69048bb52fb4b6336175c9f697ec0be13ec359c7c7af",
+      "translation_sha256": "51fb874fb16b39d7f6aedca5585ea6214e6515669f590ce9f16756018a3dff56",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/deliverable-mode.md": {
@@ -622,9 +634,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/extending-the-dashboard.md": {
-      "source_sha256": "4870392bcba37bad51129f2ab7d26f5d635382312556e61af4ef4474507a0e05",
+      "source_sha256": "cf6281cc0931e3d4079d9c76418ba3765828ec6bf0f87d3de6a79f84cdf4b17f",
       "translation_sha256": "df6515c4621308d59327376971ba4301fc338c609abb0fa34cd03d4ae452a6c0",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/fallback-providers.md": {
@@ -670,27 +682,27 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/kanban.md": {
-      "source_sha256": "2c25a6ad72550b32496e72095440aa6c8b241907ca5da6ebbdb4f56f47cfd888",
+      "source_sha256": "40ee030e8011a664d4b729c9c71d24919bddc22b96824682914b022d7154fbc8",
       "translation_sha256": "0fb33f07bfc9588eb34351fe738eba4320f439cc0e26fb79aa677f7b05f323a5",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/lsp.md": {
-      "source_sha256": "3e67b23e7fb5821e43a739416dea291cad45c6366bc084c0c326248dfaffede0",
+      "source_sha256": "058617bbe4baf34024b359d857bee0b5b8c705d35cce62867e56c525f4c5c58f",
       "translation_sha256": "6f6441f30d74ff6a8be000eb574f7b0fb52488f4659991ba708ba8ff18b3db4f",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/mcp.md": {
-      "source_sha256": "68d48597eb956270420e9c9808109a450dd17084ca2262851cdda83d74d25e8c",
+      "source_sha256": "edbb4fb2571f24b76eb5047be9d8590f0eb2818bd85fea35824bda89b202eb47",
       "translation_sha256": "7b3ab14d0825260ec32875e0856d076de502febd9101753848cbe57b51b650e2",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/memory-providers.md": {
-      "source_sha256": "ed8ee82ca723a0a1007db9c2a847abf315c652ce7c77048c3e2cfd607bda3c27",
-      "translation_sha256": "34b46db20256e630fda87f5c34e475bcad3c9e41a50c8125ab33ba55bc101174",
-      "status": "draft",
+      "source_sha256": "952a99ee3c230df82158c969980ed45c100cc9b484d9d0e3ecd7e3f6c606a73d",
+      "translation_sha256": "6db0d12f5178a0fe82c4c52d1e1eb118b34569bb0459ec084d9c083a9283e028",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/memory.md": {
@@ -700,15 +712,15 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/mixture-of-agents.md": {
-      "source_sha256": "aa573ed50db7f0b4b4fb2fc6f41b0334852aeaf03222a62b45d43cb637fc51ae",
+      "source_sha256": "07552a7003887fae618ea3aaf7df03471bf21dcefdbcc05a2a8e1820a1528d08",
       "translation_sha256": "f993b806c50bf6beb16b812f5da0f91463cf36e3c729c92d821d632c36634f15",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/overview.md": {
-      "source_sha256": "7de014bdccd444a11ec5d35a0179cc6eae914092c30f66463bb1c25d1bbdd1bd",
+      "source_sha256": "7c0c000fcc80b5bebffa373457696b15aaf77b5e4a64e6db1a7c070c4bf437b4",
       "translation_sha256": "264e38c5bb314a9883f2e2f0a1c048fc0ae728c6d5b664e246e704c5a818e9b7",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/personality.md": {
@@ -778,9 +790,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/tts.md": {
-      "source_sha256": "a3398b49255b353ba0a7a4c66b1db69ca730d21d2e838021a734d900cb8f84c4",
+      "source_sha256": "aa36bc07cb6626fd3cdac72dddc5499a266dd0838692a4d1b5c8decde7dd89e4",
       "translation_sha256": "81c6bbb715993b29d99c48dc48bb02229d9e3fb436d2872960a56da8e683c4c7",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/vision.md": {
@@ -796,27 +808,27 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/web-dashboard.md": {
-      "source_sha256": "3788935910db0353dbf4fa1abe052e04910550799ef3105c95b471d37812af44",
+      "source_sha256": "fa46c0e94059d34358c78b2181ae68c90960b878bc2741729dae3f659c3960d5",
       "translation_sha256": "27ad80a2d61264f4128800a16072c93d70b5944e6b57566f2631f0875bbe7fdd",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/web-search.md": {
-      "source_sha256": "6bbc2fc6cf260048761dc9366306069be2e78cbe6e03ff2628d37458f6596301",
+      "source_sha256": "cf3769dab66b3eb23907f863b8aa3807e35135f325cd8de2dfee24a7d0c0b478",
       "translation_sha256": "a9195fdf73491758d408b014275f5932bab749fababa02a031dbf6b065f73281",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/features/x-search.md": {
-      "source_sha256": "4d8ad06d00e04156bf0ddb0f5086f14d6ba5a62ab5e1676503e46b38d9fbade2",
-      "translation_sha256": "78418e2d78e4df33e6a162155dd766b4d129503e402dc097fa2a68e6c0e7c82a",
-      "status": "draft",
+      "source_sha256": "e69cc907ce3a077f412334c581a242164f890cc88ba1c4195e51c39d10c76fcf",
+      "translation_sha256": "bbb5badf9974946eb67dddcd155d2df41d4ff8130dfd60a8e806c7fb338c98e4",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/git-worktrees.md": {
-      "source_sha256": "de7da2166060425b229ee0bae4be13e40531f08f78057c5ad65dc71172ea1a52",
+      "source_sha256": "1c65fd519b8c80932f09e190e0f45d72c503c27e7df8c29d161e9a898be562d6",
       "translation_sha256": "5a0399924f0cc6397a6eb2bc868e72f0b3335e861e034e82c83083a69ddd0643",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/managed-scope.md": {
@@ -832,15 +844,15 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/messaging/dingtalk.md": {
-      "source_sha256": "da5c7ea873d9335063e36eac25ef6ca84343cdc13ffcc316433c6d86b4c58bea",
-      "translation_sha256": "0ddfb42cef1e13c6cc347c1680faad26d1997de76c508bbc7e5141404b64c010",
-      "status": "needs_review",
+      "source_sha256": "b3d7210649861228387ff6bf9ee8ead65687a32284ac33b4315a07f34cfb3fba",
+      "translation_sha256": "fc53e593deb475d9fcd0776473ccf43bda9938c6b97a751d80fdf395726e112b",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/messaging/discord.md": {
-      "source_sha256": "6e43349bfb5069eb6bdce6fcc82f8cf4f6666408736952f241a356ab5356c292",
-      "translation_sha256": "8fa4d432ffb368090a9b866518678ebe13fd8fc3837147b2f0d4e7f76bbb89d5",
-      "status": "draft",
+      "source_sha256": "255e8a74fc8e2877e3032b7032fc409c271d0608896ce3c555207923c7fd9402",
+      "translation_sha256": "cc610ca850ab52445c3aa271be8e9410925e96e6a14f8086a7256146be47563d",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/messaging/email.md": {
@@ -856,9 +868,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/messaging/google_chat.md": {
-      "source_sha256": "47d551c23ce7c1120261e4762c71657827a9b766fe50d51b93a1a121537c7d52",
+      "source_sha256": "5ece68f30c4ae888a81cb944562b2b4a318ac1a239c0d88c0619ab791a712873",
       "translation_sha256": "d084677a975bb3a502772f7a757d89786d56bf5317de59558ab785c740ca49b7",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/messaging/homeassistant.md": {
@@ -868,9 +880,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/messaging/index.md": {
-      "source_sha256": "4a8ad8c8084d462ca47459eea29340a0b1bf57c0addf3c129a5dc60d62ef8b02",
+      "source_sha256": "5db83705d5e69146a934399a0dfdf77a0d66c33530efdd2aabe4b35a4a780f6e",
       "translation_sha256": "7de8532936a6d808f00128ae02b354a71d1938f3ab952f8071367233199587b9",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/messaging/irc.md": {
@@ -886,9 +898,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/messaging/matrix.md": {
-      "source_sha256": "76ae60d5c8822efbb4dc1d27cfd50cdc2305132d599dec054d9b04bace2857ba",
+      "source_sha256": "bebac08f4aa1c95a8b4aac06de7ccca330e39efedcd488e42c078bbc49739c88",
       "translation_sha256": "c7612be15369e567f9062320fb316c44c453a50739e9407d6ee7ce1151f5696c",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/messaging/mattermost.md": {
@@ -946,9 +958,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/messaging/slack.md": {
-      "source_sha256": "463d43d826b2598d4ab3d8742eeb03e033ae7e3cc9c175623bcc2b1f214b2573",
+      "source_sha256": "fe7567f4948b6f7a141de1b43ca749c3d53c270a2238f7cad2f32d7cd26dda1a",
       "translation_sha256": "39cdcbf76faf1e4fb963a1885acca2538c65095d241b37a611d426c53c34b15f",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/messaging/sms.md": {
@@ -970,9 +982,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/messaging/telegram.md": {
-      "source_sha256": "38ac8b8919a73b18cc5f240e582eb5faa2ee84bc369a4e2a2294f3e6c15c56be",
+      "source_sha256": "1091cad6edf4c23efe0125d6c63739fa84683f1620d0f7d6680d65713b605768",
       "translation_sha256": "6da00173b61764f65ae67e16d52550bb1eb845e94721ce951e3d5ed0ebf618ae",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/messaging/webhooks.md": {
@@ -1000,9 +1012,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/messaging/whatsapp-cloud.md": {
-      "source_sha256": "6d39c7f5c9f5040137eeff19d4d5fbed9b223fa3d761d22463340a66d65bed37",
+      "source_sha256": "570651a2fefc061a15500d8a303fd4600371af8b177d5c9e773c85f9912f5a47",
       "translation_sha256": "83968839cdebff61f6d894a5b385dc6dd6fb5bf39f573b69537e5f60be26e66c",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/messaging/whatsapp.md": {
@@ -1018,9 +1030,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/multi-profile-gateways.md": {
-      "source_sha256": "1bb1e80be244eb1ca6b55fd602042863409588f6cf303d95fb0243203e1f0d08",
+      "source_sha256": "b8ec106da9e1f088632fb15bffb3c5694b44afdd83650e6f5fb2f9d233927f4c",
       "translation_sha256": "ca1a24cbf652bdc9672ab7ead3abef2224bd87dc4b97f4922790a4755b644522",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/profile-distributions.md": {
@@ -1737,6 +1749,12 @@
       "status": "needs_review",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
+    "user-guide/skills/optional/mcp/mcp-mcp-oauth-remote-gateway.md": {
+      "source_sha256": "54a14ee619386623011a8c2bcbf67b32fb76b9192557476bb062a0d730401633",
+      "translation_sha256": null,
+      "status": "missing",
+      "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
+    },
     "user-guide/skills/optional/mcp/mcp-mcporter.md": {
       "source_sha256": "9d418c222482fbda8373f6f278be0bbf94d9716b3a177493920f2d3445719a08",
       "translation_sha256": "d484bd811cdbfe2ca19d89c68f3ae25dfe9288d6010627250e81f2106ae8c3c4",
@@ -2110,9 +2128,9 @@
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/tui.md": {
-      "source_sha256": "3fe7784bb6a193b7a10b7c200f343573afaa70980e29f80182dd1198791decfa",
+      "source_sha256": "3caa92d826d3099b1783c3a812ca3a3b2f42717558f1a1febc8a9ec6ab5da462",
       "translation_sha256": "fd48d03f1b73862018dce3b6cdf0422ddf0f6ab2edad9f415cdb0be10bf99829",
-      "status": "draft",
+      "status": "needs_update",
       "source_commit": "f4df260f26c93f15694698869f3ea8e965eea301"
     },
     "user-guide/windows-native.md": {

@@ -1,7 +1,25 @@
 [
   {
     "path": "getting-started/installation.md",
-    "status": "draft",
+    "status": "needs_update",
+    "priority": "P0",
+    "tier": "getting-started"
+  },
+  {
+    "path": "getting-started/updating.md",
+    "status": "needs_update",
+    "priority": "P0",
+    "tier": "getting-started"
+  },
+  {
+    "path": "user-guide/configuration.md",
+    "status": "needs_update",
+    "priority": "P0",
+    "tier": "getting-started"
+  },
+  {
+    "path": "user-guide/tui.md",
+    "status": "needs_update",
     "priority": "P0",
     "tier": "getting-started"
   },
@@ -36,44 +54,206 @@
     "tier": "getting-started"
   },
   {
-    "path": "getting-started/updating.md",
-    "status": "draft",
-    "priority": "P0",
-    "tier": "getting-started"
-  },
-  {
     "path": "user-guide/cli.md",
     "status": "needs_review",
     "priority": "P0",
     "tier": "getting-started"
   },
   {
-    "path": "user-guide/configuration.md",
-    "status": "draft",
-    "priority": "P0",
-    "tier": "getting-started"
-  },
-  {
-    "path": "user-guide/tui.md",
-    "status": "draft",
-    "priority": "P0",
-    "tier": "getting-started"
-  },
-  {
-    "path": "reference/automation-blueprints-catalog.mdx",
-    "status": "missing",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
     "path": "reference/cli-commands.md",
-    "status": "draft",
+    "status": "needs_update",
     "priority": "P1",
     "tier": "user-guide"
   },
   {
     "path": "reference/environment-variables.md",
-    "status": "draft",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "reference/model-catalog.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "reference/slash-commands.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "reference/tools-reference.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/configuring-models.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/desktop.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/browser.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/codex-app-server-runtime.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/cron.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/delegation.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/extending-the-dashboard.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/kanban.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/lsp.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/mcp.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/memory-providers.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/mixture-of-agents.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/overview.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/tts.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/web-dashboard.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/web-search.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/features/x-search.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/git-worktrees.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/dingtalk.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/discord.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/google_chat.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/index.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/matrix.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/slack.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/telegram.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/messaging/whatsapp-cloud.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "user-guide/multi-profile-gateways.md",
+    "status": "needs_update",
+    "priority": "P1",
+    "tier": "user-guide"
+  },
+  {
+    "path": "reference/automation-blueprints-catalog.mdx",
+    "status": "missing",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -90,26 +270,8 @@
     "tier": "user-guide"
   },
   {
-    "path": "reference/model-catalog.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
     "path": "reference/profile-commands.md",
     "status": "needs_review",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "reference/slash-commands.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "reference/tools-reference.md",
-    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -122,18 +284,6 @@
   {
     "path": "user-guide/checkpoints-and-rollback.md",
     "status": "needs_review",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/configuring-models.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/desktop.md",
-    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -162,12 +312,6 @@
     "tier": "user-guide"
   },
   {
-    "path": "user-guide/features/browser.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
     "path": "user-guide/features/built-in-plugins.md",
     "status": "needs_review",
     "priority": "P1",
@@ -176,12 +320,6 @@
   {
     "path": "user-guide/features/code-execution.md",
     "status": "needs_review",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/features/codex-app-server-runtime.md",
-    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -210,32 +348,14 @@
     "tier": "user-guide"
   },
   {
-    "path": "user-guide/features/cron.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
     "path": "user-guide/features/curator.md",
     "status": "needs_review",
     "priority": "P1",
     "tier": "user-guide"
   },
   {
-    "path": "user-guide/features/delegation.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
     "path": "user-guide/features/deliverable-mode.md",
     "status": "needs_review",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/features/extending-the-dashboard.md",
-    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -282,44 +402,8 @@
     "tier": "user-guide"
   },
   {
-    "path": "user-guide/features/kanban.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/features/lsp.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/features/mcp.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/features/memory-providers.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
     "path": "user-guide/features/memory.md",
     "status": "needs_review",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/features/mixture-of-agents.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/features/overview.md",
-    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -390,12 +474,6 @@
     "tier": "user-guide"
   },
   {
-    "path": "user-guide/features/tts.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
     "path": "user-guide/features/vision.md",
     "status": "needs_review",
     "priority": "P1",
@@ -404,30 +482,6 @@
   {
     "path": "user-guide/features/voice-mode.md",
     "status": "needs_review",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/features/web-dashboard.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/features/web-search.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/features/x-search.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/git-worktrees.md",
-    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -444,18 +498,6 @@
     "tier": "user-guide"
   },
   {
-    "path": "user-guide/messaging/dingtalk.md",
-    "status": "needs_review",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/messaging/discord.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
     "path": "user-guide/messaging/email.md",
     "status": "needs_review",
     "priority": "P1",
@@ -468,20 +510,8 @@
     "tier": "user-guide"
   },
   {
-    "path": "user-guide/messaging/google_chat.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
     "path": "user-guide/messaging/homeassistant.md",
     "status": "needs_review",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/messaging/index.md",
-    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -494,12 +524,6 @@
   {
     "path": "user-guide/messaging/line.md",
     "status": "needs_review",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/messaging/matrix.md",
-    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -558,12 +582,6 @@
     "tier": "user-guide"
   },
   {
-    "path": "user-guide/messaging/slack.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
     "path": "user-guide/messaging/sms.md",
     "status": "needs_review",
     "priority": "P1",
@@ -578,12 +596,6 @@
   {
     "path": "user-guide/messaging/teams.md",
     "status": "needs_review",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/messaging/telegram.md",
-    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -612,12 +624,6 @@
     "tier": "user-guide"
   },
   {
-    "path": "user-guide/messaging/whatsapp-cloud.md",
-    "status": "draft",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
     "path": "user-guide/messaging/whatsapp.md",
     "status": "needs_review",
     "priority": "P1",
@@ -626,12 +632,6 @@
   {
     "path": "user-guide/messaging/yuanbao.md",
     "status": "needs_review",
-    "priority": "P1",
-    "tier": "user-guide"
-  },
-  {
-    "path": "user-guide/multi-profile-gateways.md",
-    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -688,6 +688,78 @@
     "status": "needs_review",
     "priority": "P1",
     "tier": "user-guide"
+  },
+  {
+    "path": "developer-guide/plugins/index.md",
+    "status": "needs_update",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/programmatic-integration.md",
+    "status": "needs_update",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/session-storage.md",
+    "status": "needs_update",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/cron-troubleshooting.md",
+    "status": "needs_update",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/delegation-patterns.md",
+    "status": "needs_update",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/run-hermes-with-nous-portal.md",
+    "status": "needs_update",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/team-telegram-assistant.md",
+    "status": "needs_update",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/tips.md",
+    "status": "needs_update",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "guides/work-with-skills.md",
+    "status": "needs_update",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "integrations/index.md",
+    "status": "needs_update",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "integrations/nous-portal.md",
+    "status": "needs_update",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "integrations/providers.md",
+    "status": "needs_update",
+    "priority": "P2",
+    "tier": "developer-and-guides"
   },
   {
     "path": "developer-guide/acp-internals.md",
@@ -768,6 +840,12 @@
     "tier": "developer-and-guides"
   },
   {
+    "path": "developer-guide/desktop-plugin-sdk.md",
+    "status": "missing",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
     "path": "developer-guide/extending-the-cli.md",
     "status": "needs_review",
     "priority": "P2",
@@ -804,18 +882,6 @@
     "tier": "developer-and-guides"
   },
   {
-    "path": "developer-guide/plugins/index.md",
-    "status": "draft",
-    "priority": "P2",
-    "tier": "developer-and-guides"
-  },
-  {
-    "path": "developer-guide/programmatic-integration.md",
-    "status": "draft",
-    "priority": "P2",
-    "tier": "developer-and-guides"
-  },
-  {
     "path": "developer-guide/prompt-assembly.md",
     "status": "needs_review",
     "priority": "P2",
@@ -830,12 +896,6 @@
   {
     "path": "developer-guide/secret-source-plugin.md",
     "status": "missing",
-    "priority": "P2",
-    "tier": "developer-and-guides"
-  },
-  {
-    "path": "developer-guide/session-storage.md",
-    "status": "needs_review",
     "priority": "P2",
     "tier": "developer-and-guides"
   },
@@ -860,6 +920,12 @@
   {
     "path": "developer-guide/web-search-provider-plugin.md",
     "status": "needs_review",
+    "priority": "P2",
+    "tier": "developer-and-guides"
+  },
+  {
+    "path": "developer-guide/worktree-ui-dev.md",
+    "status": "missing",
     "priority": "P2",
     "tier": "developer-and-guides"
   },
@@ -894,20 +960,8 @@
     "tier": "developer-and-guides"
   },
   {
-    "path": "guides/cron-troubleshooting.md",
-    "status": "draft",
-    "priority": "P2",
-    "tier": "developer-and-guides"
-  },
-  {
     "path": "guides/daily-briefing-bot.md",
     "status": "needs_review",
-    "priority": "P2",
-    "tier": "developer-and-guides"
-  },
-  {
-    "path": "guides/delegation-patterns.md",
-    "status": "draft",
     "priority": "P2",
     "tier": "developer-and-guides"
   },
@@ -984,26 +1038,8 @@
     "tier": "developer-and-guides"
   },
   {
-    "path": "guides/run-hermes-with-nous-portal.md",
-    "status": "draft",
-    "priority": "P2",
-    "tier": "developer-and-guides"
-  },
-  {
     "path": "guides/run-nemotron-3-ultra-free.md",
     "status": "missing",
-    "priority": "P2",
-    "tier": "developer-and-guides"
-  },
-  {
-    "path": "guides/team-telegram-assistant.md",
-    "status": "needs_review",
-    "priority": "P2",
-    "tier": "developer-and-guides"
-  },
-  {
-    "path": "guides/tips.md",
-    "status": "draft",
     "priority": "P2",
     "tier": "developer-and-guides"
   },
@@ -1032,12 +1068,6 @@
     "tier": "developer-and-guides"
   },
   {
-    "path": "guides/work-with-skills.md",
-    "status": "draft",
-    "priority": "P2",
-    "tier": "developer-and-guides"
-  },
-  {
     "path": "guides/xai-grok-oauth.md",
     "status": "needs_review",
     "priority": "P2",
@@ -1046,24 +1076,6 @@
   {
     "path": "index.mdx",
     "status": "needs_review",
-    "priority": "P2",
-    "tier": "developer-and-guides"
-  },
-  {
-    "path": "integrations/index.md",
-    "status": "draft",
-    "priority": "P2",
-    "tier": "developer-and-guides"
-  },
-  {
-    "path": "integrations/nous-portal.md",
-    "status": "draft",
-    "priority": "P2",
-    "tier": "developer-and-guides"
-  },
-  {
-    "path": "integrations/providers.md",
-    "status": "draft",
     "priority": "P2",
     "tier": "developer-and-guides"
   },
