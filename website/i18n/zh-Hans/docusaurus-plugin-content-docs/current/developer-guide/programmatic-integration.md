@@ -41,7 +41,8 @@ hermes acp --bootstrap      # 打印适用于支持 ACP 的 IDE 的安装代码�
 
 ```
 prompt.submit           prompt.background       session.steer
-session.create          session.list            session.interrupt
+session.create          session.list            session.active_list
+session.activate        session.close           session.interrupt
 session.history         session.compress        session.branch
 session.title           session.usage           session.status
 clarify.respond         sudo.respond            secret.respond
@@ -52,9 +53,11 @@ delegation.status       subagent.interrupt      spawn_tree.save / list / load
 terminal.resize         clipboard.paste         image.attach
 ```
 
+`session.active_list`、`session.activate` 和 `session.close` 是 TUI 会话切换器使用的进程级实时会话控制方法。如需发现已保存的对话记录，请使用 `session.list` 或 `/resume`；仅在需要操作当前在 TUI gateway 进程中打开的会话时，才使用上述实时会话方法。
+
 ### 流式返回的事件
 
-`message.delta`、`message.complete`、`tool.start`、`tool.progress`、`tool.complete`、`approval.request`、`clarify.request`、`sudo.request`、`secret.request`、`gateway.ready`，以及会话生命周期和错误事件。
+`message.delta`、`message.complete`、`tool.start`、`tool.progress`、`tool.complete`、`approval.request`、`clarify.request`、`sudo.request`、`sudo.expire`、`secret.request`、`secret.expire`、`gateway.ready`，以及会话生命周期和错误事件。过期事件携带原始 `{ request_id }`；外部宿主应仅清除对应的待处理 prompt。
 
 ### Pi 风格 RPC 映射
 

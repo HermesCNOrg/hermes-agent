@@ -13,18 +13,18 @@ TUI 是 Hermes 的现代前端——一个终端 UI（用户界面），与 [Cla
 ## 启动
 
 ```bash
-# 启动 TUI
+# Launch the TUI
 hermes --tui
 
-# 恢复最近的 TUI 会话（若无则回退到最近的 classic 会话）
+# Resume the latest TUI session (falls back to the latest classic session)
 hermes --tui -c
 hermes --tui --continue
 
-# 通过 ID 或标题恢复指定会话
+# Resume a specific session by ID or title
 hermes --tui -r 20260409_000000_aa11bb
 hermes --tui --resume "my t0p session"
 
-# 直接运行源码——跳过预构建步骤（供 TUI 贡献者使用）
+# Run source directly — skips the prebuild step (for TUI contributors)
 hermes --tui --dev
 ```
 
@@ -32,11 +32,20 @@ hermes --tui --dev
 
 ```bash
 export HERMES_TUI=1
-hermes          # 现在使用 TUI
-hermes chat     # 同上
+hermes          # now uses the TUI
+hermes chat     # same
 ```
 
-Classic CLI 仍作为默认方式保留。[CLI 界面](cli.md)中记录的所有内容——斜杠命令、快捷命令、skill 预加载、personality、多行输入、中断——在 TUI 中均完全一致。
+或者在 `~/.hermes/config.yaml` 中将它设为持久默认界面：
+
+```yaml
+display:
+  interface: tui   # "cli" (default) or "tui"
+```
+
+设置 `display.interface: tui` 后，直接运行 `hermes`（以及 `hermes chat`）都会启动 TUI。显式参数的优先级始终更高——单次运行时可用 `hermes --cli` 切回 classic REPL；如果配置中的默认值为 `cli`，也可用 `hermes --tui` / `HERMES_TUI=1` 强制启动 TUI。
+
+Classic CLI 仍是随附的默认界面。[CLI 界面](cli.md)中记录的所有功能——斜杠命令、快捷命令、skill 预加载、personality、多行输入和中断——在 TUI 中的工作方式完全一致。
 
 ## 为什么选择 TUI
 
@@ -89,17 +98,17 @@ hermes --tui
 - **`Cmd+V` / `Ctrl+V`** — 优先尝试普通文本粘贴，然后回退到 OSC52/原生剪贴板读取，最后在剪贴板或粘贴内容解析为图片时进行图片附件操作。
 - **`/terminal-setup`** — 安装本地 VS Code / Cursor / Windsurf 终端绑定，以在 macOS 上获得更好的 `Cmd+Enter` 和撤销/重做一致性。
 - **斜杠自动补全** — 以带描述的浮动面板形式展开，而非内联下拉菜单。
-- **`Ctrl+X`** — 当排队消息被高亮（在 agent 仍在运行时发送的消息）时，从队列中删除该消息。**`Esc`** 取消编辑并取消高亮，但不删除。
+- **`Ctrl+X`** — 打开实时会话切换器。如果当前高亮的是一条排队消息（在 agent 仍在运行时发送），则仍会删除该排队消息。**`Esc`** 取消编辑并取消高亮，但不会删除消息。
 - **`Ctrl+G` / `Ctrl+X Ctrl+E`** — 在 `$EDITOR` 中打开当前输入缓冲区，用于多行/长 prompt 编写；保存并退出后，内容将作为 prompt 发送回来。
 
 ## 斜杠命令
 
-所有斜杠命令均可正常使用。部分命令由 TUI 独有——它们会产生更丰富的输出或以浮层而非内联面板形式渲染：
+所有斜杠命令均可照常使用。部分命令由 TUI 负责处理——它们会产生更丰富的输出，或以浮层而非内联面板形式渲染：
 
 | 命令 | TUI 行为 |
 |------|---------|
 | `/help` | 带分类命令的浮层，可用方向键导航 |
-| `/sessions` | 模态会话选择器——预览、标题、token 总量、内联恢复 |
+| `/sessions`（别名 `/switch`） | 实时会话切换器——列出已打开的 TUI 会话，可在会话间切换、关闭会话或新建会话 |
 | `/model` | 按提供商分组的模态模型选择器，带费用提示 |
 | `/skin` | 实时预览——浏览时主题变更即时生效 |
 | `/details` | 切换详细工具调用详情（全局或按区块） |
@@ -109,6 +118,31 @@ hermes --tui
 | `/mouse [on\|off\|toggle\|wheel\|buttons\|all]` | 在运行时选择鼠标跟踪预设（同时持久化到 `config.yaml` 的 `display.mouse_tracking`）。`wheel`（1000+1006）保留滚轮滚动而不产生悬停事件，避免在 tmux 中向 prompt 行发送"No image in clipboard"垃圾信息；`buttons` 添加 1002 以支持终端侧拖拽选择；`all` 是带悬停 UI 的默认值。 |
 
 其他所有斜杠命令（包括已安装的 skill、快捷命令和 personality 切换）与 classic CLI 完全一致。请参阅[斜杠命令参考](../reference/slash-commands.md)。
+
+## 实时会话切换器
+
+如果你希望用一个终端调度多个 TUI 会话，可以使用实时会话切换器。它只列出当前 TUI 进程中仍在运行的会话；已关闭会话的对话记录仍会保存，之后依然可以通过 `/resume` 或 `hermes --tui --resume <id-or-title>` 重新打开。
+
+可通过以下任一方式打开：
+
+- 在 TUI 中按 `Ctrl+X`。
+- 输入 `/sessions` 或 `/switch`。
+- 输入 `/sessions new`，立即创建一个新的实时会话。
+- 点击状态栏中的 `N live sessions` 数量。
+
+<img alt="Hermes TUI Session Orchestrator with one live session and a +new row" src="/img/docs/tui-session-orchestrator/session-orchestrator.png" />
+
+<video controls muted loop playsInline src="/img/docs/tui-session-orchestrator/session-orchestrator-demo.mp4" title="Hermes TUI Session Orchestrator demo" />
+
+在切换器中：
+
+- `↑` / `↓` 移动选中项；也可以单击鼠标选择行。
+- `Enter` 切换到选中的实时会话。
+- `Ctrl+D` 关闭选中的实时会话。
+- `Ctrl+N` 启动一个空白的实时会话。
+- `Ctrl+R` 刷新实时会话列表。
+- `Esc` 关闭切换器。
+- 选择 `+new`，输入 prompt，再按 `Enter` 即可调度新的实时会话。如果只想为这个新会话选择模型，请先按 `Tab`。
 
 ## LaTeX 数学渲染
 
@@ -146,9 +180,9 @@ display:
 默认情况下，`hermes --tui` 每次启动都会开启新会话。若要自动重新连接到最近的 TUI 会话（在终端或 SSH 连接意外断开时很有用），可选择启用：
 
 ```bash
-export HERMES_TUI_RESUME=1          # 最近的 TUI 会话
-# 或：
-export HERMES_TUI_RESUME=<session-id>   # 指定会话
+export HERMES_TUI_RESUME=1          # most-recent TUI session
+# or:
+export HERMES_TUI_RESUME=<session-id>   # specific session
 ```
 
 取消设置该变量，或在每次启动时显式传入 `--resume <id>` 以覆盖。
@@ -183,20 +217,20 @@ TUI 遵循所有标准 Hermes 配置：`~/.hermes/config.yaml`、profile、perso
 
 ```yaml
 display:
-  skin: default              # 任意内置或自定义 skin
+  skin: default              # any built-in or custom skin
   personality: helpful
-  details_mode: collapsed    # hidden | collapsed | expanded — 全局折叠面板默认值
-  sections:                  # 可选：按区块覆盖（任意子集）
-    thinking: expanded       # 始终展开
-    tools: expanded          # 始终展开
-    activity: collapsed      # 重新启用 activity 面板（默认隐藏）
-  mouse_tracking: all        # off | wheel | buttons | all（或 true/false 以向后兼容）
-                             #   wheel   — 1000+1006（滚轮+点击；无拖拽，无悬停——
-                             #             在 tmux 内推荐使用，可消除悬停事件导致的
-                             #             prompt 行"No image in clipboard"垃圾信息）
-                             #   buttons — 添加 1002 以支持终端侧拖拽选择
-                             #   all     — 添加 1003 以支持悬停（滚动条悬停翻页、
-                             #             链接 mouseenter 等）
+  details_mode: collapsed    # hidden | collapsed | expanded — global accordion default
+  sections:                  # optional: per-section overrides (any subset)
+    thinking: expanded       # always open
+    tools: expanded          # always open
+    activity: collapsed      # opt back IN to the activity panel (hidden by default)
+  mouse_tracking: all        # off | wheel | buttons | all (or true/false for back-compat).
+                             #   wheel   — 1000+1006 (scroll + click; no drag, no hover —
+                             #             recommended inside tmux to silence the prompt-row
+                             #             "No image in clipboard" spam from hover events)
+                             #   buttons — adds 1002 for terminal-side drag selection
+                             #   all     — adds 1003 for hover (scrollbar paginate-on-hover,
+                             #             link mouseenter, etc.)
 ```
 
 运行时切换：
@@ -241,7 +275,7 @@ TUI 附带有主见的按区块默认值，将轮次以实时转录形式流式�
 
 ## 回退到 Classic CLI
 
-不带 `--tui` 启动 `hermes` 将继续使用 classic CLI。若要让某台机器默认使用 TUI，在 shell profile 中设置 `HERMES_TUI=1`。若要回退，取消设置即可。
+默认情况下，不带 `--tui` 启动 `hermes` 仍会使用 classic CLI。若要让某台机器优先使用 TUI，可在 `~/.hermes/config.yaml` 中设置 `display.interface: tui`（持久生效），或在 shell profile 中设置 `HERMES_TUI=1`（对当前 shell 生效）。若要切回，请将 `interface` 设为 `cli` / 取消设置该环境变量；也可以传入 `hermes --cli`，仅在本次运行中切回。
 
 如果 TUI 启动失败（无 Node、缺少 bundle、TTY 问题），Hermes 会打印诊断信息并回退——而不是让你陷入困境。
 

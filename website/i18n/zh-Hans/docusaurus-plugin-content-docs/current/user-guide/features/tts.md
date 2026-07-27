@@ -66,8 +66,10 @@ tts:
     model: "voxtral-mini-tts-2603"
     voice_id: "c69964a6-ab8b-4f8a-9465-ec0925096ec8"  # Paul - Neutral (default)
   gemini:
-    model: "gemini-2.5-flash-preview-tts"  # or gemini-2.5-pro-preview-tts
+    model: "gemini-2.5-flash-preview-tts"  # or gemini-3.1-flash-tts-preview
     voice: "Kore"               # 30 prebuilt voices: Zephyr, Puck, Kore, Enceladus, Gacrux, etc.
+    audio_tags: false           # Enable hidden Gemini 3.1 TTS audio-tag insertion
+    persona_prompt_file: ""      # Optional Markdown/text file with Gemini voice direction
   xai:
     voice_id: "eve"             # or a custom voice ID — see docs below
     language: "en"              # ISO 639-1 code
@@ -97,6 +99,33 @@ tts:
 
 **速度控制**：全局 `tts.speed` 值默认应用于所有提供商。每个提供商可用自身的 `speed` 设置覆盖它（例如 `tts.openai.speed: 1.5`）。提供商级别的速度优先于全局值。默认值为 `1.0`（正常速度）。
 
+### Gemini 角色提示
+
+Gemini TTS 可以遵循自然语言的表现力指令。将 `tts.gemini.persona_prompt_file` 设置为描述语音角色的本地 Markdown 或文本文件。该文件可以包含 Gemini 风格的章节，例如 `AUDIO PROFILE`、`SCENE`、`DIRECTOR'S NOTES`、`SAMPLE CONTEXT` 和 `TRANSCRIPT`。
+
+如果文件包含 `{transcript}` 或 `{{ transcript }}`，Hermes 会将该占位符替换为实时的 TTS 文本。否则，Hermes 会自动附加一个带标签的 `TRANSCRIPT` 章节。角色提示保留在本地，不会显示在聊天回复中。
+
+```yaml
+tts:
+  provider: gemini
+  gemini:
+    voice: Algieba
+    persona_prompt_file: ~/.hermes/tts/butler-voice.md
+```
+
+### Gemini 音频标签
+
+Gemini 3.1 Flash TTS 支持自由形式的方括号音频标签，例如 `[whispers]`、`[excitedly]`、`[very slow]`、`[laughs]` 以及其他表现力投递说明。启用 `tts.gemini.audio_tags` 后，Hermes 会在 Gemini TTS 之前运行一次隐藏的重写。重写过程会将内联标签插入到 TTS 脚本中；可见的聊天回复保持不变。
+
+```yaml
+tts:
+  provider: gemini
+  gemini:
+    model: gemini-3.1-flash-tts-preview
+    audio_tags: true
+```
+
+重写过程使用 `auxiliary.tts_audio_tags`，默认使用你的主聊天模型。如果你希望由更便宜或更快的模型处理标签插入，可以覆盖该辅助任务。
 
 ### 输入长度限制
 
@@ -109,10 +138,11 @@ tts:
 | xAI | 15000 |
 | MiniMax | 10000 |
 | Mistral | 4000 |
-| Google Gemini | 5000 |
+| Google Gemini | 32000 |
 | ElevenLabs | 取决于模型（见下文） |
 | NeuTTS | 2000 |
 | KittenTTS | 2000 |
+| Piper | 5000 |
 
 **ElevenLabs** 根据配置的 `model_id` 选择上限：
 
@@ -454,3 +484,188 @@ Hermes 将传入的语音消息写入 `{input_path}`，运行命令，并读取 
 - **未设置 OpenAI 密钥** → 回退至本地转录，然后是 Groq
 - **未设置 Mistral 密钥/SDK** → 在自动检测中跳过；回退至下一个可用提供商
 - **无可用提供商** → 语音消息直接传递，并向用户给出准确说明
+
+### STT 自定义命令提供商
+
+如果你想使用的 STT 引擎未被原生支持（Doubao ASR、NVIDIA Parakeet、whisper.cpp 编译版本、开源 SenseVoice CLI，或任何其他暴露 shell 命令的引擎），可以将其作为**命令类型提供商**接入，无需编写任何 Python 代码。Hermes 会针对音频文件运行你的 shell 命令并读取返回的转录文本。
+
+在 `stt.providers.<name>` 下声明一个或多个提供商，并通过 `stt.provider: <name>` 在它们之间切换——形式与 TTS [命令提供商注册表](#custom-command-providers)相同，方向改为输入=音频 → 输出=转录。
+
+```yaml
+stt:
+  provider: parakeet                # pick any name under stt.providers
+  providers:
+    parakeet:
+      type: command
+      command: "parakeet-asr --model nvidia/parakeet-tdt-0.6b-v2 --in {input_path} --out {output_path}"
+      format: txt
+      language: en
+      timeout: 300
+
+    whispercpp:
+      type: command
+      command: "whisper-cli -m ~/models/ggml-large-v3.bin -f {input_path} -otxt -of {output_dir}/transcript"
+      format: txt
+
+    sensevoice:
+      type: command
+      command: "sensevoice-cli {input_path} --json | tee {output_path}"
+      format: json
+```
+
+这补充了原有的 `HERMES_LOCAL_STT_COMMAND` 逃生口——该环境变量通过内置的 `local_command` 路径仍然可以原样使用。当需要**多个**由 shell 驱动的 STT 引擎、希望通过 `stt.provider` 选择的名称，或需要按提供商设置 `language` / `model` / `timeout` 时，请使用 `stt.providers.<name>`。
+
+#### STT 占位符
+
+你的命令模板可以引用以下占位符。Hermes 在渲染时会替换它们，并根据上下文（裸值 / 单引号 / 双引号）对每个值进行 shell 转义，因此包含空格的路径是安全的。
+
+| 占位符 | 含义 |
+|-------------------|----------------------------------------------------------------------|
+| `{input_path}` | 输入音频文件的绝对路径（原始位置，只读） |
+| `{output_path}` | 命令应将转录写入的绝对路径 |
+| `{output_dir}` | `{output_path}` 的父目录（便于 whisper 风格的工具使用） |
+| `{format}` | 配置的输出格式：`txt` / `json` / `srt` / `vtt` |
+| `{language}` | 配置的语言代码（默认为 `en`） |
+| `{model}` | `stt.providers.<name>.model`，未设置时为空 |
+
+使用 `{{` 和 `}}` 表示字面大括号（在命令中嵌入 JSON 片段时很方便）。
+
+#### 转录结果的读取方式
+
+命令成功退出后：
+
+1. 如果 `{output_path}` 存在且非空 → Hermes 将其作为 UTF-8 文本读取。
+2. 否则，如果命令写入了 stdout → Hermes 使用 stdout。
+3. 否则 → 错误："Command STT provider wrote no output file and produced no stdout"。
+
+这让你既可以使用写入文件的 CLI（`whisper-cli`、`parakeet-asr`），也可以使用输出转录到 stdout 的 curl 风格单行命令（`curl … | jq -r .text`）。
+
+对于 `format: json` / `srt` / `vtt`，Hermes 将原始文件内容作为 `transcript` 字段返回。从 JSON 中提取 `.text` 不属于运行器的职责范围——要么配置 `format: txt`，要么在下游对 JSON 进行后处理。
+
+#### STT 命令提供商可选键
+
+| 键 | 默认值 | 含义 |
+|-----------------|---------|------------------------------------------------------------------------------------------------------|
+| `timeout` | `300` | 秒数；超时后进程树将被终止（Unix `start_new_session`，Windows `taskkill /T`）。 |
+| `format` | `txt` | `txt` / `json` / `srt` / `vtt` 之一。设置 `{output_path}` 的扩展名。 |
+| `language` | `en` | 传递给 `{language}`。默认使用 `stt.language`，然后回退至 `en`。 |
+| `model` | 空 | 传递给 `{model}`。`transcribe_audio()` 的 `model=` 参数会覆盖此值。 |
+
+#### STT 命令提供商行为说明
+
+- **内置名称始终优先。** 声明 `stt.providers.openai: type: command` 不会覆盖真正的 OpenAI Whisper 处理器。内置名称在命令提供商解析器运行之前就会被短路处理。
+- **进程树清理。** 超过 `timeout` 的命令，其整个进程树都会被终止，而不仅仅是 shell 包装器。长期运行的 ASR 管道中派生模型加载子进程的情况也能被可靠地清理。
+- **Shell 转义是自动的。** `'…'` 内的占位符会进行单引号安全转义；`"…"` 内的会进行 `$`/`` ` ``/`"` 转义；引号外的会使用 `shlex.quote`。不要对占位符值进行预转义。
+
+#### STT 命令提供商安全性
+
+该 shell 命令以与 Hermes 相同的用户身份运行，拥有完整的文件系统访问权限——与 `tts.providers.<name>: type: command` 和 `HERMES_LOCAL_STT_COMMAND` 相同的信任模型。只声明来自你信任的来源的命令提供商。
+
+### STT Python 插件提供商
+
+对于既非内置又无法用 shell 命令表达的 STT 引擎（需要 Python SDK、OAuth 刷新认证、流式分块等），可以通过 `ctx.register_transcription_provider()` 注册 Python 插件。该插件与 6 个内置提供商（`local`、`local_command`、`groq`、`openai`、`mistral`、`xai`）以及 `stt.providers.<name>: type: command` 注册表**共存**——内置提供商保留其原生实现且在名称冲突时始终优先；命令提供商优先于同名插件（配置比插件安装更本地化）。
+
+#### 如何选择（STT）
+
+| 后端具有… | 使用 |
+|--------------------------------------------------------------|------------------------------------------------------------------|
+| 单个 shell 命令，输入音频文件，输出文本 | `stt.providers.<name>: type: command`（无需 Python） |
+| 只需要旧式的单命令逃生口 | `HERMES_LOCAL_STT_COMMAND` 环境变量（为向后兼容保留） |
+| 仅提供 Python SDK，没有 CLI | `register_transcription_provider()` 插件 |
+| OAuth 刷新认证、流式分块、声音列表元数据 | `register_transcription_provider()` 插件 |
+| 内置提供商已覆盖（`local`、`groq`、`openai` 等） | 设置 `stt.provider: <name>`——内置提供商已内联 |
+
+#### 解析顺序
+
+1. **`stt.provider` 是内置名称** → 内置分发。**始终优先。**
+2. **`stt.provider` 匹配设置了 `command:` 的 `stt.providers.<name>`** → 命令提供商运行器（见 [STT 自定义命令提供商](#stt-custom-command-providers)）。优先于同名插件。
+3. **`stt.provider` 匹配插件注册的 `TranscriptionProvider`** → 插件分发：
+   - 如果插件的 `is_available()` 返回 `False`（缺少凭据或 SDK），调用会返回标识该插件的不可用错误信息——**不是**通用的"No STT provider available"消息。
+   - 否则，调用插件的 `transcribe()`，参数包括 `model`（从公开的 `model=` 参数获取，回退至 `stt.<provider>.model`）和 `language`（从 `stt.<provider>.language` 获取）。
+4. **无匹配** → "No STT provider available"错误。
+
+#### 按提供商的配置命名空间
+
+插件从 `config.yaml` 中的 `stt.<provider>` 读取其按提供商的配置，与内置提供商读取 `stt.openai.model` / `stt.mistral.model` 的方式相同：
+
+```yaml
+stt:
+  provider: my-stt
+  my-stt:
+    model: whisper-large-v3
+    language: ja          # forwarded as language= to transcribe()
+    # any other plugin-specific keys go here; read them via your
+    # own config.yaml access in __init__/is_available/transcribe
+```
+
+分发器会将 `model` 和 `language` 从该节中转发；其他内容，插件可以自行读取。
+
+#### 最小插件
+
+将以下内容放入 `~/.hermes/plugins/my-stt/`：
+
+`plugin.yaml`：
+```yaml
+name: my-stt
+version: 0.1.0
+description: "My custom Python STT backend"
+```
+
+`__init__.py`：
+```python
+from agent.transcription_provider import TranscriptionProvider
+
+
+class MySTTProvider(TranscriptionProvider):
+    @property
+    def name(self) -> str:
+        return "my-stt"  # what stt.provider matches against
+
+    @property
+    def display_name(self) -> str:
+        return "My Custom STT"
+
+    def is_available(self) -> bool:
+        # Return False when credentials/deps are missing — picker skips
+        # this row but the dispatcher still routes here on explicit config.
+        import os
+        return bool(os.environ.get("MY_STT_API_KEY"))
+
+    def transcribe(self, file_path, *, model=None, language=None, **extra):
+        # Return the standard transcribe envelope:
+        #   {"success": bool, "transcript": str, "provider": str, "error": str}
+        # Do NOT raise — convert exceptions to the error envelope so the
+        # gateway/CLI caller sees a consistent shape on failure.
+        try:
+            import my_stt_sdk
+            client = my_stt_sdk.Client()
+            text = client.transcribe(open(file_path, "rb"))
+            return {
+                "success": True,
+                "transcript": text,
+                "provider": "my-stt",
+            }
+        except Exception as exc:
+            return {
+                "success": False,
+                "transcript": "",
+                "error": f"my-stt failed: {exc}",
+                "provider": "my-stt",
+            }
+
+
+def register(ctx):
+    ctx.register_transcription_provider(MySTTProvider())
+```
+
+启用它（`hermes plugins enable my-stt`），在 `config.yaml` 中设置 `stt.provider: my-stt`，语音消息转录将通过你的插件路由。
+
+#### 可选 hook
+
+在你的提供商类上覆盖以下方法以获得更丰富的集成：
+
+- `list_models()` → 返回 `{id, display, languages, max_audio_seconds}` 字典列表。
+- `default_model()` → 当用户未覆盖模型时返回的字符串。
+- `get_setup_schema()` → 返回 `{name, badge, tag, env_vars: [{key, prompt, url}]}` 以驱动 `hermes tools` / `hermes setup` 中的选择器行（STT 的选择器分类尚未发布——此元数据可供插件使用，以保持向前兼容）。
+
+完整的抽象基类（含文档字符串）请参阅 `agent/transcription_provider.py`。

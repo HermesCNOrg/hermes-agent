@@ -136,6 +136,8 @@ hermes tools
 # → TTS              → "Nous Subscription"     （推荐）
 ```
 
+这些选项在你尚未登录 Nous Portal 时就已经出现在 `hermes tools` 中了——如果你选择"Nous Subscription"但没有活跃的会话，Hermes 会内联触发 Portal 登录（不会改变你的推理 provider 或其他工具设置）。
+
 使用以下命令验证你的混合配置：
 
 ```bash
@@ -161,8 +163,9 @@ hermes setup voice
 Portal 订阅对 [cron 定时任务](/user-guide/features/cron)和[批处理](/user-guide/features/batch-processing)的支持方式与交互式对话相同——OAuth refresh token 会自动复用。无需额外配置，直接安排 cron 任务，费用将计入你的订阅。
 
 ```bash
-hermes cron add "Daily AI news summary" "every day at 9am" \
-  "Search the web for top AI news and summarize the 5 most important stories"
+hermes cron create "every day at 9am" \
+  "Search the web for top AI news and summarize the 5 most important stories" \
+  --name "Daily AI news"
 ```
 
 该 cron 任务无人值守运行，调用模型、网页搜索和摘要生成，全部通过你的 Portal 订阅完成。

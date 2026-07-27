@@ -14,7 +14,7 @@ Hermes Kanban 是一个持久化任务看板，在所有 Hermes 配置文件之�
 
 看板有两个入口，均由同一个 `~/.hermes/kanban.db` 支撑：
 
-- **Agent 通过专用 `kanban_*` 工具集驱动看板** —— `kanban_show`、`kanban_list`、`kanban_complete`、`kanban_block`、`kanban_heartbeat`、`kanban_comment`、`kanban_create`、`kanban_link`、`kanban_unblock`。调度器在 schema 中已内置这些工具来启动每个 worker；编排器（orchestrator）配置文件也可以通过 `kanban` 工具集显式启用。模型通过直接调用工具来读取和路由任务，*而不是*通过 shell 执行 `hermes kanban`。详见下方[Worker 如何与看板交互](#how-workers-interact-with-the-board)。
+- **Agent 通过专用 `kanban_*` 工具集驱动看板** —— `kanban_show`、`kanban_list`、`kanban_complete`、`kanban_block`、`kanban_heartbeat`、`kanban_comment`、`kanban_create`、`kanban_link`、`kanban_unblock`。调度器在 schema 中已内置这些工具来启动每个 worker；编排器（orchestrator）配置文件也可以通过 `kanban` 工具集显式启用。模型通过直接调用工具来读取和路由任务，*而不是*通过 shell 执行 `hermes kanban`。详见下方 [Worker 如何与看板交互](#how-workers-interact-with-the-board)。
 - **你（以及脚本和 cron）通过 CLI 上的 `hermes kanban …`、斜杠命令 `/kanban …` 或仪表盘驱动看板。** 这些界面面向人类和自动化场景——即没有工具调用模型的场合。
 
 两个界面都通过同一个 `kanban_db` 层路由，因此读取视图一致，写入不会产生偏差。本页其余部分展示 CLI 示例，因为它们便于复制粘贴，但每个 CLI 动词都有模型使用的等效工具调用。
@@ -54,7 +54,7 @@ Hermes Kanban 是一个持久化任务看板，在所有 Hermes 配置文件之�
 
 ## 核心概念
 
-- **Board（看板）** —— 一个独立的任务队列，拥有自己的 SQLite DB、工作区目录和调度器循环。单次安装可以有多个看板（例如每个项目、仓库或领域一个）；详见下方[看板（多项目）](#boards-multi-project)。单项目用户保持使用 `default` 看板，在本文档章节之外不会看到"board"这个词。
+- **Board（看板）** —— 一个独立的任务队列，拥有自己的 SQLite DB、工作区目录和调度器循环。单次安装可以有多个看板（例如每个项目、仓库或领域一个）；详见下方 [看板（多项目）](#boards-multi-project)。单项目用户保持使用 `default` 看板，在本文档章节之外不会看到"board"这个词。
 - **Task（任务）** —— 包含标题、可选正文、一个受让人（配置文件名称）、状态（`triage | todo | ready | running | blocked | done | archived`）、可选租户命名空间、可选幂等键（用于重试自动化的去重）的一行记录。
 - **Link（链接）** —— `task_links` 行，记录父 → 子依赖关系。当所有父任务变为 `done` 时，调度器将 `todo → ready`。
 - **Comment（评论）** —— agent 间协议。Agent 和人类追加评论；当 worker 被（重新）启动时，它将完整的评论线程作为上下文的一部分读取。
@@ -127,10 +127,22 @@ Slug 经过验证：小写字母数字 + 连字符 + 下划线，1-64 个字符�
 
 所有仪表盘 API 端点接受 `?board=<slug>` 进行看板范围限定。事件 WebSocket 在连接时固定到一个看板；在 UI 中切换会针对新看板打开一个新的 WS。
 
+## 文件附件
+
+任务可以携带文件附件 —— PDF、图片、源文档 —— 这样 worker 无需你将路径粘贴到正文中并希望它能找到它们。
+
+- **上传** —— 在仪表盘抽屉中打开任务，使用 **Attachments** 部分的 *Upload file* 按钮（可一次上传多个文件）。每次上传上限为 25 MB。
+- **存储** —— 文件存放在 `<hermes-home>/kanban/attachments/<task_id>/`（默认看板）或 `<hermes-home>/kanban/boards/<slug>/attachments/<task_id>/`（命名看板）。设置 `HERMES_KANBAN_ATTACHMENTS_ROOT` 可指定自定义位置。
+- **Worker 看到的内容** —— 当调度器将任务交给 worker 时，worker 的上下文中包含一个 **Attachments** 部分，列出每个文件的名称及其**绝对路径**。Worker 拥有完整的文件/终端工具访问权限，因此可以直接读取附件（通过 `read_file`，或使用 `pdftotext` 等 shell 工具）。
+- **下载 / 删除** —— 抽屉中列出每个附件，带有下载链接和删除（×）控件。删除附件会同时删除元数据行和磁盘上的文件。
+
+:::note 远程终端后端
+附件路径在**本地**终端后端上直接解析，这是 Kanban worker 的默认设置。如果你在远程后端（Docker、Modal）运行 worker，请将看板的 `attachments/` 目录挂载到沙箱中，以便 worker 上下文中的绝对路径可访问。
+:::
 
 ## 快速开始
 
-以下命令是**你**（人类）设置看板和创建任务的操作。一旦任务被分配，调度器就会将分配的配置文件作为 worker 启动，从那时起**模型通过 `kanban_*` 工具调用驱动任务，而不是 CLI 命令** —— 详见[Worker 如何与看板交互](#how-workers-interact-with-the-board)。
+以下命令是**你**（人类）设置看板和创建任务的操作。一旦任务被分配，调度器就会将分配的配置文件作为 worker 启动，从那时起**模型通过 `kanban_*` 工具调用驱动任务，而不是 CLI 命令** —— 详见 [Worker 如何与看板交互](#how-workers-interact-with-the-board)。
 
 ```bash
 # 1. 创建看板（你）
@@ -198,7 +210,7 @@ hermes kanban block    t_abc "need input" --ids t_def t_hij
 | `kanban_show` | 读取当前任务（标题、正文、先前尝试、父级交接、评论、完整预格式化的 `worker_context`）。默认使用环境变量中的任务 id。 | — |
 | `kanban_list` | 列出带有 `assignee`、`status`、`tenant`、归档可见性和限制过滤器的任务摘要。供编排器发现看板工作使用。 | — |
 | `kanban_complete` | 以 `summary` + `metadata` 结构化交接完成任务。 | `summary` / `result` 至少一个 |
-| `kanban_block` | 以 `reason` 上报需要人工输入。 | `reason` |
+| `kanban_block` | 停止工作并按原因路由：`kind=dependency`（等待中，自动恢复）、`needs_input` / `capability` / `transient`（上报给人类）。相同类型重复阻塞会自动升级到 `triage`。 | `reason` |
 | `kanban_heartbeat` | 在长时间操作期间发出存活信号。纯副作用。 | — |
 | `kanban_comment` | 向任务线程追加持久化备注。 | `task_id`、`body` |
 | `kanban_create` | （编排器）将任务扇出为带有 `assignee`、可选 `parents`、`skills` 等的子任务。 | `title`、`assignee` |
@@ -289,7 +301,13 @@ kanban_complete(summary="decomposed into 2 research tasks + 1 writer; linked dep
 3. 在长时间操作期间每隔几分钟调用一次 `kanban_heartbeat(note="...")`。**如果你的工作可能运行超过 1 小时，请至少每小时调用一次 `kanban_heartbeat`** —— 调度器会回收运行时间超过 `kanban.dispatch_stale_timeout_seconds`（默认 4 小时）且最近一小时内没有心跳的任务，认为 worker 在没有清理的情况下崩溃了。回收是无害的（任务返回 `ready` 重新调度，不增加失败计数器），但你会失去当前运行的进度。
 4. 以 `kanban_complete(summary="...", metadata={...})` 完成，或在卡住时以 `kanban_block(reason="...")` 完成。
 
-最终的 `kanban_complete` / `kanban_block` 调用是 worker 协议的一部分。如果 worker 进程以状态 0 退出而任务仍处于 `running` 状态，调度器将其视为协议违规，发出 `protocol_violation` 事件，并在下一个 tick 自动阻塞任务而不是重新启动它进入同一循环。这通常意味着模型写了一个纯文本答案并退出，而没有使用 Kanban 工具界面。
+最终的 `kanban_complete` / `kanban_block` 调用是 worker 协议的一部分。如果 worker 进程以状态 0 退出而任务仍处于 `running` 状态，调度器将其视为协议违规并发出 `protocol_violation` 事件。
+
+**Agent 侧预防：** 在 worker 退出前，当 Hermes 检测到模型即将在没有终端看板工具调用的情况下停止时，会注入最多两次合成提示。这能捕获常见情况：模型叙述下一步（"让我写报告"）然后以 `finish_reason=stop` 停止。提示提醒模型立即调用 `kanban_complete` 或 `kanban_block`。此保护仅对调度器启动的 worker 有效（设置了 `HERMES_KANBAN_TASK`），可通过 `HERMES_KANBAN_STOP_NUDGE=0` 禁用。
+
+**调度器端恢复：** 如果提示已用完或 worker 在到达提示前崩溃，调度器会给违规一个**有界重试**（最多 `_PROTOCOL_VIOLATION_FAILURE_LIMIT` 次连续违规，默认 3），然后自动阻塞任务而非重新启动进入同一循环。预算仅计数*连续*的干净退出协议违规 —— 间隔的限速重新排队是中性的，其他任何失败类型都会重置连续计数 —— 并且每任务的 `max_retries` 会覆盖此界限。这通常意味着模型写了纯文本答案并在未使用 Kanban 工具界面的情况下退出。
+
+生命周期及负载相关的参考细节（工作区类型、交付 `artifacts`、认领已创建的卡片）随系统 prompt 块提供，因此无论 worker 在哪个配置文件下运行，都能获得这些信息 —— 无需按配置文件设置 skill。
 
 ### 为特定任务固定额外 skill
 
@@ -328,6 +346,20 @@ hermes kanban create "audit auth flow" \
 
 调度器为列出的每个 skill 发出一个 `--skills <name>` 标志，因此 worker 在自动注入的 kanban 指引之上加载了所有这些 skill。skill 名称必须与受让人配置文件上实际安装的 skill 匹配（运行 `hermes skills list` 查看可用内容）；没有运行时安装。
 
+### 目标模式卡片（`--goal`）
+
+默认情况下每个 worker 获得**一次机会**处理其卡片 —— 完成工作，调用 `kanban_complete` / `kanban_block`，退出。传递 `--goal`（CLI）或 `goal_mode=True`（`kanban_create` 工具 / 仪表盘）可以改为在**目标循环**中运行该 worker，这是 `/goal` 斜杠命令背后相同的 Ralph 风格引擎：每轮后辅助判断器检查 worker 的输出是否满足卡片的标题 + 正文（视为验收标准），如果工作未完成且轮次预算未耗尽，worker 会在**同一会话**中继续，直到判断器同意、worker 自行终止任务或预算耗尽（此时卡片会被**阻塞**以待人工审查，而非静默退出）。
+
+```bash
+hermes kanban create "Translate the docs site to French" \
+    --body "Acceptance: every page translated, no English left, links intact." \
+    --assignee linguist \
+    --goal \
+    --goal-max-turns 15      # 可选；默认 20
+```
+
+用于开放式、多步骤或"继续直到 X 为真"的卡片。对于廉价的一次性工作跳过它 —— 每轮判断器的开销不值得，且调度器现有的重试/熔断器已能处理临时 worker 失败。判断器的效果取决于你的目标文本，因此请将正文写为**明确的验收标准**。
+
 ### 编排器的行为方式
 
 **行为良好的编排器不会自己做工作。** 它将用户的目标分解为任务，链接它们，将每个任务分配给你设置的配置文件之一，然后退后。编排器指引 —— 反诱惑规则、Step-0 配置文件发现提示（调度器在未知受让人名称上静默失败，因此编排器必须将每张卡片落地到你机器上实际存在的配置文件），以及以 `kanban_create` / `kanban_link` / `kanban_comment` 为核心的分解手册 —— 会自动注入到 worker 的系统 prompt 中；无需安装任何东西。
@@ -357,7 +389,7 @@ kanban_complete(
 
 ## 仪表盘（GUI）
 
-`/kanban` CLI 和斜杠命令足以无头运行看板，但可视化看板通常是人工介入的正确界面：分诊、跨配置文件监督、阅读评论线程以及在列之间拖动卡片。Hermes 将此作为**内置仪表盘插件**在 `plugins/kanban/` 中提供 —— 不是核心功能，不是单独的服务 —— 遵循[扩展仪表盘](./extending-the-dashboard)中描述的模型。
+`/kanban` CLI 和斜杠命令足以无头运行看板，但可视化看板通常是人工介入的正确界面：分诊、跨配置文件监督、阅读评论线程以及在列之间拖动卡片。Hermes 将此作为**内置仪表盘插件**在 `plugins/kanban/` 中提供 —— 不是核心功能，不是单独的服务 —— 遵循 [扩展仪表盘](./extending-the-dashboard) 中描述的模型。
 
 使用以下命令打开：
 
@@ -369,8 +401,8 @@ hermes dashboard        # 导航栏中出现 "Kanban" 标签页，位于 "Skills
 ### 插件提供的功能
 
 - 一个 **Kanban** 标签页，每个状态显示一列：`triage`、`todo`、`ready`、`running`、`blocked`、`done`（开启切换时还有 `archived`）。
-  - `triage` 是粗略想法的停车列。默认情况下（`kanban.auto_decompose: true`），调度器会自动对落在这里的任务运行**分解器** —— 编排器配置文件读取粗略想法，查看你的配置文件名册（含描述），并将任务扇出为路由到最合适专家的小型子任务图。原始任务作为每个子任务的父级保持存活，因此当所有子任务完成时，编排器会重新唤醒以判断完成情况，并在工作未完成时添加更多任务。点击页面顶部的 **Orchestration: Auto/Manual** 切换按钮（或设置 `kanban.auto_decompose: false`）切换到手动模式，在手动模式下分诊任务保持原位，直到你点击卡片上的 **⚗ Decompose** 或运行 `hermes kanban decompose <id>`。对于不需要扇出的任务（或没有编排器配置文件的设置），**✨ Specify** 按钮通过相同的 LLM 机制进行单任务规格重写（标题 + 正文，包含目标、方法、验收标准）。详见下方[自动与手动编排](#auto-vs-manual-orchestration)。
-- 卡片显示任务 id、标题、优先级徽章、租户标签、分配的配置文件、评论/链接计数、**进度标签**（任务有依赖项时显示 `N/M` 子任务已完成）以及"N 前创建"。每张卡片的复选框启用多选。
+  - `triage` 是粗略想法的停车列。默认情况下（`kanban.auto_decompose: true`），调度器会自动对落在这里的任务运行**分解器**。内置分解器使用 `auxiliary.kanban_decomposer` 模型路径，读取你的配置文件名册（含描述），并将任务扇出为路由到最合适专家的小型子任务图。原始任务作为每个子任务的父级保持存活，因此其受让人（`kanban.orchestrator_profile`，未设置时为活动默认配置文件）在所有任务完成时重新唤醒以判断完成情况。点击页面顶部的 **Orchestration: Auto/Manual** 切换按钮（翠绿色 = Auto，静音灰色 = Manual），或直接编辑 `config.yaml`。两种模式都与 `hermes kanban specify` 共存 —— 当你不想扇出时，它仍然可用作单任务规格重写。
+- 卡片显示任务 id、标题、优先级徽章、租户标签、分配的配置文件、评论/链接计数、**进度标签**（任务有依赖项时显示 `N/M` 子任务已完成）以及"created N ago"。每张卡片的复选框启用多选。
 - **Running 列内的按配置文件分组** —— 工具栏复选框切换 Running 列按受让人的子分组。
 - **通过 WebSocket 实时更新** —— 插件以短轮询间隔追踪仅追加的 `task_events` 表；任何配置文件（CLI、gateway 或另一个仪表盘标签页）操作后，看板立即反映变化。重新加载经过防抖处理，因此一批事件只触发一次重新获取。
 - **拖放**卡片在列之间更改状态。拖放操作发送 `PATCH /api/plugins/kanban/tasks/:id`，通过与 CLI 使用的相同 `kanban_db` 代码路由 —— 三个界面永远不会产生偏差。移动到破坏性状态（`done`、`archived`、`blocked`）时会提示确认。触摸设备使用基于指针的回退，因此看板可以在平板电脑上使用。
@@ -381,7 +413,7 @@ hermes dashboard        # 导航栏中出现 "Kanban" 标签页，位于 "Skills
   - **可编辑受让人 / 优先级** —— 点击元数据行进行修改。
   - **可编辑描述** —— 默认以 markdown 渲染（标题、粗体、斜体、内联代码、围栏代码、`http(s)` / `mailto:` 链接、项目符号列表），带有"编辑"按钮可切换到文本区域。Markdown 渲染是一个微型、防 XSS 的渲染器 —— 每次替换都在 HTML 转义的输入上运行，只有 `http(s)` / `mailto:` 链接通过，并且始终设置 `target="_blank"` + `rel="noopener noreferrer"`。
   - **依赖编辑器** —— 父级和子级的芯片列表，每个都有 `×` 用于取消链接，加上所有其他任务的下拉菜单用于添加新的父级或子级。循环尝试在服务器端被拒绝并给出清晰的消息。
-  - **状态操作行**（→ triage / → ready / → running / block / unblock / complete / archive），破坏性转换有确认提示。对于 **Triage** 列中的卡片，该行还提供两个 LLM 驱动的操作：**⚗ Decompose** 将任务扇出为路由到专家配置文件（按描述）的子任务图（编排器驱动路径），**✨ Specify** 进行单任务规格重写。当 LLM 判断任务不需要扇出时，Decompose 会回退到类似 specify 的推进，因此它是严格的超集。两者都可以从 CLI（`hermes kanban decompose <id>` / `specify <id>` / `--all`）、任何 gateway 平台（`/kanban decompose <id>`）以及通过 `POST /api/plugins/kanban/tasks/:id/decompose` 和 `…/specify` 以编程方式访问。在 `config.yaml` 的 `auxiliary.kanban_decomposer` 和 `auxiliary.triage_specifier` 下配置模型。
+  - **状态操作行**（→ triage / → ready / → running / block / unblock / complete / archive），破坏性转换有确认提示。对于 **Triage** 列中的卡片，该行还提供两个 LLM 驱动的操作：**⚗ Decompose** 将任务扇出为路由到专家配置文件（按描述）的子任务图，**✨ Specify** 进行单任务规格重写。当 LLM 判断任务不需要扇出时，Decompose 会回退到类似 specify 的推进，因此它是严格的超集。两者都可以从 CLI（`hermes kanban decompose <id>` / `specify <id>` / `--all`）、任何 gateway 平台（`/kanban decompose <id>`）以及通过 `POST /api/plugins/kanban/tasks/:id/decompose` 和 `…/specify` 以编程方式访问。在 `config.yaml` 的 `auxiliary.kanban_decomposer` 和 `auxiliary.triage_specifier` 下配置模型。
   - 结果部分（也以 markdown 渲染）、带 Enter 提交的评论线程、最近 20 个事件。
 - **工具栏过滤器** —— 自由文本搜索、租户下拉菜单（默认为 `config.yaml` 中的 `dashboard.kanban.default_tenant`）、受让人下拉菜单、"显示已归档"切换、"按配置文件分组"切换，以及**推动调度器**按钮，这样你就不必等待下一个 60 秒 tick。
 
@@ -391,13 +423,15 @@ hermes dashboard        # 导航栏中出现 "Kanban" 标签页，位于 "Skills
 
 看板有两种方式处理你放入 Triage 列的任务：
 
-**自动（默认）** —— `kanban.auto_decompose: true`。Gateway 内嵌调度器在每个 tick 运行**分解器**，受 `kanban.auto_decompose_per_tick`（默认每 tick 3 个任务）限制，以防批量加载分诊任务时突发消耗辅助 LLM。分解器读取粗略想法，查看你安装的配置文件及其描述，并要求 LLM 生成 JSON 任务图：要启动哪些任务、分配给谁，以及哪些依赖哪些。原始分诊任务成为图中每个叶节点的父级，因此它保持存活直到整个图完成 —— 然后推进回 `ready`，让其受让人（编排器配置文件）判断完成情况，并在工作未完成时添加更多任务。这是"丢一行描述，走开"的流程。
+**自动（默认）** —— `kanban.auto_decompose: true`。Gateway 内嵌调度器在每个 tick 运行**分解器**，受 `kanban.auto_decompose_per_tick`（默认每 tick 3 个任务）限制，以防批量加载分诊任务时突发消耗辅助 LLM。分解器使用内置分解提示及 `auxiliary.kanban_decomposer` 模型路径，读取你安装的配置文件及其描述，并要求 LLM 生成 JSON 任务图：要启动哪些任务、分配给谁，以及哪些依赖哪些。原始分诊任务成为图中每个叶节点的父级，因此它保持存活直到整个图完成 —— 然后推进回 `ready`，让其受让人（编排器配置文件）判断完成情况，并在工作未完成时添加更多任务。这是"丢一行描述，走开"的流程。
 
 **手动** —— `kanban.auto_decompose: false`。分诊任务保持在分诊中，直到你操作。点击卡片上的 **⚗ Decompose** 按钮，运行 `hermes kanban decompose <id>`（或 `--all`），或从聊天中使用 `/kanban decompose <id>`。这与看板的预分解器行为一致，适合需要完全控制运行时机的场景。
 
-从 kanban 页面顶部的 **Orchestration: Auto/Manual** 切换按钮（翠绿色 = 自动，静音灰色 = 手动）在两种模式之间切换，或直接编辑 `config.yaml`。两种模式都与 `hermes kanban specify` 共存 —— 当你不想扇出时，它仍然可用作单任务规格重写。
+从 kanban 页面顶部的 **Orchestration: Auto/Manual** 切换按钮（翠绿色 = Auto，静音灰色 = Manual）在两种模式之间切换，或直接编辑 `config.yaml`。两种模式都与 `hermes kanban specify` 共存 —— 当你不想扇出时，它仍然可用作单任务规格重写。
 
 分解器的路由决策依赖于配置文件描述，这是一个每配置文件的标签原语，通过 `hermes profile create --description "..."`、`hermes profile describe <name> --text "..."`、`hermes profile describe <name> --auto`（LLM 从配置文件安装的 skill + 模型自动生成），或仪表盘展开的 **Orchestration settings** 面板中的每配置文件编辑器来设置。没有描述的配置文件仍然出现在名册中 —— 它们可以按名称路由，只是精度较低。分解器**绝不**会将子任务落地为 `assignee=None`：当 LLM 选择未知配置文件时，子任务路由到 `kanban.default_assignee`（如果未设置，则路由到活动默认配置文件）。
+
+`kanban.orchestrator_profile` 不会将该配置文件的 prompt、skill 或自定义逻辑加载到分解调用中。它控制谁在扇出后拥有根/编排任务。要更改分解器的模型/提供者，请配置 `auxiliary.kanban_decomposer`。要使用配置文件的自定义任务拆分逻辑而非内置分解器，请切换到手动模式并让该配置文件显式创建或分解任务。
 
 配置项（均在 `~/.hermes/config.yaml` 的 `kanban:` 下）：
 
@@ -405,7 +439,7 @@ hermes dashboard        # 导航栏中出现 "Kanban" 标签页，位于 "Skills
 |---|---|---|
 | `auto_decompose` | `true` | 调度器每 tick 自动运行分解器。 |
 | `auto_decompose_per_tick` | `3` | 每个调度器 tick 的分解上限。超出部分推迟到下一个 tick。 |
-| `orchestrator_profile` | `""` | 拥有分解权的配置文件。空 = 回退到活动默认配置文件。 |
+| `orchestrator_profile` | `""` | 拥有根/编排任务的配置文件。空 = 回退到活动默认配置文件。 |
 | `default_assignee` | `""` | LLM 选择未知配置文件时子任务的落地位置。空 = 回退到活动默认配置文件。 |
 | `auto_subscribe_on_create` | `true` | 当 worker 在具有持久投递通道的会话（消息网关或 TUI）内调用 `kanban_create` 时，原始会话会自动订阅新任务的完成/阻塞事件。调度器仍负责驱动投递 —— 此设置只决定调用者的聊天/密钥是否出现在通知订阅表中。设为 `false` 则要求对每个任务显式调用 `kanban_notify-subscribe`。 |
 
@@ -500,7 +534,7 @@ WebSocket 额外增加了一步：它要求仪表盘的临时会话 token 作为
 
 ### 扩展
 
-插件使用标准的 Hermes 仪表盘插件契约 —— 完整的 manifest 参考、shell 槽、页面范围槽和 Plugin SDK，请参阅[扩展仪表盘](./extending-the-dashboard)。额外的列、自定义卡片样式、租户过滤布局或完整的 `tab.override` 替换都可以表达，无需 fork 此插件。
+插件使用标准的 Hermes 仪表盘插件契约 —— 完整的 manifest 参考、shell 槽、页面范围槽和 Plugin SDK，请参阅 [扩展仪表盘](./extending-the-dashboard)。额外的列、自定义卡片样式、租户过滤布局或完整的 `tab.override` 替换都可以表达，无需 fork 此插件。
 
 要禁用而不删除：在 `config.yaml` 中添加 `dashboard.plugins.kanban.enabled: false`（或删除 `plugins/kanban/dashboard/manifest.json`）。
 
@@ -521,11 +555,21 @@ hermes kanban create "<title>" [--body ...] [--assignee <profile>]
                                 [--priority N] [--triage] [--idempotency-key KEY]
                                 [--max-runtime 30m|2h|1d|<seconds>]
                                 [--max-retries N]
+                                [--goal] [--goal-max-turns N]
                                 [--skill <name>]...
                                 [--json]
-hermes kanban list [--mine] [--assignee P] [--status S] [--tenant T] [--archived] [--json]
+hermes kanban list [--mine] [--assignee P] [--status S] [--tenant T] [--archived]
+        [--workflow-template-id <id>] [--current-step-key <key>]
+        [--sort created|created-desc|priority|priority-desc|status|assignee|title|updated]
+        [--json]
 hermes kanban show <id> [--json]
 hermes kanban assign <id> <profile>                    # 或 'none' 取消分配
+hermes kanban reassign <id>... <profile>               # 批量重新分配任务给一个配置文件
+hermes kanban edit <id> [--title ...] [--body ...]     # 原地编辑任务标题/正文/优先级
+        [--priority N]
+hermes kanban promote <id>...                          # 将 todo/blocked 任务移到 ready（恢复）
+hermes kanban schedule <id> --at <ISO8601>             # 设置/清除任务的 scheduled_at 开始时间
+hermes kanban diagnostics [--json]                     # 看板健康快照（别名：diag）
 hermes kanban link <parent_id> <child_id>
 hermes kanban unlink <parent_id> <child_id>
 hermes kanban claim <id> [--ttl SECONDS]
@@ -561,9 +605,67 @@ hermes kanban gc [--event-retention-days N]            # 工作区 + 旧事件 +
         [--log-retention-days N]
 ```
 
-所有命令也可以作为交互式 CLI 中的斜杠命令和消息 gateway 中使用（见下方[`/kanban` 斜杠命令](#kanban-slash-command)）。
+所有命令也可以作为交互式 CLI 中的斜杠命令和消息 gateway 中使用（见下方 [`/kanban` 斜杠命令](#kanban-slash-command)）。
 
 `--max-retries` 是调度器的每任务熔断器覆盖。`--max-retries 1` 在第一次不成功的尝试后阻塞任务，而 `--max-retries 3` 允许两次重试并在第三次失败时阻塞。省略它则使用 `config.yaml` 中的 `kanban.failure_limit`，然后是内置默认值。
+
+### 并发、调度与子任务推进配置
+
+| 配置键 | 默认值 | 作用 |
+|---|---|---|
+| `kanban.max_in_progress` | 未设置（无限制） | 限制同时运行的任务数量。当看板已有 N 个运行中的任务时，调度器跳过启动更多任务 —— 适用于慢速 worker（本地 LLM、资源受限主机），让它们先完成已有任务，避免堆积超时。无效或低于 1 的值会记录警告并表现为无限制。 |
+| `kanban.max_in_progress_per_profile` | 未设置（无限制） | `max_in_progress` 的按配置文件变体 —— 限制任何单个受让人配置文件可以同时运行的任务数量。当某个配置文件较慢或受限但其他配置文件应继续流动时有用。与看板范围的 `max_in_progress` 同时适用；两者都允许启动时才会启动。 |
+| `kanban.auto_promote_children` | `true` | 在 `decompose_triage_task()` 生成没有父级阻塞依赖的子任务后，它们会自动推进到 `ready` 以便调度器可以接管。设为 `false` 需要手动审查 —— 子任务保持 `todo` 直到你推进它们。 |
+| `kanban.default_workdir` | 未设置 | 看板级默认工作目录，当 `--workspace` 和任务本身都未覆盖时应用于新任务。每任务 `workspace:` 仍然优先。 |
+
+```yaml
+kanban:
+  max_in_progress: 2
+  auto_promote_children: false
+  default_workdir: ~/work/active-project
+```
+
+### 计划任务开始（`scheduled_at`）
+
+在任务上设置 `scheduled_at` 以将调度延迟到特定时间。调度器跳过 `scheduled_at` 在未来的就绪任务，并在该时间戳之后的第一个 tick 接管它们。
+
+```bash
+hermes kanban create "nightly backup audit" \
+  --assignee ops --scheduled-at "2026-06-01T03:00:00Z"
+```
+
+### 重生保护
+
+调度器拒绝重新启动一个就绪任务，当它在之前的运行中遇到配额/认证/429 错误（`blocker_auth`），或在保护窗口内成功完成运行（`recent_success`），或最近的评论链接到 GitHub PR（`active_pr`）。这可以防止在人类跟进时重复的 worker 风暴冲击同一 bug 或任务。详见 [事件参考](#event-reference) 中的 `respawn_guarded` 行。
+
+### 拖放删除与批量删除（仪表盘）
+
+仪表盘在 kanban 页面上暴露一个**垃圾桶放置区** —— 将任何卡片拖入其中以删除任务（级联删除 `task_events`、子链接和订阅）。确认提示防止误操作。批量删除也可以通过 `DELETE /api/plugins/kanban/tasks` 搭配 JSON 正文 `{"ids": ["t_abc", "t_def", ...]}` 访问。
+
+### Worker 可见性端点
+
+仪表盘插件 API 现在暴露以下只读端点（加上一个运行控制动词）供外部监控使用：
+
+| 端点 | 返回 |
+|---|---|
+| `GET /api/plugins/kanban/workers/active` | 当前已启动的 worker，包含 PID、配置文件、任务 id、启动时间、最后心跳 |
+| `GET /api/plugins/kanban/runs/{id}` | 单次运行详情 —— 任务 id、状态、开始/结束时间、退出码、日志路径 |
+| `POST /api/plugins/kanban/runs/{run_id}/terminate` | 终止一个可回收的运行 —— 停止 worker 并释放任务以重新调度 |
+| `GET /api/plugins/kanban/inspect` | 组合调度器快照 —— 待办队列、进行中数量 vs `max_in_progress`、最近事件 |
+
+所有这些都受与看板插件 API 其余部分相同的仪表盘插件认证保护。
+
+### Kanban Swarm 拓扑辅助工具
+
+`hermes kanban swarm` 一键创建持久的 **Kanban Swarm v1** 图：一个已完成的根/黑板卡片、N 个并行 worker 卡片、一个依赖所有 worker 的验证器卡片，以及一个依赖验证器的合成器卡片。共享的 swarm 上下文（"黑板"）以结构化 JSON 评论存储在根卡片上，以便任何 worker 都可以读取。
+
+```bash
+hermes kanban swarm "Design a multi-region failover plan" \
+  --workers researcher,architect,sre \
+  --verifier reviewer --synthesizer writer
+```
+
+生成的图正常调度 —— worker 并行运行，验证器在它们全部完成后唤醒，合成器在验证器标记工作干净后唤醒。
 
 ## `/kanban` 斜杠命令 {#kanban-slash-command}
 
@@ -730,8 +832,10 @@ hermes kanban runs t_abcd
 | `promoted` | — | 因所有父任务达到 `done` 而 `todo → ready`。`run_id` 为 `NULL`。 |
 | `claimed` | `{lock, expires, run_id}` | 调度器原子性认领 `ready` 任务以启动。 |
 | `completed` | `{result_len, summary?}` | Worker 写入 `--result` / `--summary` 且任务达到 `done`。`summary` 是第一行交接（400 字符上限）；完整版本存在于运行行上。如果在从未认领的任务上调用 `complete_task` 并带有交接字段，则合成零持续时间运行，以便 `run_id` 仍然指向某处。 |
-| `blocked` | `{reason}` | Worker 或人类将任务翻转为 `blocked`。在带有 `--reason` 的从未认领任务上调用时合成零持续时间运行。 |
-| `unblocked` | — | `blocked → ready`，手动或通过 `/unblock`。`run_id` 为 `NULL`。 |
+| `blocked` | `{reason, kind, recurrences}` | Worker 或人类将任务翻转为 `blocked`。`kind` 是类型化的阻塞原因（`needs_input`、`capability`、`transient`，或通用阻塞为 `null`）；`recurrences` 是解除阻塞循环计数器。在带有 `--reason` 的从未认领任务上调用时合成零持续时间运行。 |
+| `dependency_wait` | `{reason, kind}` | Worker 以 `kind=dependency` 阻塞 —— 任务仅等待另一个任务，因此路由到 `todo`（父级门控，自动推进）而非 `blocked`。无需人类。 |
+| `block_loop_detected` | `{reason, kind, recurrences, limit}` | 一个任务被解除阻塞后又因相同原因重新阻塞达 `BLOCK_RECURRENCE_LIMIT` 次（默认 2）。而不是再次落入 `blocked` —— 在那里 cron 会不断解除阻塞它 —— 它路由到 `triage` 供人类决策，打破解除阻塞↔重新阻塞的循环。 |
+| `unblocked` | — | `blocked → ready`（如果父任务仍开放则为 `todo`），手动或通过 `/unblock`。重置调度器的 `consecutive_failures` 但有意保留 `block_recurrences` 以便循环破坏器保持记忆。`run_id` 为 `NULL`。 |
 | `archived` | — | 从默认看板中隐藏。如果任务仍在运行，携带作为副作用被回收的运行的 `run_id`。 |
 
 **编辑**（不是转换的人类驱动变更）：
@@ -755,7 +859,7 @@ hermes kanban runs t_abcd
 | `stale` | `{elapsed_seconds, last_heartbeat_at, heartbeat_age_seconds, timeout_seconds, pid, terminated}` | 任务运行时间超过 `kanban.dispatch_stale_timeout_seconds`（默认 4 小时）**且**最近一小时内没有 `kanban_heartbeat`。调度器向本地 worker（如有）发送 SIGTERM，将任务重置为 `ready` 重新调度。**不**增加失败计数器（stale 是调度器端的缺席检测，不是 worker 故障）。运行长时间操作的 Worker 应至少每小时调用一次 `kanban_heartbeat` 以避免此情况。 |
 | `respawn_guarded` | `{reason}` | 调度器拒绝在本 tick 重新启动此就绪任务。原因：`blocker_auth`（上次失败是配额/认证/429 错误 —— 等待速率窗口重置）、`recent_success`（最近一小时内有完成的运行 —— 在重新运行前等待审查）、`active_pr`（最近的评论中出现 GitHub PR URL —— 先前的 worker 已经打开了 PR）。任务保持在 `ready`；下一个 tick 有另一次启动机会。如果底层条件持续存在，正常的 `consecutive_failures` 熔断器将在 `failure_limit` 次失败后通过 `gave_up` 自动阻塞。 |
 | `spawn_failed` | `{error, failures}` | 一次启动尝试失败（PATH 缺失、工作区无法挂载等）。计数器递增；任务返回 `ready` 重试。 |
-| `protocol_violation` | `{pid, claimer, exit_code}` | Worker 在任务仍处于 `running` 状态时成功退出，通常是因为它回答了问题而没有调用 `kanban_complete` 或 `kanban_block`。调度器还会立即发出 `gave_up` 并自动阻塞，而不是重试。 |
+| `protocol_violation` | `{pid, claimer, exit_code, protocol_violation}` | Worker 在任务仍处于 `running` 状态时成功退出，通常是因为它回答了问题而没有调用 `kanban_complete` 或 `kanban_block`。每次违规都会发出（有效载荷的 `protocol_violation: true` 标记会复制到运行元数据中，并供给仅限违规的重试预算）。在预算之内 —— 最多 `_PROTOCOL_VIOLATION_FAILURE_LIMIT`（默认 3）次*连续*违规，由每任务 `max_retries` 覆盖 —— 任务仅返回 `ready` 进行再次尝试；当连续次数达到界限时，调度器还会发出 `gave_up` 并自动阻塞。 |
 | `gave_up` | `{failures, effective_limit, limit_source, error}` | N 次连续不成功尝试后熔断器触发。任务以最后一个错误自动阻塞。有效限制解析为任务 `max_retries`，然后是调度器 `failure_limit` / `kanban.failure_limit`，然后是内置默认值。 |
 
 `hermes kanban tail <id>` 显示单个任务的这些事件。`hermes kanban watch` 在整个看板范围内流式传输它们。

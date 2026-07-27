@@ -8,6 +8,8 @@ description: "使用 Cloud Pub/Sub 将 Hermes Agent 设置为 Google Chat 机器
 
 将 Hermes Agent 作为机器人接入 Google Chat。该集成使用 Cloud Pub/Sub 拉取订阅接收入站事件，使用 Chat REST API 发送出站消息。与 Slack Socket Mode 或 Telegram 长轮询的使用体验相当：Hermes 进程无需公网 URL、隧道或 TLS 证书。它直接连接、认证并监听订阅——就像 Telegram 机器人通过 token 监听一样。
 
+> 运行 `hermes gateway setup` 并选择 **Google Chat** 即可获得引导式操作指引。
+
 :::note Workspace 版本
 Google Chat 是 Google Workspace 的一部分。你可以在个人 Workspace（通过 Google 注册的 `@yourdomain.com`）或拥有管理员权限可发布应用的企业 Workspace 中使用此集成。仅有 Gmail 账号的用户无法托管 Chat 应用。
 :::
@@ -26,7 +28,7 @@ Google Chat 是 Google Workspace 的一部分。你可以在个人 Workspace（�
 
 ## 第一步：创建或选择 GCP 项目
 
-你需要一个 Google Cloud 项目来托管 Pub/Sub topic（主题）。如果还没有，请在 [console.cloud.google.com](https://console.cloud.google.com) 创建——个人账号有免费额度，足以覆盖机器人流量。
+你需要一个 Google Cloud 项目来托管 Pub/Sub topic。如果还没有，请在 [console.cloud.google.com](https://console.cloud.google.com) 创建——个人账号有免费额度，足以覆盖机器人流量。
 
 记下项目 ID（例如 `my-chat-bot-123`），后续每一步都会用到。
 
@@ -39,7 +41,7 @@ Google Chat 是 Google Workspace 的一部分。你可以在个人 Workspace（�
 - **Google Chat API**
 - **Cloud Pub/Sub API**
 
-个人机器人产生的流量完全在免费额度内。
+两者对个人机器人产生的流量而言均为免费。
 
 ---
 
@@ -48,12 +50,12 @@ Google Chat 是 Google Workspace 的一部分。你可以在个人 Workspace（�
 **IAM & Admin → Service Accounts → Create Service Account。**
 
 - 名称：`hermes-chat-bot`
-- 跳过"Grant this service account access to project"步骤。你只需要在特定订阅上配置 IAM，**不要**授予项目级别的 Pub/Sub 角色。
+- 跳过"Grant this service account access to project"步骤。你只需要在特定订阅上配置 IAM——**不要**授予项目级别的 Pub/Sub 角色。
 
 创建完成后，打开该 SA，进入 **Keys → Add Key → Create new key → JSON**，下载文件。将其保存到只有 Hermes 可读的位置（例如 `~/.hermes/google-chat-sa.json`，`chmod 600`）。
 
 :::caution 不存在"Chat Bot Caller"角色
-一个常见错误是搜索 Chat 专属 IAM 角色并在项目级别授予。该角色并不存在。Chat 机器人的权限来自被安装到某个 space（空间），而非 IAM。你的 SA 只需要在下一步创建的订阅上具有 Pub/Sub subscriber 权限。
+一个常见错误是搜索 Chat 专属 IAM 角色并在项目级别授予。该角色并不存在。Chat 机器人的权限来自被安装到某个 space，而非 IAM。你的 SA 只需要在下一步创建的订阅上具有 Pub/Sub subscriber 权限。
 :::
 
 ---
@@ -144,7 +146,7 @@ GOOGLE_CHAT_MAX_BYTES=16777216                  # 16 MiB — 在途消息字节�
 pip install google-cloud-pubsub google-api-python-client google-auth google-auth-oauthlib
 ```
 
-启动 gateway（网关）：
+启动 gateway：
 
 ```bash
 hermes gateway
@@ -157,7 +159,7 @@ hermes gateway
              bot_user_id=users/XXXX, flow_control(msgs=1, bytes=16777216)
 ```
 
-在测试私信中发送"hola"。机器人会先发送一条"Hermes is thinking…"占位消息，然后原地编辑该消息为真实回复——不会留下"消息已删除"的墓碑。
+在测试私信中发送"hola"。机器人会先发送一条"Hermes is thinking…"占位消息，然后原地编辑该消息为真实回复——不会留下"消息已删除"的墓碑标记。
 
 ---
 
@@ -171,11 +173,11 @@ Google Chat 支持有限的 Markdown 子集：
 | 通过 URL 内联图片 | 交互式 Card v2 按钮（此 gateway 为 v1） |
 | 原生文件附件（执行 `/setup-files` 后——见第十步） | 原生语音消息 / 圆形视频消息 |
 
-Agent 的系统 prompt（提示词）包含 Google Chat 专属提示，使其了解这些限制，避免使用无法渲染的格式。
+Agent 的 system prompt 包含 Google Chat 专属提示，使其了解这些限制，避免使用无法渲染的格式。
 
 消息大小限制：每条消息 4000 个字符。较长的 agent 回复会自动拆分为多条消息。
 
-Thread（线程）支持：当用户在 thread 中回复时，Hermes 会检测 `thread.name` 并在同一 thread 中发送回复，每个 thread 对应独立的 Hermes 会话。
+Thread 支持：当用户在 thread 中回复时，Hermes 会检测 `thread.name` 并在同一 thread 中发送回复，每个 thread 对应独立的 Hermes 会话。
 
 ---
 
@@ -192,19 +194,24 @@ Google Chat 的 `media.upload` 端点会硬拒绝 service account 认证：
 
 没有任何 IAM 角色或 scope 能解决这个问题。该端点只接受用户凭据。因此，机器人在上传文件时必须*以用户身份*操作——具体来说，是以请求文件的用户身份。
 
-### 一次性宿主机设置
+### 一次性设置（按 profile）
 
 1. 在同一 GCP 项目中，进入 **APIs & Services → Credentials**。
 2. **Create credentials → OAuth client ID → Desktop app**。
 3. 下载 JSON 文件，移动到运行 Hermes 的宿主机上。
-4. 在宿主机上，向 Hermes 注册该客户端：
+4. 向 Hermes 注册该客户端（在你想限定的 profile 下运行）：
 
 ```bash
-python -m gateway.platforms.google_chat_user_oauth \
+# 默认 profile：
+python -m plugins.platforms.google_chat.oauth \
+    --client-secret /path/to/client_secret.json
+
+# 命名 profile 拥有独立的注册：
+hermes -p <profile> python -m plugins.platforms.google_chat.oauth \
     --client-secret /path/to/client_secret.json
 ```
 
-该命令会写入 `~/.hermes/google_chat_user_client_secret.json`。这是共享基础设施——它标识 OAuth *应用*，而非某个具体用户。无论后续有多少用户授权，每台宿主机只需一个文件。
+上述命令会将客户端密钥写入当前活动 profile 的 Hermes home 目录（例如默认 profile 为 `~/.hermes/google_chat_user_client_secret.json`）。客户端密钥是 **profile 作用域的，不跨 profile 共享**——每个 profile 独立注册。这是有意为之：profile 是独立的认证边界，两个 profile 可以指向不同的 Google OAuth 应用/账号。每个需要 Google Chat 附件投递功能的 profile 只需注册一次。
 
 ### 每用户授权（在 Chat 中操作）
 
@@ -212,10 +219,10 @@ python -m gateway.platforms.google_chat_user_oauth \
 
 1. 向机器人发送 `/setup-files`，机器人回复当前状态和下一步操作。
 2. 发送 `/setup-files start`，机器人回复一个 OAuth URL。
-3. 打开该 URL，点击 **Allow**，浏览器会尝试加载 `http://localhost:1/?...&code=...` 并失败。这是预期行为——auth code 在地址栏的 URL 中。
+3. 打开该 URL，点击 **Allow**，浏览器会尝试加载 `http://localhost:1/?...&code=...` 并失败。这是预期行为——auth code 在地址栏中。
 4. 复制失败的 URL（或仅复制 `code=...` 的值），粘贴回 Chat 中作为 `/setup-files <PASTED_URL>`。机器人将其换取 refresh token。
 
-token 保存在 `~/.hermes/google_chat_user_tokens/<sanitized_email>.json`。该用户私信中后续的文件请求将使用*其*token，机器人以其身份上传，消息投递到其 space。
+token 保存在 `~/.hermes/google_chat_user_tokens/<sanitized_email>.json`。该用户私信中后续的文件请求将使用*其* token，机器人以其身份上传，消息投递到其 space。
 
 如需撤销：`/setup-files revoke` 仅删除该用户的 token，其他用户的 token 不受影响。
 
@@ -225,7 +232,7 @@ token 保存在 `~/.hermes/google_chat_user_tokens/<sanitized_email>.json`。该
 
 ### 多用户行为
 
-当请求者尚无每用户 token 时，机器人会回退到 `~/.hermes/google_chat_user_token.json` 中的旧版单用户 token（如果存在于多用户支持之前的安装中）。两者均不可用时，机器人会发送清晰的文字提示，告知请求者运行 `/setup-files`。
+当请求者尚无每用户 token 时，机器人会回退到 `~/.hermes/google_chat_user_token.json` 中的旧版单用户 token（如果存在于多用户支持之前的安装）。两者均不可用时，机器人会发送清晰的文字提示，告知请求者运行 `/setup-files`。
 
 用户撤销只清除自己的槽位。某用户 token 产生的 401/403 只驱逐该用户的缓存，不影响其他用户。
 
@@ -255,12 +262,17 @@ Chat API 默认配额为每个 space 每分钟 60 条消息。如果 agent 产�
 
 请求者没有每用户 OAuth token，也没有旧版回退。在其私信中运行 `/setup-files` 并按照第十步操作。交换完成后，下次文件请求将原生上传，无需重启 gateway。
 
-**`/setup-files start` 提示"No client credentials stored on the host."**
+**`/setup-files start` 提示"No client credentials stored."**
 
-一次性宿主机设置未完成。在运行 Hermes 的宿主机终端中执行：
+一次性设置未*对此 profile* 完成（客户端密钥是 profile 作用域的，一个 profile 下的注册不会被另一个 profile 看到）。在终端中，在 gateway 使用的 profile 下运行：
 
 ```bash
-python -m gateway.platforms.google_chat_user_oauth \
+# 默认 profile：
+python -m plugins.platforms.google_chat.oauth \
+    --client-secret /path/to/client_secret.json
+
+# 命名 profile：
+hermes -p <profile> python -m plugins.platforms.google_chat.oauth \
     --client-secret /path/to/client_secret.json
 ```
 

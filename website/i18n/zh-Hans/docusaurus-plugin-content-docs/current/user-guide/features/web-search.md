@@ -158,17 +158,33 @@ SearXNG 默认禁用 JSON 输出。复制生成的配置并启用它：
 docker cp searxng:/etc/searxng/settings.yml ~/searxng/searxng/settings.yml
 ```
 
-打开 `~/searxng/searxng/settings.yml`，找到 `formats` 块（约第 84 行）：
+打开 `~/searxng/searxng/settings.yml`。
+如果存在 `use_default_settings: true`，则该文件仅包含您的覆盖项，所有其他设置继承自内置默认值。
+要为 Hermes 启用 JSON 响应，请添加以下覆盖项：
 
 ```yaml
-# 修改前（默认——JSON 已禁用）：
-formats:
-  - html
+search:
+  formats:
+    - html
+    - json
+```
 
-# 修改后（为 Hermes 启用 JSON）：
-formats:
-  - html
-  - json
+您的 `settings.yml` 应类似如下：
+
+```yaml
+# 在扩展现有默认值之前请先阅读文档：
+# https://docs.searxng.org/admin/settings/
+
+use_default_settings: true
+
+server:
+  secret_key: "abcdef12345678"
+  image_proxy: true
+
+search:
+  formats:
+    - html
+    - json
 ```
 
 **5. 重启以应用更改：**
@@ -282,7 +298,7 @@ PARALLEL_API_KEY=your-parallel-key-here
 
 ```bash
 # ~/.hermes/.env（环境变量路径）
-XAI_API_KEY=sk-xai-your-key-here
+XAI_API_KEY=«redacted:sk-…»
 ```
 
 或对于 SuperGrok 订阅用户：

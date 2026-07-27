@@ -76,9 +76,29 @@ agent 对于语法正确但存在语义问题的文件，会看到 ``lint: ok`` 
 | Prisma | `prisma language-server` | 手动 |
 | Kotlin | `kotlin-language-server` | 手动 |
 | Java | `jdtls` | 手动 |
+| PowerShell | `PowerShellEditorServices`（`pwsh` 宿主） | 手动（发布 zip） |
 
 对于"手动"条目，请通过该语言对应的工具链管理器安装服务器（rustup、ghcup、opam、brew 等）。
 Hermes 会自动检测 PATH 上或 `<HERMES_HOME>/lsp/bin/` 中的二进制文件。
+
+### PowerShell
+
+PowerShellEditorServices 并非单个二进制文件——它是一个由
+`pwsh`（PowerShell 7+）或 `powershell` 宿主编译的 PowerShell 模块包。
+安装步骤：
+
+1. 安装 [PowerShell](https://github.com/PowerShell/PowerShell)，确保
+   `pwsh`（或 Windows 上的 `powershell`）在 PATH 中。
+2. 从 [PowerShellEditorServices releases](https://github.com/PowerShell/PowerShellEditorServices/releases)
+   下载最新发布 zip 并解压。
+3. 将 Hermes 指向解压后的包目录——该目录包含
+   `PowerShellEditorServices/Start-EditorServices.ps1`。可选方式：
+   - 在 `config.yaml` 中设置 `lsp.servers.powershell.command: ["/path/to/bundle"]`，或
+   - 解压到 `<HERMES_HOME>/lsp/PowerShellEditorServices`，或
+   - 导出 `PSES_BUNDLE_PATH=/path/to/bundle`。
+
+`hermes lsp status` 在找到 `pwsh` 后会报告 `installed`；若包缺失，
+你会在日志中看到一次带有下载链接的警告。
 
 部分服务器需要与 npm 不会自动拉取的对等依赖一同安装。当前的典型情况是
 `typescript-language-server`，它要求 `typescript` SDK 可从同一 `node_modules`

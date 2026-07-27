@@ -8,6 +8,10 @@ sidebar_position: 1
 
 Hermes Agent 包含一套丰富的能力，远超基础聊天范畴。从持久化记忆、文件感知上下文，到浏览器自动化和语音对话，这些功能协同工作，使 Hermes 成为一个强大的自主助手。
 
+:::tip 不知从何入手？
+`hermes setup --portal` 一条命令即可配置模型提供商及全部四个 Tool Gateway 工具（网络搜索、图像生成、TTS、浏览器）。参见 [Nous Portal](/integrations/nous-portal)。
+:::
+
 ## 核心功能
 
 - **[工具与工具集](tools.md)** — 工具是扩展 Agent 能力的函数。它们被组织成逻辑工具集，可按平台启用或禁用，涵盖网络搜索、终端执行、文件编辑、记忆、委派等功能。
@@ -43,7 +47,7 @@ Hermes Agent 包含一套丰富的能力，远超基础聊天范畴。从持久�
 - **[记忆提供商](memory-providers.md)** — 接入外部记忆后端（Honcho、OpenViking、Mem0、Hindsight、Holographic、RetainDB、ByteRover、Supermemory），实现跨会话用户建模和超越内置记忆系统的个性化。
 - **[API 服务器](api-server.md)** — 将 Hermes 作为兼容 OpenAI 的 HTTP 端点暴露。连接任何支持 OpenAI 格式的前端——Open WebUI、LobeChat、LibreChat 等。
 - **[IDE 集成（ACP）](acp.md)** — 在兼容 ACP 的编辑器（如 VS Code、Zed 和 JetBrains）中使用 Hermes。聊天、工具活动、文件 diff 和终端命令均在编辑器内渲染。
-- **[强化学习训练](rl-training.md)** — 从 Agent 会话中生成轨迹数据，用于强化学习和模型微调。
+- **[批处理](batch-processing.md)** — 在 CLI 中跨多个 prompt 或任务并行运行 Agent，输出结构化结果并捕获轨迹，适用于评估或下游训练流水线。
 
 ## 自定义
 

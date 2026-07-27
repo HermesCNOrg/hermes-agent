@@ -1,12 +1,12 @@
 ---
 sidebar_position: 12
 title: "使用 Skills"
-description: "查找、安装、使用和创建 skills——按需加载的知识文档，用于教会 Hermes 新的工作流程"
+description: "查找、安装、使用和创建 skills——按需加载的知识，教会 Hermes 新的工作流程"
 ---
 
 # 使用 Skills
 
-Skills（技能）是按需加载的知识文档，用于教会 Hermes 如何处理特定任务——从生成 ASCII 艺术到管理 GitHub PR。本指南介绍日常使用方法。
+Skills（技能）是按需加载的知识文档，教会 Hermes 如何处理特定任务——从生成 ASCII 艺术到管理 GitHub PR。本指南介绍日常使用方法。
 
 完整技术参考请见 [Skills 系统](/user-guide/features/skills)。
 
@@ -162,7 +162,7 @@ metadata:
 hermes skills config gif-search
 
 # 查看所有 skill 配置
-hermes config get skills.config
+hermes config show | grep '^skills\.config'
 ```
 
 ---

@@ -9,6 +9,10 @@ Hermes 可以选择将 `openai/*` 和 `openai-codex/*` 的轮次交由 [Codex CL
 
 此功能**仅限手动启用**。除非你主动切换该标志，否则 Hermes 的默认行为不变。Hermes 不会自动将你路由到此运行时。
 
+:::tip
+不使用 OpenAI Codex？运行 `hermes setup --portal`，即可一步配置使用 Claude、Gemini 等模型的非 Codex 后端。详见 [Nous Portal](/integrations/nous-portal)。
+:::
+
 ## 为什么使用
 
 - 通过 Codex CLI 使用的相同认证流程，使用你的 **ChatGPT 订阅**运行 OpenAI agent 轮次（无需 API 密钥）。

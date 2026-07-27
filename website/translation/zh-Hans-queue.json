@@ -1,7 +1,7 @@
 [
   {
     "path": "getting-started/installation.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P0",
     "tier": "getting-started"
   },
@@ -37,7 +37,7 @@
   },
   {
     "path": "getting-started/updating.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P0",
     "tier": "getting-started"
   },
@@ -49,13 +49,13 @@
   },
   {
     "path": "user-guide/configuration.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P0",
     "tier": "getting-started"
   },
   {
     "path": "user-guide/tui.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P0",
     "tier": "getting-started"
   },
@@ -67,13 +67,13 @@
   },
   {
     "path": "reference/cli-commands.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
   {
     "path": "reference/environment-variables.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -91,7 +91,7 @@
   },
   {
     "path": "reference/model-catalog.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -103,13 +103,13 @@
   },
   {
     "path": "reference/slash-commands.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
   {
     "path": "reference/tools-reference.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -127,13 +127,13 @@
   },
   {
     "path": "user-guide/configuring-models.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
   {
     "path": "user-guide/desktop.md",
-    "status": "missing",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -163,7 +163,7 @@
   },
   {
     "path": "user-guide/features/browser.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -181,7 +181,7 @@
   },
   {
     "path": "user-guide/features/codex-app-server-runtime.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -211,7 +211,7 @@
   },
   {
     "path": "user-guide/features/cron.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -223,7 +223,7 @@
   },
   {
     "path": "user-guide/features/delegation.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -235,7 +235,7 @@
   },
   {
     "path": "user-guide/features/extending-the-dashboard.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -283,25 +283,25 @@
   },
   {
     "path": "user-guide/features/kanban.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
   {
     "path": "user-guide/features/lsp.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
   {
     "path": "user-guide/features/mcp.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
   {
     "path": "user-guide/features/memory-providers.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -313,13 +313,13 @@
   },
   {
     "path": "user-guide/features/mixture-of-agents.md",
-    "status": "missing",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
   {
     "path": "user-guide/features/overview.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -391,7 +391,7 @@
   },
   {
     "path": "user-guide/features/tts.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -409,25 +409,25 @@
   },
   {
     "path": "user-guide/features/web-dashboard.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
   {
     "path": "user-guide/features/web-search.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
   {
     "path": "user-guide/features/x-search.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
   {
     "path": "user-guide/git-worktrees.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -451,7 +451,7 @@
   },
   {
     "path": "user-guide/messaging/discord.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -469,7 +469,7 @@
   },
   {
     "path": "user-guide/messaging/google_chat.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -481,7 +481,7 @@
   },
   {
     "path": "user-guide/messaging/index.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -499,7 +499,7 @@
   },
   {
     "path": "user-guide/messaging/matrix.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -559,7 +559,7 @@
   },
   {
     "path": "user-guide/messaging/slack.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -583,7 +583,7 @@
   },
   {
     "path": "user-guide/messaging/telegram.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -613,7 +613,7 @@
   },
   {
     "path": "user-guide/messaging/whatsapp-cloud.md",
-    "status": "missing",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -631,7 +631,7 @@
   },
   {
     "path": "user-guide/multi-profile-gateways.md",
-    "status": "missing",
+    "status": "draft",
     "priority": "P1",
     "tier": "user-guide"
   },
@@ -805,13 +805,13 @@
   },
   {
     "path": "developer-guide/plugins/index.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P2",
     "tier": "developer-and-guides"
   },
   {
     "path": "developer-guide/programmatic-integration.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P2",
     "tier": "developer-and-guides"
   },
@@ -895,7 +895,7 @@
   },
   {
     "path": "guides/cron-troubleshooting.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P2",
     "tier": "developer-and-guides"
   },
@@ -907,7 +907,7 @@
   },
   {
     "path": "guides/delegation-patterns.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P2",
     "tier": "developer-and-guides"
   },
@@ -985,7 +985,7 @@
   },
   {
     "path": "guides/run-hermes-with-nous-portal.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P2",
     "tier": "developer-and-guides"
   },
@@ -1003,7 +1003,7 @@
   },
   {
     "path": "guides/tips.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P2",
     "tier": "developer-and-guides"
   },
@@ -1033,7 +1033,7 @@
   },
   {
     "path": "guides/work-with-skills.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P2",
     "tier": "developer-and-guides"
   },
@@ -1051,19 +1051,19 @@
   },
   {
     "path": "integrations/index.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P2",
     "tier": "developer-and-guides"
   },
   {
     "path": "integrations/nous-portal.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P2",
     "tier": "developer-and-guides"
   },
   {
     "path": "integrations/providers.md",
-    "status": "needs_review",
+    "status": "draft",
     "priority": "P2",
     "tier": "developer-and-guides"
   },

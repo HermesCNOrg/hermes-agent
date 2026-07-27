@@ -53,7 +53,7 @@ delegate_task(
 )
 ```
 
-子智能体会收到一个基于你的 goal 和 context 构建的专注系统 prompt（提示词），指示其完成任务并提供结构化摘要，包括所做的事情、发现的内容、修改的文件以及遇到的问题。
+子智能体会收到一个基于你的 goal 和 context 构建的专注系统 prompt，指示其完成任务并提供结构化摘要，包括所做的事情、发现的内容、修改的文件以及遇到的问题。
 
 ## 实际示例
 
@@ -165,7 +165,6 @@ delegation:
 - `clarify` — 子智能体无法与用户交互
 - `memory` — 不可写入共享持久内存
 - `code_execution` — 子智能体应逐步推理
-- `send_message` — 无跨平台副作用（例如发送 Telegram 消息）
 
 ## 最大迭代次数
 
@@ -210,7 +209,7 @@ TUI 提供 `/agents` 浮层（别名 `/tasks`），将递归 `delegate_task` 扇
 
 经典 CLI 仅将 `/agents` 打印为文本摘要；TUI 才是浮层真正发挥作用的地方。参见 [TUI — 斜杠命令](/user-guide/tui#slash-commands)。
 
-## 深度限制与嵌套编排 {#depth-limit-and-nested-orchestration}
+## 深度限制与嵌套编排
 
 默认情况下，委派是**扁平的**：父智能体（深度 0）生成子智能体（深度 1），而这些子智能体无法进一步委派。这可防止失控的递归委派。
 
@@ -225,7 +224,7 @@ delegate_task(
 ```
 
 - `role="leaf"`（默认）：子智能体无法进一步委派——与扁平委派行为相同。
-- `role="orchestrator"`：子智能体保留 `delegation` 工具集。受 `delegation.max_spawn_depth` 约束（默认 **1** = 扁平，因此在默认设置下 `role="orchestrator"` 无效）。将 `max_spawn_depth` 提高到 2 可允许编排者子智能体生成叶子孙智能体；设为 3 则允许三层（上限）。
+- `role="orchestrator"`：子智能体保留 `delegation` 工具集。受 `delegation.max_spawn_depth` 约束（默认 **1** = 扁平，因此在默认设置下 `role="orchestrator"` 无效）。将 `max_spawn_depth` 提高到 2 可允许编排者子智能体生成叶子孙智能体；3 及以上则支持更深层树结构。没有硬性上限——成本是实际限制。
 - `delegation.orchestrator_enabled: false`：全局开关，无论 `role` 参数如何，强制所有子智能体为 `leaf`。
 
 **费用警告：** 在 `max_spawn_depth: 3` 和 `max_concurrent_children: 3` 的情况下，树可达到 3×3×3 = 27 个并发叶子智能体。每增加一层都会成倍增加开销——请谨慎提高 `max_spawn_depth`。
@@ -251,7 +250,7 @@ delegate_task(
 
 - 每个子智能体获得其**独立的终端会话**（与父智能体分离）
 - **嵌套委派为可选项**——只有 `role="orchestrator"` 的子智能体可以进一步委派，且仅在 `max_spawn_depth` 从默认值 1（扁平）提高后才生效。可通过 `orchestrator_enabled: false` 全局禁用。
-- 叶子子智能体**不能**调用：`delegate_task`、`clarify`、`memory`、`send_message`、`execute_code`。编排者子智能体保留 `delegate_task`，但仍不能使用其他四个。
+- 叶子子智能体**不能**调用：`delegate_task`、`clarify`、`memory`、`execute_code`。编排者子智能体保留 `delegate_task`，但仍不能使用其他三个。
 - **中断传播**——中断父智能体会中断所有活跃的子智能体（包括编排者下的孙智能体）
 - 只有最终摘要进入父智能体的上下文，保持 token 使用高效
 - 子智能体继承父智能体的 **API 密钥、provider 配置和凭据池**（支持在速率限制时轮换密钥）
@@ -277,7 +276,7 @@ delegate_task(
 delegation:
   max_iterations: 50                        # Max turns per child (default: 50)
   # max_concurrent_children: 3              # Parallel children per batch (default: 3)
-  # max_spawn_depth: 1                      # Tree depth (1-3, default 1 = flat). Raise to 2 to allow orchestrator children to spawn leaves; 3 for three levels.
+  # max_spawn_depth: 1                      # Tree depth (floor 1, no ceiling, default 1 = flat). Raise to 2 to allow orchestrator children to spawn leaves; 3+ for deeper trees.
   # orchestrator_enabled: true              # Disable to force all children to leaf role.
   model: "google/gemini-3-flash-preview"             # Optional provider/model override
   provider: "openrouter"                             # Optional built-in provider

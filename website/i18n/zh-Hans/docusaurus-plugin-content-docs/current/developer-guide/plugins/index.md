@@ -1,5 +1,6 @@
 ---
 sidebar_label: "Build a Plugin"
+slug: /developer-guide/plugins
 title: "构建 Hermes 插件"
 description: "逐步指南：构建包含工具、钩子、数据文件和技能的完整 Hermes 插件"
 ---
@@ -33,6 +34,10 @@ Hermes 有多种不同的可插拔接口——有些使用 Python `register_*` A
 | 一流的**核心**推理提供商（非插件） | [添加提供商](/developer-guide/adding-providers) |
 
 查看完整的[可插拔接口表](/user-guide/features/plugins#pluggable-interfaces--where-to-go-for-each)，获取每种扩展接口的汇总视图，包括配置驱动（TTS、STT、MCP、shell 钩子）和放入目录（网关钩子）两种方式。
+:::
+
+:::caution 第三方产品插件作为独立仓库发布——不合并到核心树中
+集成**他人产品或项目**的插件——可观测性/指标后端、供应商 SaaS 连接器、分析仪表盘、付费服务接入——应作为**独立插件仓库**构建和分发，而非合并到 `NousResearch/hermes-agent`。用户通过 `~/.hermes/plugins/` 或 pip entry point 安装；本指南中的所有内容在独立仓库中同样适用。这是耦合与维护方面的决策（核心迭代快，我们不拥有你的后端），而非质量门槛——插件可以很出色，但仍应属于自有仓库。请在 Nous Research Discord 的 `#plugins-skills-and-skins` 频道推广。参见 [CONTRIBUTING.md](https://github.com/NousResearch/hermes-agent/blob/main/CONTRIBUTING.md) 了解相关政策。
 :::
 
 ## 你将构建什么
@@ -275,13 +280,18 @@ def register(ctx):
 **`dispatch_tool` 示例——执行工具的斜杠命令：**
 
 ```python
-def handle_scan(ctx, argstr):
+def handle_scan(ctx, raw_args: str):
     """Implement /scan by invoking the terminal tool through the registry."""
-    result = ctx.dispatch_tool("terminal", {"command": f"find . -name '{argstr}'"})
+    result = ctx.dispatch_tool("terminal", {"command": f"find . -name '{raw_args}'"})
     return result  # returned to the caller's chat UI
 
 def register(ctx):
-    ctx.register_command("scan", handle_scan, help="Find files matching a glob")
+    # Handlers receive a single raw_args string; close over ctx via a lambda.
+    ctx.register_command(
+        "scan",
+        lambda raw: handle_scan(ctx, raw),
+        description="Find files matching a glob",
+    )
 ```
 
 被分发的工具会经过正常的审批、脱敏和预算流程——这是真实的工具调用，而非绕过这些流程的捷径。
@@ -315,7 +325,7 @@ Plugins (1):
   ✓ calculator v1.0.0 (2 tools, 1 hooks)
 ```
 
-### 调试插件发现问题
+### 调试插件发现
 
 如果你的插件没有出现，或出现了但未加载——设置 `HERMES_PLUGINS_DEBUG=1` 可在 stderr 获取详细的发现日志：
 
@@ -484,6 +494,51 @@ def my_tool_handler(args, **kwargs):
 
 当全局设置 `security.allow_lazy_installs: false` 时，`ensure()` 会立即抛出 `FeatureUnavailable` 并附带修复提示——你的插件应捕获该异常并优雅降级（返回错误结果，而非让工具循环崩溃）。
 
+### 线程安全的懒加载单例
+
+插件通常会在模块级变量中缓存一个昂贵的对象——SDK 客户端、HTTP 会话、连接池——在首次使用时构建：
+
+```python
+_client = None
+
+def get_client():
+    global _client
+    if _client is not None:
+        return _client
+    _client = ExpensiveClient(...)   # ← TOCTOU 竞态条件
+    return _client
+```
+
+这是一个隐患。Hermes 在单进程中运行多个线程（委托工具调用、后台工作线程、自我改进分支），因此两个线程可能在 `_client` 被赋值之前同时进入 `get_client()`，**都**通过了 `is not None` 检查，**都**运行了昂贵的构建，第二次写入覆盖了第一次——导致失败方打开的任何资源（连接、文件句柄、后台线程）泄漏。
+
+不要手动编写锁。使用 `plugins/plugin_utils.py` 中的辅助函数：
+
+```python
+from plugins.plugin_utils import lazy_singleton, SingletonSlot
+
+# 零参数访问器 → 装饰它：
+@lazy_singleton
+def get_client():
+    return ExpensiveClient(load_config())   # 恰好运行一次
+
+client = get_client()    # 线程安全
+get_client.reset()       # 丢弃实例（测试/清理）
+
+
+# 需要构建参数的访问器 → 使用槽：
+_slot: SingletonSlot = SingletonSlot()
+
+def get_client(config=None):
+    return _slot.get(lambda: ExpensiveClient(resolve(config)))
+
+def reset_client():
+    _slot.reset()
+```
+
+两者都使用双重检查锁定序列化并发的首次调用，且工厂函数最多运行一次。如果工厂函数抛出异常，不缓存任何内容，下次调用会重试。honcho 记忆插件（`plugins/memory/honcho/client.py`）是参考消费者。
+
+> 经验法则：任何时候你写 `global _something` 后跟 `is None` 检查和构建，都应改用这些方法之一。
+
 ### 条件工具可用性
 
 对于依赖可选库的工具：
@@ -537,12 +592,17 @@ def register(ctx):
 | [`post_llm_call`](/user-guide/features/hooks#post_llm_call) | 每轮一次，工具调用循环后（仅成功轮次） | `session_id: str, user_message: str, assistant_response: str, conversation_history: list, model: str, platform: str` | 忽略 |
 | [`on_session_start`](/user-guide/features/hooks#on_session_start) | 新会话创建（仅第一轮） | `session_id: str, model: str, platform: str` | 忽略 |
 | [`on_session_end`](/user-guide/features/hooks#on_session_end) | 每次 `run_conversation` 调用结束 + CLI 退出 | `session_id: str, completed: bool, interrupted: bool, model: str, platform: str` | 忽略 |
-| [`on_session_finalize`](/user-guide/features/hooks#on_session_finalize) | CLI/网关销毁活跃会话 | `session_id: str \| None, platform: str` | 忽略 |
+| [`on_session_finalize`](/user-guide/features/hooks#on_session_finalize) | CLI/网关销毁活跃会话 | `session_id: str \\| None, platform: str` | 忽略 |
 | [`on_session_reset`](/user-guide/features/hooks#on_session_reset) | 网关切换新会话键（`/new`、`/reset`） | `session_id: str, platform: str` | 忽略 |
+| `kanban_task_claimed` | 看板任务被认领（分发器进程，在 worker 生成前） | `task_id: str, board: str \\| None, assignee: str \\| None, run_id: int \\| None, profile_name: str` | 忽略 |
+| `kanban_task_completed` | 看板任务完成（worker 进程） | `task_id, board, assignee, run_id, profile_name, summary: str \\| None` | 忽略 |
+| `kanban_task_blocked` | 看板任务被阻塞（worker 进程） | `task_id, board, assignee, run_id, profile_name, reason: str \\| None` | 忽略 |
 
 大多数钩子是即发即忘的观察者——其返回值被忽略。例外是 `pre_llm_call`，它可以向对话中注入上下文。
 
 所有回调都应接受 `**kwargs` 以保持向前兼容性。如果钩子回调崩溃，会被记录日志并跳过。其他钩子和代理继续正常运行。
+
+看板生命周期钩子在**看板数据库变更提交之后**触发，因此回调始终看到持久化状态，不会持有 SQLite 写锁。由于看板 worker 作为独立的 `hermes -p <profile> chat -q` 子进程运行，`kanban_task_claimed` 在**分发器**进程中触发，而 `kanban_task_completed` / `kanban_task_blocked` 在 **worker** 进程中触发——在分发器中注册钩子可集中观察所有转换，在 worker 中注册则获取每任务会话内的上下文。
 
 ### `pre_llm_call` 上下文注入
 
@@ -562,6 +622,20 @@ return None
 ```
 
 任何非 None、非空的返回值，只要包含 `"context"` 键（或为非空纯字符串），都会被收集并追加到当前轮次的用户消息中。
+
+#### 过大量上下文溢出
+
+每个钩子的上下文默认限制为 `10,000` 个字符。超出限制的内容会写入 `$HERMES_HOME/hook_outputs/<session_id>/<uuid>.txt`，并替换为头部/尾部预览及保存路径。模型如果确实需要，可以通过 `read_file` 或 `terminal` 读取完整内容。这防止了失控的插件膨胀每一轮的提示词并破坏提示词缓存前缀。可在 `config.yaml` 中调整：
+
+```yaml
+hooks:
+  output_spill:
+    enabled: true          # 默认：true
+    max_chars: 10000       # 默认值；设更高可退出溢出机制
+    preview_head: 500      # 预览顶部显示的字符数
+    preview_tail: 500      # 预览底部显示的字符数
+    # directory: null      # 默认：$HERMES_HOME/hook_outputs
+```
 
 #### 注入的工作原理
 
@@ -700,12 +774,12 @@ def register(ctx):
 
 注册后，用户可以在任意会话中输入 `/mystatus`。该命令会出现在自动补全、`/help` 输出和 Telegram 机器人菜单中。
 
-**签名：** `ctx.register_command(name: str, handler: Callable, description: str = "")`
+**签名：** `ctx.register_command(name: str, handler: Callable, description: str = "", args_hint: str = "")`
 
 | 参数 | 类型 | 描述 |
 |-----------|------|-------------|
 | `name` | `str` | 不含前导斜杠的命令名称（例如 `"lcm"`、`"mystatus"`） |
-| `handler` | `Callable[[str], str \| None]` | 以原始参数字符串调用。也可以是 `async`。 |
+| `handler` | `Callable[[str], str \\| None]` | 以原始参数字符串调用。也可以是 `async`。 |
 | `description` | `str` | 显示在 `/help`、自动补全和 Telegram 机器人菜单中 |
 
 **与 `register_cli_command()` 的主要区别：**
@@ -759,15 +833,70 @@ def register(ctx):
 |-----------|------|-------------|
 | `name` | `str` | 工具注册表中的工具名称（例如 `"delegate_task"`、`"file_edit"`） |
 | `args` | `dict` | 工具参数，与模型发送的格式相同 |
-| `parent_agent` | `Agent \| None` | 可选覆盖。省略时从当前 CLI 代理解析（网关模式下优雅降级） |
+| `parent_agent` | `Agent \\| None` | 可选覆盖。省略时从当前 CLI 代理解析（网关模式下优雅降级） |
 
 **运行时行为：**
 
 - **CLI 模式：** `parent_agent` 从活跃的 CLI 代理解析，工作区提示、spinner 和模型选择按预期继承。
-- **网关模式：** 没有 CLI 代理，工具优雅降级——工作区从 `TERMINAL_CWD` 读取，不显示 spinner。
+- **网关模式：** 没有 CLI 代理，工具优雅降级——工作区从配置的终端工作目录读取，不显示 spinner。
 - **显式覆盖：** 如果调用者显式传入 `parent_agent=`，则尊重该值，不会被覆盖。
 
 这是从插件命令分发工具的公开稳定接口。插件不应访问 `ctx._cli_ref.agent` 或类似的私有状态。
+
+### 从钩子内部操作（profile + 工具）
+
+`ctx._cli_ref` 仅在**交互式 CLI** 会话中填充。在网关中、在非交互式 `hermes chat -q` 运行时，以及在**看板生成的 worker 会话**中，它为 `None`——因此任何通过 `_cli_ref` 访问的插件逻辑在这些上下文中会静默无操作。两个稳定、与会话无关的 API 覆盖了钩子实际所需的功能：
+
+- **`ctx.profile_name`** ——活跃的 profile 名称（例如 `"default"`，或者看板 worker 中的 assignee profile）。派生自 `HERMES_HOME`，在任何地方都可用，不依赖 `_cli_ref`。
+- **`ctx.dispatch_tool(name, args)`** ——调用任意已注册的工具（内置或插件），包括 `kanban_*` 工具、`delegate_task`、`terminal`、`read_file` 等。在钩子回调中无论钩子在哪个进程中触发都可使用。
+
+两者结合允许看板生命周期钩子观察转换并在不接触框架内部的情况下操作看板：
+
+```python
+def register(ctx):
+    def on_blocked(*, task_id, reason=None, **kw):
+        # 在 worker 进程中运行；此处 ctx._cli_ref 为 None。
+        ctx.dispatch_tool("kanban_comment", {
+            "task_id": task_id,
+            "comment": f"[{ctx.profile_name}] auto-noted block: {reason}",
+        })
+    ctx.register_hook("kanban_task_blocked", on_blocked)
+```
+
+如需运行完整的 `hermes <subcommand>`（例如 `hermes kanban show`），通过 `ctx.dispatch_tool("terminal", {"command": "hermes kanban show ..."})` 使用工具 shell 执行——无头 worker 会话中没有进程内斜杠命令桥接，工具是从钩子驱动 Hermes 的受支持方式。
+
+### 处理 Slack Block Kit 按钮点击
+
+发布包含交互元素（按钮、溢出菜单、日期选择器等）的 Block Kit 消息的插件，可以直接向 Slack 适配器注册点击处理器——无需对 `slack_bolt.AsyncApp` 进行猴子补丁。
+
+```python
+def register(ctx):
+    async def _on_approve(ack, body, action):
+        # 3 秒内确认——slack_bolt 要求。
+        await ack()
+        # body["channel"]["id"], body["user"]["id"], body["message"]["ts"]
+        # action["action_id"], action["value"]
+        sweep_id = (action.get("value") or "").split("|", 1)[-1]
+        # ...做确定性工作，然后发送后续消息。
+
+    ctx.register_slack_action_handler("inbox_sweep_approve", _on_approve)
+```
+
+**签名：** `ctx.register_slack_action_handler(action_id, callback) -> None`
+
+| 参数 | 类型 | 描述 |
+|-----------|------|-------------|
+| `action_id` | `str \\| re.Pattern \\| dict` | `slack_bolt.App.action()` 接受的任何内容：字面 `action_id`、匹配多个 id 的编译正则、或约束字典如 `{"action_id": "...", "block_id": "..."}` |
+| `callback` | async callable | 按 slack_bolt 约定接收 `(ack, body, action)` |
+
+**运行时行为：**
+
+- 处理器在插件加载时排队，并在 Slack 平台连接时接入适配器的 `slack_bolt.AsyncApp`。
+- 每个回调都有防御性包装：如果你的处理器抛出异常，网关会记录错误并尽力确认点击，以便 Slack 停止重试。
+- 标准 slack_bolt 规则适用——3 秒内 `await ack()`，然后执行长时间工作。
+- 对于多工作区部署，处理器会响应来自任何已连接工作区的点击；如果需要限定行为作用域，使用 `body["team"]["id"]`。
+
+这是插件参与 Slack 交互的公开方式。较旧的插件可能会修补 `SlackAdapter.connect`；请优先使用此 API。
 
 :::tip
 本指南涵盖**通用插件**（工具、钩子、斜杠命令、CLI 命令）。以下各节简要介绍每种专用插件类型的编写模式；每节均链接到其完整指南以获取字段参考和示例。
@@ -890,11 +1019,15 @@ class MyMemoryProvider(MemoryProvider):
     def initialize(self, session_id: str, **kwargs) -> None:
         self._session_id = session_id
 
-    def sync_turn(self, user_message, assistant_response, **kwargs) -> None:
+    def sync_turn(self, user_content, assistant_content, *,
+                  session_id="", messages=None) -> None:
         ...
 
-    def prefetch(self, query: str, **kwargs) -> str | None:
+    def prefetch(self, query, *, session_id="") -> str:
         ...
+
+    def get_tool_schemas(self) -> list[dict]:
+        return []   # required @abstractmethod — see full guide
 
 def register(ctx):
     ctx.register_memory_provider(MyMemoryProvider())
@@ -915,8 +1048,9 @@ class MyContextEngine(ContextEngine):
     def name(self) -> str:
         return "my-engine"
 
-    def should_compress(self, messages, model) -> bool: ...
-    def compress(self, messages, model) -> list[dict]: ...
+    def update_from_response(self, usage) -> None: ...
+    def should_compress(self, prompt_tokens: int = None) -> bool: ...
+    def compress(self, messages, current_tokens=None, focus_topic=None) -> list: ...
 
 def register(ctx):
     ctx.register_context_engine(MyContextEngine())
@@ -940,7 +1074,9 @@ class MyImageGenProvider(ImageGenProvider):
         return "my-imggen"
 
     def is_available(self) -> bool: ...
-    def generate(self, prompt: str, **kwargs) -> str: ...   # returns image path
+    def generate(self, prompt: str, aspect_ratio="landscape", **kwargs) -> dict:
+        # returns success_response(...) / error_response(...)
+        ...
 
 def register(ctx):
     ctx.register_image_gen_provider(MyImageGenProvider())
@@ -1001,7 +1137,7 @@ async def handle(event_type: str, context: dict) -> None:
         pass
 ```
 
-事件包括 `gateway:startup`、`session:start`、`session:end`、`session:reset`、`agent:start`、`agent:step`、`agent:end` 以及通配符 `command:*`。钩子中的错误会被捕获并记录日志——它们不会阻塞主流程。
+事件包括 `gateway:startup`、`session:start`、`session:end`、`session:reset`、`agent:start`、`agent:step`、`agent:end`，以及通配符 `command:*`。钩子中的错误会被捕获并记录日志——它们不会阻塞主流程。
 
 **完整指南：** [网关事件钩子](/user-guide/features/hooks#gateway-event-hooks)。
 
@@ -1071,7 +1207,11 @@ pip install hermes-plugin-calculator
 
 ## 为 NixOS 分发
 
-如果你提供了带有 entry points 的 `pyproject.toml`，NixOS 用户可以声明式安装你的插件：
+:::warning Nix 不再是明确支持的目标
+Nix/NixOS 已不再是明确支持的安装路径（仅尽力而为）——参见 [Nix 设置](/getting-started/nix-setup)。本节内容面向已在 NixOS 上部署的用户。
+:::
+
+NixOS 用户可以在你提供带有 entry points 的 `pyproject.toml` 时声明式安装你的插件：
 
 **Entry-point 插件**（推荐用于分发）：
 ```nix

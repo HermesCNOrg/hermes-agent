@@ -6,7 +6,7 @@ description: "一个订阅，300+ 前沿模型，Tool Gateway，以及 Nous Chat
 
 # Nous Portal
 
-[Nous Portal](https://portal.nousresearch.com) 是 Nous Research 的统一订阅网关，也是**运行 Hermes Agent 的推荐方式**。一次 OAuth 登录，即可替代原本需要手动配置的各模型厂商独立账号、API 密钥和计费关系。
+[Nous Portal](https://portal.nousresearch.com) 是 Nous Research 的统一订阅网关，也是**运行 Hermes Agent 的推荐方式**。一次 OAuth 登录，即可替代原本需要在每个模型实验室、搜索 API、图像生成器和浏览器提供商之间分别管理独立账号、API 密钥和计费关系的繁琐操作。
 
 如果你只有时间配置一件事，就配置这个。最快路径：
 
@@ -26,19 +26,23 @@ Portal 代理了来自整个生态系统的精选 agentic 模型目录——统�
 
 | 系列 | 模型 |
 |--------|--------|
-| **Anthropic Claude** | Opus、Sonnet、Haiku（4.x 系列） |
-| **OpenAI** | GPT-5.4、o 系列推理模型 |
-| **Google Gemini** | 2.5 Pro、2.5 Flash |
-| **DeepSeek** | DeepSeek V3.2、DeepSeek-R1 |
-| **Qwen** | Qwen3 系列、Qwen Coder |
-| **Kimi / Moonshot** | Kimi-K2、Kimi-Latest |
-| **GLM / Zhipu** | GLM-4.6、GLM-4-Plus |
-| **MiniMax** | M2.7、M1 |
-| **xAI** | Grok-4、Grok-3 |
+| **Anthropic Claude** | Opus 4.7、Opus 4.6、Sonnet 4.6、Haiku 4.5 |
+| **OpenAI** | GPT-5.5、GPT-5.5 Pro、GPT-5.4 Mini、GPT-5.4 Nano、GPT-5.3 Codex |
+| **Google Gemini** | Gemini 3 Pro Preview、Gemini 3 Flash Preview、Gemini 3.1 Pro Preview、Gemini 3.1 Flash Lite Preview |
+| **DeepSeek** | DeepSeek V4 Pro |
+| **Qwen** | Qwen3.7-Max、Qwen3.6-35B-A3B |
+| **Kimi / Moonshot** | Kimi K2.6 |
+| **GLM / Zhipu** | GLM-5.1 |
+| **MiniMax** | MiniMax M2.7 |
+| **xAI** | Grok 4.3 |
+| **NVIDIA** | Nemotron-3 Super 120B-A12B |
+| **Tencent** | Hunyuan 3 Preview |
+| **Xiaomi** | MiMo V2.5 Pro |
+| **StepFun** | Step 3.5 Flash |
 | **Hermes** | Hermes-4-70B、Hermes-4-405B（对话，见[下方说明](#a-note-on-hermes-4)） |
-| **+ 其他所有模型** | 240+ 额外模型——完整的 agentic 前沿生态 |
+| **+ 其他所有模型** | 280+ 额外模型——完整的 agentic 前沿生态 |
 
-底层路由通过 OpenRouter 实现，因此模型可用性和故障转移行为与使用 OpenRouter 密钥一致——只是计费走你的 Nous 订阅。在会话中途用 `/model` 即可在 Claude Sonnet 4.6（适合代码）和 Gemini 2.5 Pro（适合长上下文）之间切换——无需新凭证，无需充值，不会遇到余额为零的意外报错。
+底层路由通过 OpenRouter 实现，因此模型可用性和故障转移行为与使用 OpenRouter 密钥一致——只是计费走你的 Nous 订阅。在会话中途用 `/model` 即可在 Claude Sonnet 4.6（适合代码）和 Gemini 3 Pro（适合长上下文）之间切换——无需新凭证，无需充值，不会遇到余额为零的意外报错。
 
 ### Nous Tool Gateway
 
@@ -47,7 +51,7 @@ Portal 代理了来自整个生态系统的精选 agentic 模型目录——统�
 | 工具 | 合作方 | 功能说明 |
 |------|---------|--------------|
 | **网页搜索与抓取** | Firecrawl | Agent 级搜索与整页内容提取。无需 Firecrawl API 密钥，无需管理速率限制。 |
-| **图像生成** | FAL | 单一端点下的九个模型：FLUX 2 Klein 9B、FLUX 2 Pro、Z-Image Turbo、Nano Banana Pro（Gemini 3 Pro Image）、GPT Image 1.5、GPT Image 2、Ideogram V3、Recraft V4 Pro、Qwen Image。 |
+| **图像生成** | FAL | 单一端点下的九款模型：FLUX 2 Klein 9B、FLUX 2 Pro、Z-Image Turbo、Nano Banana Pro（Gemini 3 Pro Image）、GPT Image 1.5、GPT Image 2、Ideogram V3、Recraft V4 Pro、Qwen Image。 |
 | **文字转语音** | OpenAI TTS | 无需独立 OpenAI 密钥的高质量 TTS。在各消息平台上启用[语音模式](/user-guide/features/voice-mode)。 |
 | **云端浏览器自动化** | Browser Use | 用于 `browser_navigate`、`browser_click`、`browser_type`、`browser_vision` 的无头 Chromium 会话。无需 Browserbase 账号。 |
 | **云端终端沙箱** | Modal | 用于代码执行的无服务器终端沙箱（可选附加项）。 |
@@ -62,11 +66,11 @@ Portal 代理了来自整个生态系统的精选 agentic 模型目录——统�
 
 ### 凭证不落入 dotfiles
 
-由于所有请求都通过一个经 OAuth 认证的 Portal 会话路由，你不会积累一个包含十几个长期 API 密钥的 `.env` 文件。磁盘上唯一的凭证是 `~/.hermes/auth.json` 中的 refresh token（刷新令牌），Hermes 会在每次请求时从中生成短期 JWT——详见下方[令牌处理](#token-handling)。
+由于所有请求都通过一个经 OAuth 认证的 Portal 会话路由，你不会积累一个包含十几个长期 API 密钥的 `.env` 文件。磁盘上唯一的凭证是 `~/.hermes/auth.json` 中的 refresh token，Hermes 会在每次请求时从中生成短期 JWT——详见下方[令牌处理](#token-handling)。
 
 ### 跨平台一致性
 
-[原生 Windows](/user-guide/windows-native) 上，逐个配置 API 密钥是其最大痛点——在 Windows 上分别安装 Firecrawl 账号、FAL 账号、Browser Use 账号、OpenAI 密钥，是整个 agent 配置过程中摩擦最高的部分。Portal 订阅消除了这一问题：一次 OAuth 覆盖模型和所有 gateway 工具，Windows 用户无需手动配置四个后端，即可获得与 macOS/Linux 相同的体验。
+[原生 Windows](/user-guide/windows-native) 上，逐个配置 API 密钥是其最大痛点——在 Windows 上分别安装 Firecrawl 账号、FAL 账号、Browser Use 账号、OpenAI 密钥，是整个 agent 配置过程中摩擦最高的部分。Portal 订阅解决了这个问题：一次 OAuth 覆盖模型和所有 gateway 工具，Windows 用户无需手动配置四个后端，即可获得与 macOS/Linux 相同的体验。
 
 ## 关于 Hermes 4 的说明
 
@@ -76,9 +80,9 @@ Nous Research 自家的 **Hermes 4** 系列（Hermes-4-70B、Hermes-4-405B）通
 
 ```bash
 /model anthropic/claude-sonnet-4.6     # 最佳通用 agentic 模型
-/model openai/gpt-5.4                  # 强推理 + 工具调用
-/model google/gemini-2.5-pro           # 超大上下文窗口
-/model deepseek/deepseek-v3.2          # 高性价比代码模型
+/model openai/gpt-5.5-pro              # 强推理 + 工具调用
+/model google/gemini-3-pro-preview     # 超大上下文窗口
+/model deepseek/deepseek-v4-pro        # 高性价比代码模型
 ```
 
 Portal 自身的[模型信息页](https://portal.nousresearch.com/info)也有相同警告，因此这不是 Hermes 侧的主观意见——这是 Nous Research 的官方指导。
@@ -129,6 +133,7 @@ OAuth 需要浏览器，但回调的 loopback 运行在 Hermes 所在的机器�
 ```bash
 hermes portal            # 登录 Nous Portal 并完成配置（一键引导）
 hermes portal info       # 登录状态、订阅信息、模型与 gateway 路由
+hermes portal status     # `portal info` 的别名
 hermes portal tools      # 详细的 Tool Gateway 目录及每个工具的路由信息
 hermes portal open       # 在浏览器中打开订阅管理页面
 ```
@@ -159,8 +164,8 @@ hermes portal open       # 在浏览器中打开订阅管理页面
 
 ```bash
 /model anthropic/claude-sonnet-4.6
-/model openai/gpt-5.4
-/model google/gemini-2.5-pro
+/model openai/gpt-5.5-pro
+/model google/gemini-3-pro-preview
 ```
 
 或打开选择器：
@@ -188,7 +193,7 @@ hermes tools
 # → TTS            → "Nous Subscription"
 ```
 
-Tool Gateway 是按工具单独选择启用的，而非全部或全不。完整的每工具配置矩阵请参阅 [Tool Gateway 文档](/user-guide/features/tool-gateway)。
+Tool Gateway 是按工具单独选择启用的，而非全部或全不。无论是否登录 Nous Portal，托管后端都会出现在 `hermes tools` 中——如果你在认证前选择了 "Nous Subscription"，Hermes 会内联运行 Portal 登录（不会更改你的推理提供商或影响其他工具）。完整的每工具配置矩阵请参阅 [Tool Gateway 文档](/user-guide/features/tool-gateway)。
 
 ### 订阅管理
 
@@ -205,7 +210,7 @@ Tool Gateway 是按工具单独选择启用的，而非全部或全不。完整�
 model:
   provider: nous
   default: anthropic/claude-sonnet-4.6     # 或你选择的其他模型
-  base_url: https://inference.nousresearch.com/v1
+  base_url: https://inference-api.nousresearch.com/v1
 ```
 
 Tool Gateway 设置位于各自工具的配置节下：
@@ -234,7 +239,7 @@ Hermes 在每次推理调用时从存储的 Portal refresh token 生成短期 JW
 
 ## 故障排查
 
-### `hermes portal info` 显示"not logged in"
+### `hermes portal info` 显示 "not logged in"
 
 你尚未完成 OAuth 流程，或 refresh token 已被清除。运行：
 
@@ -244,7 +249,7 @@ hermes portal
 
 或使用 `hermes model` 重新选择 Nous Portal。
 
-### 会话中途收到"需要重新认证"提示
+### 会话中途收到 "需要重新认证" 提示
 
 你的 Portal refresh token 已失效（修改密码、手动撤销或会话过期）。运行 `hermes auth add nous`，下一次请求将使用新凭证。旧令牌的隔离状态在成功重新登录后自动清除。
 

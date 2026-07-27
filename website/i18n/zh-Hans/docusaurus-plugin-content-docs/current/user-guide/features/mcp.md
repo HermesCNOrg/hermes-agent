@@ -20,12 +20,7 @@ MCP 让 Hermes Agent 连接到外部工具服务器，使 agent 能够使用 Her
 
 ## 快速开始
 
-1. 安装 MCP 支持（如果你使用了标准安装脚本，已包含在内）：
-
-```bash
-cd ~/.hermes/hermes-agent
-uv pip install -e ".[mcp]"
-```
+1. MCP 支持已包含在标准安装中——无需额外步骤。
 
 2. 在 `~/.hermes/config.yaml` 中添加一个 MCP 服务器：
 
@@ -51,6 +46,105 @@ List the files in /home/user/projects and summarize the repo structure.
 ```
 
 Hermes 会发现 MCP 服务器的工具，并像使用其他工具一样使用它们。
+
+## 目录：一键安装经 Nous 批准的 MCP
+
+Hermes 附带了一个经过策划的 MCP 服务器目录，这些服务器已由 Nous 工作人员审查
+并合并。它们默认是禁用的——只安装你真正需要的。
+
+```bash
+hermes mcp                # 交互式选择器（默认）
+hermes mcp catalog        # 纯文本列表，可脚本化
+hermes mcp install n8n    # 按名称安装目录条目
+```
+
+选择器会显示每个条目的当前状态：
+
+```
+n8n          available              Manage and inspect n8n workflows from Hermes
+linear       enabled                Linear issue/project management (remote OAuth)
+github       installed (disabled)   GitHub repo + PR tools
+```
+
+在行上按 `Enter` 进行安装（并完成所需凭据的配置）、启用、禁用或卸载。目录条目存储在
+hermes-agent 仓库的 `optional-mcps/` 目录下——存在于该目录表示已获得 Nous 批准。
+没有社区提交层级；通过合并 PR 来添加条目。
+
+目录条目可能需要：
+
+- **API 密钥**——Hermes 在安装时提示，并将值写入 `~/.hermes/.env`。非秘密值（base URL）也写入同一文件。
+- **OAuth**（远程 MCP）——在配置中写入 `auth: oauth`；MCP 客户端在首次连接时打开浏览器。
+- **OAuth**（第三方提供商，如 Google/GitHub）——如果你尚未完成身份验证，Hermes 会引导你使用 `hermes auth <provider>`。
+
+### 安装时选择工具
+
+配置完凭据后，Hermes 会探测 MCP 服务器，列出其暴露的每一个工具并呈现一个复选框列表：
+
+```
+Select tools for 'linear' (SPACE toggle, ENTER confirm)
+  [x] find_issues       Find issues matching a query
+  [x] get_issue         Get a single issue
+  [x] create_issue      Create a new issue
+  [ ] delete_workspace  Delete a Linear workspace
+  ...
+```
+
+预选的项目来源于：
+
+1. **你之前的选择**（如果你之前安装过该条目——重新安装会保留你已有的选择，清单的默认值不会覆盖它）
+2. **清单中的 `tools.default_enabled`**（如果条目声明了该字段——有些目录条目会预先修剪可变或不常用的工具）
+3. **全部勾选**（如果以上都不适用）
+
+按 ENTER 提交复选框列表。只有选中的工具会写入 `mcp_servers.<name>.tools.include`。如果全选，则不写入过滤规则（配置最简洁，行为一致）。
+
+**如果探测失败**（服务器不可达、OAuth 尚未完成、后端服务未运行），安装仍然成功：清单中的 `tools.default_enabled` 会直接应用（如果声明了），否则不写入过滤规则。待服务器可达后，运行 `hermes mcp configure <name>` 进行细化。
+
+### 信任模型
+
+安装目录条目会运行清单指定的内容——`git clone`、条目的 `bootstrap` 命令（`pip install`、`npm install`等），以及最终的 MCP 服务器自身代码。清单通过 PR 审查后合入 hermes-agent 仓库，因此 Nous 在每条记录发布前已进行审查——**但你在安装前仍应阅读清单**，特别是 `source:` 字段的仓库、`install.bootstrap:` 命令以及任何 `transport.command:` 调用。
+
+清单位于 GitHub 上的
+[`optional-mcps/<name>/manifest.yaml`](https://github.com/NousResearch/hermes-agent/tree/main/optional-mcps)。
+选择器在安装时也会打印清单的 `source:` URL，方便你快速验证上游仓库。Web 面板的 MCP
+页面会为每个目录条目展示同样的详细信息——传输方式、认证类型、
+端点 URL（HTTP）或命令+参数（stdio）、git 安装源/引用和
+bootstrap 命令、以及设置说明——`source:` 会渲染为
+可点击链接，因此你可以在点击安装之前检查条目连接或运行的内容。
+
+### 清单版本兼容性
+
+清单固定了 `manifest_version`。目录是向前兼容的：如果
+某个 PR 添加的条目使用了比你当前 Hermes 理解的更新的 `manifest_version`，
+选择器会为该条目显示警告（`⚠ '<name>' 需要更新版本的 Hermes`），
+而不是静默隐藏它。看到此提示时，运行 `hermes update`
+安装最新的 Hermes。
+
+### 运行时 `${ENV_VAR}` 替换
+
+在条目的 `transport.command`、`transport.args`、`transport.url`
+和 `headers` 中，`${VAR}` 占位符会在服务器连接时从环境变量
+（包括 `~/.hermes/.env` 中的所有内容）解析。
+当目录条目需要引用用户在别处配置的值时，这很有用——
+例如 `${HOME}/foo` 或 `${MY_PROVIDER_TOKEN}`。
+
+请注意，这与目录清单中的 `${INSTALL_DIR}` 不同，后者
+在安装时会被替换为目录克隆条目仓库的路径。
+
+### 稍后更新工具选择
+
+```bash
+hermes mcp configure linear
+```
+
+重新打开相同的复选框列表，并预选中你当前的选择。当你想要启用更多工具，
+或者服务器新增了你想要加入的工具时使用此命令。
+
+### 更新目录清单
+
+MCP 永远不会自动更新。Hermes 更新后如果清单版本发生变化，请重新运行 `hermes mcp install <name>` 来刷新。
+
+要向目录添加 MCP，请针对
+[`optional-mcps/`](https://github.com/NousResearch/hermes-agent/tree/main/optional-mcps) 提交 PR。
 
 ## 两种 MCP 服务器
 
@@ -89,6 +183,77 @@ mcp_servers:
 - 你的组织暴露了内部 MCP 端点
 - 你不希望 Hermes 为该集成在本地启动子进程
 
+### OAuth 认证的 HTTP 服务器
+
+大多数托管的 MCP 服务器（Linear、Sentry、Atlassian、Asana、Figma、Stripe……）需要 OAuth 2.1，而不是静态的 bearer token。设置 `auth: oauth`，Hermes 会通过 MCP Python SDK 处理发现、动态客户端注册、PKCE、令牌交换、刷新和升级认证。
+
+```yaml
+mcp_servers:
+  linear:
+    url: "https://mcp.linear.app/mcp"
+    auth: oauth
+```
+
+首次连接时，Hermes 会打印一个授权 URL，尽可能打开你的浏览器，并在本地环回端口上等待 OAuth 回调。令牌缓存在 `~/.hermes/mcp-tokens/<server>.json`，权限为 0o600；后续运行静默重用令牌，直到刷新失败。
+
+**远程/无头主机。** 当 Hermes 运行在与浏览器不同的机器上时，环回回调无法到达你的笔记本。两种方式完成流程：
+
+- **粘贴回传（无需设置）：** 在交互式终端上，Hermes 会在授权 URL 旁边打印"Or paste the redirect URL here…"。在浏览器中打开 URL，批准，复制浏览器最终跳转到的完整 URL（重定向会显示连接错误——这是预期行为），在提示符处粘贴。纯 `?code=…&state=…` 查询字符串也可以。
+- **SSH 端口转发：** 在另一个终端中运行 `ssh -N -L <port>:127.0.0.1:<port> user@host`，然后让重定向流程正常进行。
+
+完整的操作指南，包括不支持 DCR 的服务器（如 Slack）、预注册的 `client_id`/`client_secret`、作用域定制以及通过 `hermes mcp login <server>` 重新认证，请参见 [通过 SSH / 远程主机的 OAuth](../../guides/oauth-over-ssh.md#mcp-servers)。
+
+**陷阱——不支持自动注册的提供商（Google Drive、Atlassian）。** 某些服务器会拒绝纯 `auth: oauth` 所依赖的动态客户端注册步骤（RFC 7591）——Google 官方的 Drive 服务器（`https://drivemcp.googleapis.com/mcp/v1`）返回 `400 Bad Request`，因此无法创建 OAuth 客户端，也无法获取令牌。症状很微妙：这些服务器在无需认证的情况下也能返回 `tools/list`，因此 `hermes mcp login` 可以列出工具，看起来像是成功了，但每次真正的工具调用都会超时。`hermes mcp login` 现在可以检测到这种情况（它会检查令牌是否确实写入了磁盘），并提示你提供自己的 OAuth 客户端。在提供商的控制台中创建一个客户端，并将其添加到配置中：
+
+```yaml
+mcp_servers:
+  googledrive:
+    url: "https://drivemcp.googleapis.com/mcp/v1"
+    auth: oauth
+    oauth:
+      client_id: "<your-oauth-client-id>"
+      client_secret: "<your-oauth-client-secret>"
+```
+
+然后运行 `hermes mcp login googledrive`——使用预注册的客户端，Hermes 会跳过注册，直接运行标准的浏览器授权流程。
+
+**陷阱——配置自动重载竞态。** 在正在运行的 Hermes 会话中编辑 `~/.hermes/config.yaml` 时，CLI 会以 30 秒超时自动重载 MCP 连接。这不足以完成交互式 OAuth 流程。请先添加条目，然后在一个新的终端中运行 `hermes mcp login <server>`——它会等待完整的 5 分钟让你完成认证。
+
+## mTLS / 客户端证书
+
+需要双向 TLS（客户端证书认证）的远程 HTTP MCP 服务器通过 `client_cert` / `client_key` 支持。Hermes 将解析后的证书传递给底层 HTTP 客户端，用于 TLS 握手。
+
+`client_cert` 接受三种形式：
+
+- **单个组合 PEM 路径**——一个文件同时包含证书和私钥：
+
+```yaml
+mcp_servers:
+  internal_api:
+    url: "https://mcp.internal.example.com/mcp"
+    client_cert: "~/.certs/mcp-client.pem"
+```
+
+- **`[cert, key]` 二元组**——证书和密钥分别在单独的文件中（等同于设置 `client_cert` + `client_key`）：
+
+```yaml
+mcp_servers:
+  internal_api:
+    url: "https://mcp.internal.example.com/mcp"
+    client_cert: ["~/.certs/mcp-client.crt", "~/.certs/mcp-client.key"]
+```
+
+- **`[cert, key, password]` 三元组**——当私钥已加密时，第三个元素是密钥口令：
+
+```yaml
+mcp_servers:
+  internal_api:
+    url: "https://mcp.internal.example.com/mcp"
+    client_cert: ["~/.certs/mcp-client.crt", "~/.certs/mcp-client.key", "${MCP_KEY_PASSWORD}"]
+```
+
+你也可以通过 `client_cert`（组合 PEM）加上显式的 `client_key` 来完全分离证书和密钥。路径支持 `~` 展开；文件缺失会抛出清晰的、服务器级别的错误，而不是模糊的 TLS 握手失败。
+
 ## 基本配置参考
 
 Hermes 从 `~/.hermes/config.yaml` 的 `mcp_servers` 下读取 MCP 配置。
@@ -102,8 +267,12 @@ Hermes 从 `~/.hermes/config.yaml` 的 `mcp_servers` 下读取 MCP 配置。
 | `env` | mapping | 传递给 stdio 服务器的环境变量 |
 | `url` | string | HTTP MCP 端点 |
 | `headers` | mapping | 远程服务器的 HTTP 头 |
+| `client_cert` | string \| list | 用于 mTLS 的客户端证书——组合 PEM 路径，或 `[cert, key]` / `[cert, key, password]` |
+| `client_key` | string | 客户端私钥 PEM 路径（当与 `client_cert` 分开时） |
 | `timeout` | number | 工具调用超时时间 |
-| `connect_timeout` | number | 初始连接超时时间 |
+| `connect_timeout` | number | 初始连接超时时间（也限制 MCP `initialize` 握手） |
+| `idle_timeout_seconds` | number | 在此秒数无工具调用后回收 stdio 服务器（`0` = 从不，默认）。服务器在下次工具调用时透明重启。 |
+| `max_lifetime_seconds` | number | 在此总存活时间后回收 stdio 服务器（`0` = 从不，默认）。下次使用时透明重启。 |
 | `enabled` | bool | 若为 `false`，Hermes 完全跳过该服务器 |
 | `supports_parallel_tool_calls` | bool | 若为 `true`，该服务器的工具可并发运行 |
 | `tools` | mapping | 按服务器过滤工具及实用工具策略 |
@@ -115,6 +284,19 @@ mcp_servers:
   filesystem:
     command: "npx"
     args: ["-y", "@modelcontextprotocol/server-filesystem", "/tmp"]
+```
+
+### 回收内存密集型 stdio 服务器
+
+基于浏览器的 MCP 服务器（例如 `@playwright/mcp`）在首次工具调用后会保持一个完整的 Chromium 常驻——数百 MB 永远不会释放。选择自动回收，服务器会在空闲/存活时间限制后被关闭，然后在下次调用其某个工具时透明重启（其工具在整个过程中保持注册状态）：
+
+```yaml
+mcp_servers:
+  playwright:
+    command: "npx"
+    args: ["-y", "@playwright/mcp@latest", "--headless"]
+    idle_timeout_seconds: 900     # 15 分钟无工具调用后回收
+    max_lifetime_seconds: 86400   # 每天至少回收一次
 ```
 
 ### 最简 HTTP 示例
@@ -535,7 +717,7 @@ hermes mcp serve
 MCP 服务器暴露 10 个工具，与 OpenClaw 的 channel bridge 接口一致，并额外提供一个 Hermes 专属的 channel 浏览器：
 
 | 工具 | 描述 |
-|------|-------------|
+|------|------|
 | `conversations_list` | 列出活跃的消息会话。可按平台过滤或按名称搜索。 |
 | `conversation_get` | 通过 session key 获取某个会话的详细信息。 |
 | `messages_read` | 读取某个会话的近期消息历史。 |
@@ -572,7 +754,7 @@ hermes mcp serve --verbose    # 在 stderr 输出调试日志
 
 ### 工作原理
 
-MCP 服务器直接从 Hermes 的会话存储（`~/.hermes/sessions/sessions.json` 和 SQLite 数据库）读取会话数据。后台线程轮询数据库以获取新消息，并维护一个内存事件队列。发送消息时，使用与 Hermes agent 本身相同的 `send_message` 基础设施。
+MCP 服务器直接从 Hermes 的会话存储（`~/.hermes/sessions/sessions.json` 和 SQLite 数据库）读取会话数据。后台线程轮询数据库以获取新消息，并维护一个内存事件队列。发送消息时，使用与 cron 投递和 `hermes send` CLI 相同的内部发送引擎（`tools/send_message_tool.py`）。
 
 读取操作（列出会话、读取历史、轮询事件）**不需要** gateway 运行。发送操作**需要** gateway 运行，因为平台适配器需要活跃连接。
 

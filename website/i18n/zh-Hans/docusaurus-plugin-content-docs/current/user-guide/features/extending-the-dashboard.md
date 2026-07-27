@@ -17,7 +17,7 @@ Hermes Web Dashboard（`hermes dashboard`）在设计上支持换肤和扩展，
 如果只是想使用 dashboard，请参阅 [Web Dashboard](./web-dashboard)。如果想为终端 CLI（而非 Web Dashboard）换肤，请参阅 [Skins & Themes](./skins) —— CLI 皮肤系统与 dashboard 主题无关。
 
 :::note 各部分如何组合
-主题和插件相互独立，但可协同工作。主题可以单独使用（仅一个 YAML 文件）。插件也可以单独使用（仅一个标签页）。两者结合可构建带有自定义 HUD 的完整视觉换肤方案——内置的 `strike-freedom-cockpit` 演示正是如此。参见[主题 + 插件组合演示](#combined-theme--plugin-demo)。
+|主题和插件相互独立，但可协同工作。主题可以单独使用（仅一个 YAML 文件）。插件也可以单独使用（仅一个标签页）。两者结合可构建带有自定义 HUD 的完整视觉换肤方案——`strike-freedom-cockpit` 演示（位于 `hermes-example-plugins` 伴随仓库中，安装步骤见[主题 + 插件组合演示](#combined-theme--plugin-demo)）正是如此。
 :::
 
 ---
@@ -130,6 +130,12 @@ typography:
   lineHeight: "1.5"
   letterSpacing: "0.04em"
 ```
+
+##### 从 UI 选择字体（无需 YAML）
+
+Dashboard 顶栏的主题选择器在主题列表下方有一个**字体**区域。选中任何字体即可覆盖当前激活主题的正文字体——该选择独立于主题，且切换主题时保持不变（持久化到 `config.yaml` 的 `dashboard.font` 下）。选择**主题默认**可清除覆盖并回退到当前主题自身的 `fontSans`。
+
+选择器提供精选目录（系统字体栈以及一组无衬线/衬线/等宽 Google Fonts）。它特意**不接受**自由文本字体 URL——字体的样式表以 `<link>` 方式注入，因此目录可保持注入来源固定。如需完全自定义字体，请按上述方式在主题 YAML 中设置 `fontSans` + `fontUrl`。主题的 `fontMono`（代码块、终端）始终不受 UI 覆盖影响。
 
 #### 布局
 

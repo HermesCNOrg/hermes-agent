@@ -170,6 +170,25 @@ make down
 CAMOFOX_URL=http://localhost:9377
 ```
 
+如果 Camofox 在 Docker 中运行，并且你希望它打开宿主机上提供的 Web 应用，请启用回环地址重写。`CAMOFOX_URL` 仍应指向宿主机发布的控制 API，但 `http://127.0.0.1:3000` 等页面 URL 必须从容器内部通过 `http://host.docker.internal:3000` 打开：
+
+```yaml
+# ~/.hermes/config.yaml
+browser:
+  camofox:
+    rewrite_loopback_urls: true
+    loopback_host_alias: host.docker.internal  # default; use a LAN IP if needed
+```
+
+等效的环境变量：
+
+```bash
+CAMOFOX_REWRITE_LOOPBACK_URLS=true
+CAMOFOX_LOOPBACK_HOST_ALIAS=host.docker.internal
+```
+
+重写仅适用于使用回环主机（`localhost`、`127.0.0.1`、`::1`）的页面导航 URL，不会更改 `CAMOFOX_URL`。对于非 Docker 的 Camofox 安装，请保持禁用，因为此时浏览器已在宿主机上运行，回环 URL 无需改写。
+
 或通过 `hermes tools` → Browser Automation → Camofox 进行配置。
 
 设置 `CAMOFOX_URL` 后，所有浏览器工具将自动通过 Camofox 路由，而非 Browserbase 或 agent-browser。
@@ -361,9 +380,9 @@ BROWSERBASE_ADVANCED_STEALTH=false
 # Session reconnection after disconnects — requires paid plan (default: "true")
 BROWSERBASE_KEEP_ALIVE=true
 
-# Custom session timeout in milliseconds (default: project default)
-# Examples: 600000 (10min), 1800000 (30min)
-BROWSERBASE_SESSION_TIMEOUT=600000
+# Custom session timeout in seconds (max 21600 = 6 hours) (default: project default)
+# Examples: 600 (10min), 1800 (30min), 21600 (6h max)
+BROWSERBASE_SESSION_TIMEOUT=1800
 
 # Inactivity timeout before auto-cleanup in seconds (default: 120)
 BROWSER_INACTIVITY_TIMEOUT=120

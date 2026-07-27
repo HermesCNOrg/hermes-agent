@@ -62,7 +62,7 @@ group_sessions_per_user: false
 
 共享会话对协作房间可能有用，但这也意味着：
 
-- 用户共享上下文增长和 token（令牌）成本
+- 用户共享上下文增长和 token 成本
 - 一个人的长时间重度工具任务会使所有人的上下文膨胀
 - 一个人正在进行的运行可能会中断同一房间中另一个人的后续操作
 
@@ -107,7 +107,7 @@ Hermes 按会话键跟踪正在运行的 agent。
 如果你希望保持机器人私有（Public Bot = OFF），则**必须**在第五步中使用**手动 URL** 方法，而不是 Installation 标签页。Discord 提供的链接需要启用 Public Bot。
 :::
 
-## 第三步：启用特权网关 Intent（意图）
+## 第三步：启用特权 Gateway Intent（意图）
 
 这是整个设置过程中最关键的步骤。如果没有启用正确的 intent，你的机器人将连接到 Discord，但**无法读取消息内容**。
 
@@ -129,6 +129,7 @@ Hermes 按会话键跟踪正在运行的 agent。
 :::
 
 **关于服务器数量：**
+
 - 如果你的机器人在**少于 100 个服务器**中，可以自由切换 intent。
 - 如果你的机器人在 **100 个或更多服务器**中，Discord 要求你提交验证申请才能使用特权 intent。对于个人使用，这不是问题。
 
@@ -136,7 +137,7 @@ Hermes 按会话键跟踪正在运行的 agent。
 
 ## 第四步：获取机器人 Token
 
-机器人 token（令牌）是 Hermes Agent 用于以你的机器人身份登录的凭据。仍在 **Bot** 页面：
+机器人 token 是 Hermes Agent 用于以你的机器人身份登录的凭据。仍在 **Bot** 页面：
 
 1. 在 **Token** 部分，点击 **Reset Token**。
 2. 如果你的 Discord 账号启用了双重身份验证，请输入你的 2FA 代码。
@@ -170,7 +171,7 @@ Token 只显示一次。如果丢失，你需要重置并生成新的 token。�
 你可以使用以下格式直接构建邀请 URL：
 
 ```
-https://discord.com/oauth2/authorize?client_id=YOUR_APP_ID&scope=bot+applications.commands&permissions=309237763136
+https://discord.com/oauth2/authorize?client_id=YOUR_APP_ID&scope=bot+applications.commands&permissions=274878286912
 ```
 
 将 `YOUR_APP_ID` 替换为第一步中的 Application ID。
@@ -188,7 +189,6 @@ https://discord.com/oauth2/authorize?client_id=YOUR_APP_ID&scope=bot+application
 ### 推荐的附加权限
 
 - **Send Messages in Threads** — 在线程对话中响应
-- **Create Public Threads** - create threads
 - **Add Reactions** — 对消息添加反应以示确认
 
 ### 权限整数
@@ -196,7 +196,7 @@ https://discord.com/oauth2/authorize?client_id=YOUR_APP_ID&scope=bot+application
 | 级别 | 权限整数 | 包含内容 |
 |-------|-------------------|-----------------|
 | 最低 | `117760` | View Channels、Send Messages、Read Message History、Attach Files |
-| 推荐 | `309237763136` | 以上所有权限，加上 Embed Links、Send Messages in Threads、Add Reactions, Create Public Threads |
+| 推荐 | `274878286912` | 以上所有权限，加上 Embed Links、Send Messages in Threads、Add Reactions |
 
 ## 第六步：邀请到你的服务器
 
@@ -272,8 +272,10 @@ Discord 行为通过两个文件控制：**`~/.hermes/.env`** 用于凭据和环
 | 变量 | 是否必填 | 默认值 | 描述 |
 |----------|----------|---------|-------------|
 | `DISCORD_BOT_TOKEN` | **是** | — | 来自 [Discord 开发者门户](https://discord.com/developers/applications) 的机器人 token。 |
-| `DISCORD_ALLOWED_USERS` | **是** | — | 允许与机器人交互的 Discord 用户 ID，逗号分隔。没有此项**或** `DISCORD_ALLOWED_ROLES`，网关将拒绝所有用户。 |
+| `DISCORD_ALLOWED_USERS` | 有条件 | — | 允许与机器人交互的 Discord 用户 ID，逗号分隔。没有此项**或** `DISCORD_ALLOWED_ROLES`，且未设置 `DISCORD_ALLOW_ALL_USERS=true`、`GATEWAY_ALLOW_ALL_USERS=true` 或 `DISCORD_ALLOWED_CHANNELS` 显式限定公会访问时，网关会拒绝所有用户。 |
 | `DISCORD_ALLOWED_ROLES` | 否 | — | Discord 角色 ID，逗号分隔。拥有其中任一角色的成员即被授权——与 `DISCORD_ALLOWED_USERS` 为 OR 语义。连接时自动启用 **Server Members Intent**。适用于管理团队频繁变动的场景：新管理员一旦被授予角色即可获得访问权限，无需推送配置。 |
+| `DISCORD_ALLOW_ALL_USERS` | 否 | `false` | 显式选择让每个能联系到机器人的 Discord 用户都获得授权。仅在 Discord 上恢复 0.18 之前的开放行为；仅用于受信任/私人公会或开发环境。 |
+| `GATEWAY_ALLOW_ALL_USERS` | 否 | `false` | 全局允许所有用户，适用于所有网关平台。除非你有意让所有已连接平台全部开放，否则建议使用平台特定的 `DISCORD_ALLOW_ALL_USERS`。 |
 | `DISCORD_HOME_CHANNEL` | 否 | — | 机器人发送主动消息（cron 输出、提醒、通知）的频道 ID。 |
 | `DISCORD_HOME_CHANNEL_NAME` | 否 | `"Home"` | 主频道在日志和状态输出中的显示名称。 |
 | `DISCORD_COMMAND_SYNC_POLICY` | 否 | `"safe"` | 控制原生斜杠命令启动同步。`"safe"` 对现有全局命令进行差异比较，仅更新已更改的内容，当 Discord 元数据更改无法通过补丁应用时重新创建命令。`"bulk"` 保留旧的 `tree.sync()` 行为。`"off"` 完全跳过启动同步。 |
@@ -299,6 +301,12 @@ Discord 行为通过两个文件控制：**`~/.hermes/.env`** 用于凭据和环
 | `DISCORD_MAX_ATTACHMENT_BYTES` | 否 | `33554432` | 网关将下载并缓存的每个附件的最大字节数。默认 32 MiB。设置为 `0` 表示无上限（附件在写入时保存在内存中，因此无限制会带来真实的内存成本）。 |
 | `HERMES_DISCORD_TEXT_BATCH_DELAY_SECONDS` | 否 | `0.6` | 适配器在刷新排队文本块之前等待的宽限窗口。用于平滑流式输出。 |
 | `HERMES_DISCORD_TEXT_BATCH_SPLIT_DELAY_SECONDS` | 否 | `2.0` | 当单条消息超过 Discord 长度限制时，分割块之间的延迟。 |
+
+:::warning 不支持机器人对机器人对话
+`DISCORD_ALLOW_BOTS` 的存在是为了接受来自特定受信任机器人的输入（例如中继或 webhook 机器人），而不是为了让两个 Hermes 配置互相对话。默认值 `"none"` 忽略所有其他机器人，是安全的设置。
+
+将多个 Hermes 配置设置为在共享频道中互相回复——通过在多个配置中设置 `"mentions"` 或 `"all"`——是一种不支持的拓扑结构。Discord 在每次回复时自动 `@提及` 被回复的作者，因此在 `"mentions"` 模式下，两个机器人将无限期地满足彼此的提及门控并形成确认循环。没有断路器，因为受支持的配置就是简单地将 `DISCORD_ALLOW_BOTS` 保留为 `"none"`。如果你必须接受某个特定的机器人，请严格限定接受范围，并且永远不要将其用于其他自动回复的 agent。
+:::
 
 ### 配置文件（`config.yaml`）
 
@@ -339,7 +347,7 @@ group_sessions_per_user: true     # 在共享频道中按用户隔离会话
 
 默认情况下，一旦机器人参与了某个线程（通过 `@提及` 自动创建或回复过一次），它就会继续响应该线程中的每条后续消息，无需再次 `@提及`。这对于一对一对话来说是正确的默认行为。
 
-在**多机器人线程**中，用户每次只与一个机器人交流，这个默认行为会成为隐患——线程中的每个其他机器人也会对每条消息触发，消耗额度并刷屏。将 `thread_require_mention: true` 设置为禁用线程内快捷方式，使线程与频道的门控方式相同。显式 `@提及` 仍然有效。
+在**多机器人线程**中，用户每次只与一个机器人交流，这个默认行为会成为隐患——线程中的每个其他机器人也会对每条消息触发，消耗额度并刷屏。设置 `thread_require_mention: true` 以禁用线程内快捷方式，使线程与频道的门控方式相同。显式 `@提及` 仍然有效。
 
 ```yaml
 discord:
@@ -602,9 +610,9 @@ gateway:
 
 在"主"网关上保持 `true` 可维持正常行为——为内置命令和已安装技能提供全局 `/` 菜单命令。
 
-## 发送媒体（`send_message` + `MEDIA:` 标签）
+## 发送媒体（内联 `MEDIA:` 标签）
 
-Discord 适配器通过 `send_message` 工具和 agent 发出的内联 `MEDIA:/path/to/file` 标签，支持所有常见媒体类型的原生文件上传：
+Discord 适配器支持通过 agent 响应中发出的内联 `MEDIA:/path/to/file` 标签进行所有常见媒体类型的原生文件上传——适配器会剥离标签并自动上传文件：
 
 | 类型 | 发送方式 |
 |---|---|
@@ -618,24 +626,25 @@ Discord 的每次上传大小限制取决于服务器的加成等级（免费 25
 
 ## 接收任意文件类型
 
-默认情况下，机器人缓存与内置允许列表匹配的上传——图片、音频、视频、PDF、文本/markdown/csv/log、JSON/XML/YAML/TOML、zip、docx/xlsx/pptx。其他任何内容（`.wav`、`.bin`、自定义扩展名的转储文件）都会被记录为 `Unsupported document type` 并在 agent 看到之前被丢弃。
+用户上传的任何文件类型都会被接受。向 agent 发送消息的授权是门控——而不是文件扩展名。所有上传都会被下载、缓存到 `~/.hermes/cache/documents/` 下，并以 `DOCUMENT` 类型的消息事件提供给 agent，以便它可以使用 `terminal`（`ffprobe`、`unzip`、`file`、`strings` 等）或 `read_file` 检查文件。
 
-要接受任意文件类型，启用 `discord.allow_any_attachment`：
+- 已知类型（PDF、docx/xlsx/pptx、zip、图片/音频/视频等）保留其精确的 MIME 类型。
+- 未知类型回退到上传时报告的内容类型，如果没有则使用 `application/octet-stream`。
+- 小的 UTF-8 可解码文件（文本、代码、配置、HTML、CSS、JSON、YAML 等）的内容会自动注入到 prompt 中，上限为 100 KiB。无法解码的二进制文件会以指向路径的上下文说明形式提供（通过 `to_agent_visible_cache_path` 为 Docker/Modal 沙盒终端自动转换），因此它们不会撑爆上下文窗口。
+
+唯一入站限制是每文件大小上限（默认 32 MiB）：
 
 ```yaml
 discord:
-  allow_any_attachment: true
   # 可选 — 提高/禁用每文件大小上限。默认为 32 MiB。
   # 整个文件在缓存时保存在内存中，因此无限制
   # 上传会带来真实的内存成本。
   max_attachment_bytes: 33554432   # 字节；0 = 无限制
 ```
 
-启用该标志后，任何上传的文件都会被下载、缓存到 `~/.hermes/cache/documents/` 下，并以 `application/octet-stream` MIME 类型的 `DOCUMENT` 类型消息事件提供给 agent。Agent 收到指向本地路径的上下文说明（通过 `to_agent_visible_cache_path` 为 Docker/Modal 沙盒终端自动转换），可以使用 `terminal`（`ffprobe`、`unzip`、`file`、`strings` 等）或 `read_file` 检查文件。文件内容**不会**内联到 prompt 中——只有路径——因此二进制上传不会撑爆上下文窗口。
+等效环境变量：`DISCORD_MAX_ATTACHMENT_BYTES=33554432`（或 `0` 表示无上限）。
 
-已在允许列表中的已知文本格式（`.txt`、`.md`、`.log`）继续自动注入最多 100 KiB 的内容；启用该标志后此行为不变。
-
-等效环境变量：`DISCORD_ALLOW_ANY_ATTACHMENT=true` 和 `DISCORD_MAX_ATTACHMENT_BYTES=33554432`（或 `0` 表示无上限）。
+旧的 `discord.allow_any_attachment` 标志现在是一个空操作——任何文件类型始终被接受——保留它只是为了不让现有配置报错。
 
 :::warning 无限制的内存成本
 禁用大小上限（`max_attachment_bytes: 0`）意味着用户可以向机器人上传数 GB 的文件，网关会尽职地在缓存到磁盘时将其缓冲到内存中。仅在受信任的单用户安装中设置此项。对于共享机器人，保持默认的 32 MiB 或保守地提高上限。
@@ -684,9 +693,39 @@ Hermes Agent 支持 Discord 语音消息：
 - [语音模式](/user-guide/features/voice-mode)
 - [与 Hermes 使用语音模式](/guides/use-voice-mode-with-hermes)
 
+### 语音频道音效（环境音 + 口头确认）
+
+当机器人处于语音频道中时，你可以赋予它更对话感的感觉：在开始工作之前先有一个简短的口头确认（"让我看看"），以及在工具运行期间播放微妙的"思考"背景音——语音会降低背景音的音量，并在完成后恢复，类似于 Grok 的语音模式。
+
+discord.py 每个连接只播放一个音频流，因此 Hermes 在传出流上安装了一个软件混音器，将环境循环音、确认音和 TTS 回复合并到单个流中——它们重叠播放而不是互相切断。
+
+**默认关闭。** 在 `config.yaml` 中启用：
+
+```yaml
+discord:
+  voice_fx:
+    enabled: true          # 主开关
+    ambient_enabled: true  # 工具运行时空闲"思考"背景音
+    ambient_path: ""       # 自定义循环文件（任何音频格式）；"" = 内置合成垫音
+    ambient_gain: 0.18     # 空闲背景音音量（0.0–1.0）
+    duck_gain: 0.06        # 机器人说话时的背景音音量
+    speech_gain: 1.0       # TTS / 确认音音量
+    ack_enabled: true      # 在每轮第一个工具调用前说一句简短短语
+    ack_phrases:           # 随机选择；设为 [] 可禁用口头确认
+      - "Let me look into that."
+      - "One moment."
+      - "Checking on that now."
+```
+
+注意：
+- 确认音每轮最多触发一次，仅在机器人处于语音频道且混音器激活时生效。它使用你配置的 TTS 提供商。
+- `ambient_path` 接受任何 `ffmpeg` 可以解码的文件；会无缝循环播放。留空以使用内置合成垫音（无需额外资源）。
+- 所有设置都位于 `config.yaml`（而非 `.env`）——它们是行为设置，而非秘密。
+- 当 `voice_fx.enabled` 为 `false` 时，语音播放使用原始的一次性路径，一切照旧。
+
 ## 论坛频道
 
-Discord 论坛频道（类型 15）不接受直接消息——论坛中的每个帖子都必须是线程。Hermes 自动检测论坛频道，并在需要发送消息时创建新的线程帖子，因此 `send_message`、TTS、图片、语音消息和文件附件都无需 agent 进行特殊处理即可正常工作。
+Discord 论坛频道（类型 15）不接受直接消息——论坛中的每个帖子都必须是线程。Hermes 自动检测论坛频道，并在需要发送消息时创建新的线程帖子，因此文本回复、TTS、图片、语音消息和文件附件都无需 agent 进行特殊处理即可正常工作。
 
 - **线程名称**从消息的第一行派生（去除 markdown 标题前缀，上限 100 个字符）。当消息仅包含附件时，文件名用作备用线程名称。
 - **附件**随新线程的起始消息一起发送——无需单独上传步骤，不会出现部分发送。
@@ -699,9 +738,34 @@ Discord 论坛频道（类型 15）不接受直接消息——论坛中的每个
 
 ### 机器人在线但不响应消息
 
-**原因**：Message Content Intent 被禁用。
+**原因**：Message Content Intent 被禁用，或 Discord 认证因未配置访问策略而失败关闭。
 
-**解决方法**：前往[开发者门户](https://discord.com/developers/applications) → 你的应用 → Bot → Privileged Gateway Intents → 启用 **Message Content Intent** → Save Changes。重启网关。
+**解决方法**：
+
+1. 前往 [开发者门户](https://discord.com/developers/applications) → 你的应用 → Bot → Privileged Gateway Intents → 启用 **Message Content Intent** → Save Changes。
+2. 确认至少配置了一个 Discord 访问策略：
+
+   ```bash
+   # 推荐：允许特定用户
+   DISCORD_ALLOWED_USERS=284102345871466496
+
+   # 或允许受信任的公会/开发机器人像 0.18 之前的 Discord 一样运行
+   DISCORD_ALLOW_ALL_USERS=true
+   ```
+
+3. 重启网关：
+
+   ```bash
+   hermes gateway restart
+   ```
+
+如果网关日志显示 Discord 已连接且 REST API 检查正常，但每条入站消息都无响应，请在 `~/.hermes/logs/gateway.log` 中查找以下警告：
+
+```text
+No Discord access policy configured; inbound Discord messages will be denied by default.
+```
+
+Hermes 0.18 在外部可访问的适配器上有意采用失败关闭策略。一个没有设置 `DISCORD_ALLOWED_USERS`、`DISCORD_ALLOWED_ROLES`、`DISCORD_ALLOWED_CHANNELS` 或未明确设置允许所有标志的 Discord 机器人可以成功连接，但在正常消息处理之前就会拒绝入站用户。
 
 ### 启动时出现"Disallowed Intents"错误
 

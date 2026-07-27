@@ -163,7 +163,7 @@ delegate_task(tasks=[
 使用 `execute_code` 进行机械性数据收集，然后委托推理密集型分析：
 
 ```python
-# 第一步：机械性收集（此处 execute_code 更合适——无需推理）
+# Step 1: Mechanical gathering (execute_code is better here — no reasoning needed)
 execute_code("""
 from hermes_tools import web_search, web_extract
 
@@ -184,7 +184,7 @@ with open("/tmp/ai-funding-data.json", "w") as f:
 print(f"Collected {len(results)} results, extracted {len(content['results'])} pages")
 """)
 
-# 第二步：推理密集型分析（此处委托更合适）
+# Step 2: Reasoning-heavy analysis (delegation is better here)
 delegate_task(
     goal="Analyze AI funding data and write a market report",
     context="""Raw data at /tmp/ai-funding-data.json contains search results and
@@ -217,14 +217,14 @@ delegate_task(
 ## 约束条件
 
 - **默认 3 个并行任务**：批次默认并发 3 个子代理（可通过 config.yaml 中的 `delegation.max_concurrent_children` 配置，无硬性上限，最低为 1）
-- **嵌套委托需显式启用**：叶子子代理（默认）无法调用 `delegate_task`、`clarify`、`memory`、`send_message` 或 `execute_code`。编排器子代理（`role="orchestrator"`）保留 `delegate_task` 以支持进一步委托，但仅在 `delegation.max_spawn_depth` 高于默认值 1 时生效（支持 1-3）；其余四项仍被禁用。可通过 `delegation.orchestrator_enabled: false` 全局禁用。
+- **嵌套委托需显式启用**：叶子子代理（默认）无法调用 `delegate_task`、`clarify`、`memory` 或 `execute_code`。编排器子代理（`role="orchestrator"`）保留 `delegate_task` 以支持进一步委托，但仅在 `delegation.max_spawn_depth` 高于默认值 1 时生效（最低 1，无上限）；其余三项仍被禁用。可通过 `delegation.orchestrator_enabled: false` 全局禁用。
 
 ### 调整并发数与深度
 
 | 配置项 | 默认值 | 范围 | 效果 |
 |--------|---------|-------|--------|
 | `max_concurrent_children` | 3 | >=1 | 每次 `delegate_task` 调用的并行批次大小 |
-| `max_spawn_depth` | 1 | 1-3 | 可进一步生成子代理的委托层级数 |
+| `max_spawn_depth` | 1 | >=1 | 可进一步生成子代理的委托层级数 |
 
 示例：运行 30 个并行 worker 并启用嵌套子代理：
 

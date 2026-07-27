@@ -29,11 +29,12 @@ description: "使用 Socket Mode 将 Hermes Agent 设置为 Slack 机器人"
 
 ### 方式 A：使用 Hermes 生成的 manifest（推荐）
 
-1. 生成 manifest：
+1. 生成 manifest。新 Slack 应用必须使用 Agent 视图：
    ```bash
-   hermes slack manifest --write
+   hermes slack manifest --agent-view --write
    ```
    此命令会将 `~/.hermes/slack-manifest.json` 写入磁盘并打印粘贴说明。
+   仍在使用 Slack 旧版 Assistant 视图的现有应用，在准备迁移之前可以省略 `--agent-view`。
 2. 前往 [https://api.slack.com/apps](https://api.slack.com/apps) →
    **Create New App** → **From an app manifest**
 3. 选择你的工作区，粘贴 JSON 内容，检查后点击 **Next** → **Create**
@@ -175,7 +176,7 @@ Member ID 格式类似 `U01ABC2DEF3`。你至少需要自己的 Member ID。
 
 ```bash
 # 必需
-SLACK_BOT_TOKEN=xoxb-your-bot-token-here
+SLACK_BOT_TOKEN=«redacted:xox…»
 SLACK_APP_TOKEN=xapp-your-app-token-here
 SLACK_ALLOWED_USERS=U01ABC2DEF3              # 逗号分隔的 Member ID
 
@@ -198,6 +199,10 @@ hermes gateway install      # 安装为用户服务
 sudo hermes gateway install --system   # 仅 Linux：开机启动系统服务
 ```
 
+:::tip Codex 推理精度安全
+对于使用 Codex 的 Slack 对等 Agent 频道，建议使用 `agent.reasoning_effort: high` 或更低。`xhigh` 可能将整个轮次消耗在隐藏推理中，从不生成可见的助手文本；Hermes 现在会从话题中抑制这些不完整轮次的警告，并将诊断信息保留在 gateway 日志中。
+:::
+
 ---
 
 ## 第九步：将机器人邀请到频道
@@ -217,6 +222,16 @@ sudo hermes gateway install --system   # 仅 Linux：开机启动系统服务
 每个 Hermes 命令（`/btw`、`/stop`、`/new`、`/model`、`/help`……）都是原生 Slack 斜杠命令——与它们在 Telegram 和 Discord 上的工作方式完全相同。在 Slack 中输入 `/`，自动补全选择器会列出每个 Hermes 命令及其描述。
 
 底层实现：Hermes 附带一个生成的 Slack 应用 manifest（见第一步，方式 A），它将 [`COMMAND_REGISTRY`](https://github.com/NousResearch/hermes-agent/blob/main/hermes_cli/commands.py) 中的每个命令声明为斜杠命令。在 Socket Mode 下，无论 manifest 的 `url` 字段如何，Slack 都会通过 WebSocket 路由命令事件。
+
+### Agent 消息体验
+
+新的 Slack 应用使用 Slack 的 **Agent** 消息体验。现有的 Hermes Assistant 应用可以通过使用 `--agent-view` 重新生成 manifest 进行迁移：
+
+```bash
+hermes slack manifest --agent-view --write
+```
+
+在 **Features → App Manifest** 中更新 manifest，如果 Slack 提示则重新安装应用。Agent 视图无法恢复为 Assistant 视图，用户在切换后可能需要强制刷新 Slack。生成的 Agent manifest 订阅了 `message.im`、`app_home_opened` 和 `app_context_changed`，因此 Hermes 可以识别 Messages 标签页中的私信，并在一个轮次中接收用户的活跃 Slack 上下文。Hermes 仅将该上下文作为标签提供；它不会读取被查看频道的历史记录。
 
 ### 更新后刷新斜杠命令
 
@@ -244,6 +259,8 @@ Slack 本身会阻止在话题回复中使用原生斜杠命令——在话题�
 作为解决方案，Hermes 识别前导 `!` 作为在话题（以及任何其他地方）中有效的替代命令前缀。在话题回复中输入 `!queue`、`!stop`、`!model gpt-5.4` 等普通回复——Hermes 会以与斜杠形式完全相同的方式处理，并在同一话题中回复。
 
 只有第一个 token（词元）会与已知命令列表进行匹配，因此像 `!nice work` 这样的随意消息会原样传递给 agent。
+
+审批提示（危险命令 `/execute_code` 审批）通常以交互式按钮形式呈现。当按钮无法送达且 Hermes 回退到文本提示时，提示会指示你用 `!approve` / `!deny` 回复——该形式在话题内同样有效。
 
 ### 高级：仅输出斜杠命令数组
 
@@ -307,11 +324,24 @@ platforms:
       # （100 行 / 20 列 / 1 万字符）的表格会优雅地回退为对齐的等宽文本。
       rich_blocks: false
 
+      # 在最终的 Block Kit 回复中附加 Slack 原生反馈控件。
+      # 需要 rich_blocks: true。默认：false。
+      feedback_buttons: false
+
+      # 固定在 Agent 视图 Messages 标签页顶部的建议提示。
+      # 可以是 {title, message} 行的列表，或包含标题的对象：
+      # {title: "Start here", prompts: [{title: "Plan", message: "..."}]}
+      suggested_prompts: []
+
+      # 使用用户首条消息为 Agent/Assistant 私信话题命名。
+      # 默认：true。设为 false 以保留 Slack 的默认话题标题。
+      assistant_thread_titles: true
+
       # 可继续 cron 任务的投递方式（默认："thread"）。
       # "in_channel" 将可继续的 cron 任务直接平铺投递到频道中
       # （不新建话题）；需与 reply_in_thread: false（及
       # require_mention: false）搭配，纯文本回复即可继续任务。
-      # 详见 cron 指南 →“平铺频道内继续”。
+      # 详见 cron 指南 →"平铺频道内继续"。
       cron_continuable_surface: thread
 ```
 
@@ -321,7 +351,10 @@ platforms:
 | `platforms.slack.extra.reply_in_thread` | `true` | 为 `false` 时，频道消息直接回复而非话题。已在话题中的消息仍在话题中回复。 |
 | `platforms.slack.extra.reply_broadcast` | `false` | 为 `true` 时，话题回复也会发布到主频道。仅广播第一个分块。 |
 | `platforms.slack.extra.rich_blocks` | `false` | 为 `true` 时，Agent 消息会渲染为 [Block Kit](https://docs.slack.dev/block-kit/) 区块（标题、分隔线、真正的嵌套列表以及原生表格）。始终附带纯文本回退。超出 Slack 限制的表格会回退为对齐的等宽文本。无需重新安装应用——这仅是发送端的改动。 |
-| `platforms.slack.extra.cron_continuable_surface` | `"thread"` | [可继续 cron 任务](../features/cron.md)的投递方式。`"thread"` 为每次投递新建专用话题（默认）；`"in_channel"` 直接平铺投递到频道时间线。使用 `in_channel` 时需搭配 `reply_in_thread: false`（及 `require_mention: false`），纯文本回复即可继续任务。 |
+| `platforms.slack.extra.feedback_buttons` | `false` | 与 `rich_blocks` 同时启用时，在最终回复中附加 Slack 原生反馈控件。 |
+| `platforms.slack.extra.suggested_prompts` | `[]` | 最多四个用于 Agent/Assistant 私信入口的 `{title, message}` 提示；接受列表或 `{title, prompts}` 格式。 |
+| `platforms.slack.extra.assistant_thread_titles` | `true` | 为 `true` 时，使用用户首条消息为 Agent/Assistant 私信话题命名。 |
+| `platforms.slack.extra.cron_continuable_surface` | `"thread"` | [可继续 cron 任务](../features/cron.md#flat-in-channel-continuation-slack)的投递方式。`"thread"` 为每次投递新建专用话题（默认）；`"in_channel"` 直接平铺投递到频道时间线。使用 `in_channel` 时需搭配 `reply_in_thread: false`（及 `require_mention: false`），纯文本回复即可继续任务。 |
 
 ### 会话隔离
 
@@ -365,14 +398,18 @@ slack:
 :::
 
 :::info
-Slack 支持两种模式：默认情况下需要 `@mention` 才能开始对话，但你可以通过 `SLACK_FREE_RESPONSE_CHANNELS`（逗号分隔的频道 ID）或 `config.yaml` 中的 `slack.free_response_channels` 为特定频道取消此限制。一旦机器人在话题中有活跃会话，后续话题回复无需提及。在私信中，机器人始终响应，无需提及。
+Slack 支持两种模式：默认情况下需要 `@mention` 才能开始对话，但你可以通过 `SLACK_FREE_RESPONSE_CHANNELS`（逗号分隔的频道 ID）或 `config.yaml` 中的 `slack.free_response_channels` 为特定频道取消此限制。一旦机器人在话题中有活跃会话，后续话题回复无需提及。在**1:1 私信**中，机器人始终响应，无需提及。
+:::
+
+:::caution 群组私信（MPIM）是共享界面，而非 1:1 私信
+**1:1 私信**是与一个人的私人对话，因此免于提及要求。**群组私信（MPIM / 多人私信）** 是一个 *共享界面*——多人可以看到并触发机器人——因此它遵循与频道相同的操作控制：`require_mention`、`strict_mention`、`free_response_channels` 和 `allowed_channels` 均适用，且机器人仅在确实被 `@mention` 时才添加 `:eyes:`/`:white_check_mark:` 反应。要让机器人在特定群组私信中自由响应，请将其频道 ID（以 `G` 开头）添加到 `free_response_channels`。
 :::
 
 ### 频道白名单（`allowed_channels`）
 
 将机器人限制在固定的 Slack 频道集合中——当机器人被邀请到许多频道但只应在少数频道中响应时很有用。设置后，不在此列表中的频道消息将被**静默忽略**，即使机器人被 `@mention`。
 
-**私信不受此过滤器影响**，因此授权用户始终可以通过私信联系机器人。
+**1:1 私信不受此过滤器影响**，因此授权用户始终可以通过私信联系机器人。**群组私信（MPIM）不受豁免**——与频道一样，MPIM 必须在白名单中（其 ID 以 `G` 开头），否则其消息将被丢弃。
 
 ```yaml
 slack:
@@ -472,7 +509,7 @@ Hermes 可以使用单个 gateway 实例**同时连接多个 Slack 工作区**�
 
 ```bash
 # 多个 bot token——每个工作区一个
-SLACK_BOT_TOKEN=xoxb-workspace1-token,xoxb-workspace2-token,xoxb-workspace3-token
+SLACK_BOT_TOKEN=«redacted:xox…»,«redacted:xox…»,«redacted:xox…»
 
 # Socket Mode 仍使用单个 app-level token
 SLACK_APP_TOKEN=xapp-your-app-token
@@ -483,7 +520,7 @@ SLACK_APP_TOKEN=xapp-your-app-token
 ```yaml
 platforms:
   slack:
-    token: "xoxb-workspace1-token,xoxb-workspace2-token"
+    token: "«redacted:xox…»,«redacted:xox…»"
 ```
 
 ### OAuth Token 文件
@@ -499,7 +536,7 @@ platforms:
 ```json
 {
   "T01ABC2DEF3": {
-    "token": "xoxb-workspace-token-here",
+    "token": "«redacted:xox…»",
     "team_name": "My Workspace"
   }
 }
@@ -598,7 +635,7 @@ slack:
 5. ✅ 已添加 `groups:history` 权限范围（私有频道）
 6. ✅ 添加权限范围/事件后已**重新安装**应用
 7. ✅ 已**邀请**机器人加入频道（`/invite @Hermes Agent`）
-8. ✅ 你在消息中**@mention** 了机器人
+8. ✅ 你在消息中 **@mention** 了机器人
 
 ---
 
