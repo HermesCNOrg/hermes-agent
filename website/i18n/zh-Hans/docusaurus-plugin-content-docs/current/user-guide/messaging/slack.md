@@ -29,11 +29,22 @@ description: "使用 Socket Mode 将 Hermes Agent 设置为 Slack 机器人"
 
 ### 方式 A：使用 Hermes 生成的 manifest（推荐）
 
-1. 生成 manifest：
+1. 生成 manifest。新 Slack 应用必须使用 Agent 视图：
    ```bash
-   hermes slack manifest --write
+   hermes slack manifest --agent-view --write
    ```
    此命令会将 `~/.hermes/slack-manifest.json` 写入磁盘并打印粘贴说明。
+   仍在使用 Slack 旧版 Assistant 视图的现有应用，在准备迁移之前可以省略 `--agent-view`。
+
+   若要使用现有 UTF-8 文本或 Markdown 文件填充 Slack 的应用长描述，请添加 `--long-description-file`：
+
+   ```bash
+   hermes slack manifest --agent-view \
+     --long-description-file AGENTS.md --write
+   ```
+
+   文件内容会在 Slack 的 175–4,000 个字符范围内原样保留。若要使用内联文本，请改用
+   `--long-description "..."`；内联和文件选项互斥，且均不能与 `--slashes-only` 组合使用。
 2. 前往 [https://api.slack.com/apps](https://api.slack.com/apps) →
    **Create New App** → **From an app manifest**
 3. 选择你的工作区，粘贴 JSON 内容，检查后点击 **Next** → **Create**
@@ -80,6 +91,7 @@ description: "使用 Socket Mode 将 Hermes Agent 设置为 Slack 机器人"
 | 权限范围 | 用途 |
 |-------|---------|
 | `groups:read` | 列出并获取私有频道信息 |
+| `assistant:write` | 在机器人处理消息时，于机器人名称旁渲染工作状态行（“正在思考…”）。没有此权限范围，`assistant.threads.setStatus` 调用会静默失败，Slack 会显示自己的轮换通用占位文本（“正在寻找答案…”、“正在审阅结果…”等）——Hermes 无法控制这些文本。`typing_status_text` 要产生任何可见效果必须具备此权限范围。 |
 
 ---
 
@@ -175,7 +187,7 @@ Member ID 格式类似 `U01ABC2DEF3`。你至少需要自己的 Member ID。
 
 ```bash
 # 必需
-SLACK_BOT_TOKEN=xoxb-your-bot-token-here
+SLACK_BOT_TOKEN=«redacted:xox…»
 SLACK_APP_TOKEN=xapp-your-app-token-here
 SLACK_ALLOWED_USERS=U01ABC2DEF3              # 逗号分隔的 Member ID
 
@@ -198,6 +210,10 @@ hermes gateway install      # 安装为用户服务
 sudo hermes gateway install --system   # 仅 Linux：开机启动系统服务
 ```
 
+:::tip Codex 推理精度安全
+对于使用 Codex 的 Slack 对等 Agent 频道，建议使用 `agent.reasoning_effort: high` 或更低。`xhigh` 可能将整个轮次消耗在隐藏推理中，从不生成可见的助手文本；Hermes 现在会从话题中抑制这些不完整轮次的警告，并将诊断信息保留在 gateway 日志中。
+:::
+
 ---
 
 ## 第九步：将机器人邀请到频道
@@ -217,6 +233,16 @@ sudo hermes gateway install --system   # 仅 Linux：开机启动系统服务
 每个 Hermes 命令（`/btw`、`/stop`、`/new`、`/model`、`/help`……）都是原生 Slack 斜杠命令——与它们在 Telegram 和 Discord 上的工作方式完全相同。在 Slack 中输入 `/`，自动补全选择器会列出每个 Hermes 命令及其描述。
 
 底层实现：Hermes 附带一个生成的 Slack 应用 manifest（见第一步，方式 A），它将 [`COMMAND_REGISTRY`](https://github.com/NousResearch/hermes-agent/blob/main/hermes_cli/commands.py) 中的每个命令声明为斜杠命令。在 Socket Mode 下，无论 manifest 的 `url` 字段如何，Slack 都会通过 WebSocket 路由命令事件。
+
+### Agent 消息体验
+
+新的 Slack 应用使用 Slack 的 **Agent** 消息体验。现有的 Hermes Assistant 应用可以通过使用 `--agent-view` 重新生成 manifest 进行迁移：
+
+```bash
+hermes slack manifest --agent-view --write
+```
+
+在 **Features → App Manifest** 中更新 manifest，如果 Slack 提示则重新安装应用。Agent 视图无法恢复为 Assistant 视图，用户在切换后可能需要强制刷新 Slack。生成的 Agent manifest 订阅了 `message.im`、`app_home_opened` 和 `app_context_changed`，因此 Hermes 可以识别 Messages 标签页中的私信，并在一个轮次中接收用户的活跃 Slack 上下文。Hermes 仅将该上下文作为标签提供；它不会读取被查看频道的历史记录。
 
 ### 更新后刷新斜杠命令
 
@@ -244,6 +270,17 @@ Slack 本身会阻止在话题回复中使用原生斜杠命令——在话题�
 作为解决方案，Hermes 识别前导 `!` 作为在话题（以及任何其他地方）中有效的替代命令前缀。在话题回复中输入 `!queue`、`!stop`、`!model gpt-5.4` 等普通回复——Hermes 会以与斜杠形式完全相同的方式处理，并在同一话题中回复。
 
 只有第一个 token（词元）会与已知命令列表进行匹配，因此像 `!nice work` 这样的随意消息会原样传递给 agent。
+感叹号形式也可置于提及之后（`@Hermes !stop`），并支持前导空白——两种形式都会在话题中作为命令分派。
+
+审批提示（危险命令 `/execute_code` 审批）通常以交互式按钮形式呈现。当按钮无法送达且 Hermes 回退到文本提示时，提示会指示你用 `!approve` / `!deny` 回复——该形式在话题内同样有效。
+
+### 斜杠命令回复是仅自己可见的
+
+对原生斜杠命令（例如 `/status`、`/help`）的回复会**仅自己可见**——“Only visible to you”——因此命令输出不会刷屏频道。“Running /cmd…” 占位符会被实际回复替换；较长回复会分块为后续的仅自己可见消息。Slack 将该回复流程限制为 5 条消息，因此超长输出会以明确的截断提示结束，而不会被静默丢弃。如果主要的仅自己可见路径失败，Hermes 会通过第二个仅自己可见的 API 路径重试——斜杠命令回复绝不会作为回退公开发布到频道。（作为普通消息输入的命令——话题中的 `!cmd`、`@Hermes /cmd`——仍会以正常的可见消息回复。）
+
+### 澄清提示（单击按钮）
+
+当 agent 需要向你提出多选问题（`clarify` 工具）时，Slack 会将其渲染为 **Block Kit 按钮**——每个选项一个按钮，另有“✏️ Other…”按钮可切换至自由文本模式（你的下一条输入消息即成为答案）。点击后，消息会原地更新，显示谁回答了以及选择了什么；对同一提示的后续点击会被忽略。按钮点击遵循与消息相同的用户授权规则；过期提示（gateway 重启、超时）会要求你重新提问，而不会静默吞掉点击。开放式澄清问题会渲染为普通问题，并接受你的下一条输入回复。无需配置——无论 `rich_blocks` 设置为何，此功能均可使用。
 
 ### 高级：仅输出斜杠命令数组
 
@@ -307,11 +344,30 @@ platforms:
       # （100 行 / 20 列 / 1 万字符）的表格会优雅地回退为对齐的等宽文本。
       rich_blocks: false
 
+      # 在最终的 Block Kit 回复中附加 Slack 原生反馈控件。
+      # 需要 rich_blocks: true。默认：false。
+      feedback_buttons: false
+
+      # 固定在 Agent 视图 Messages 标签页顶部的建议提示。
+      # 可以是 {title, message} 行的列表，或包含标题的对象：
+      # {title: "Start here", prompts: [{title: "Plan", message: "..."}]}
+      suggested_prompts: []
+
+      # 使用用户首条消息为 Agent/Assistant 私信话题命名。
+      # 默认：true。设为 false 以保留 Slack 的默认话题标题。
+      assistant_thread_titles: true
+
+      # 接受其他 Slack 机器人的消息（默认："none"）。
+      # "none" 忽略机器人，"mentions" 仅在该机器人消息本身
+      # @ 提及 Hermes 时接受它，"all" 接受所有其他机器人。
+      # Hermes 始终忽略自己的机器人用户，以防止自回显。
+      allow_bots: "none"
+
       # 可继续 cron 任务的投递方式（默认："thread"）。
       # "in_channel" 将可继续的 cron 任务直接平铺投递到频道中
       # （不新建话题）；需与 reply_in_thread: false（及
       # require_mention: false）搭配，纯文本回复即可继续任务。
-      # 详见 cron 指南 →“平铺频道内继续”。
+      # 详见 cron 指南 →"平铺频道内继续"。
       cron_continuable_surface: thread
 ```
 
@@ -321,7 +377,55 @@ platforms:
 | `platforms.slack.extra.reply_in_thread` | `true` | 为 `false` 时，频道消息直接回复而非话题。已在话题中的消息仍在话题中回复。 |
 | `platforms.slack.extra.reply_broadcast` | `false` | 为 `true` 时，话题回复也会发布到主频道。仅广播第一个分块。 |
 | `platforms.slack.extra.rich_blocks` | `false` | 为 `true` 时，Agent 消息会渲染为 [Block Kit](https://docs.slack.dev/block-kit/) 区块（标题、分隔线、真正的嵌套列表以及原生表格）。始终附带纯文本回退。超出 Slack 限制的表格会回退为对齐的等宽文本。无需重新安装应用——这仅是发送端的改动。 |
-| `platforms.slack.extra.cron_continuable_surface` | `"thread"` | [可继续 cron 任务](../features/cron.md)的投递方式。`"thread"` 为每次投递新建专用话题（默认）；`"in_channel"` 直接平铺投递到频道时间线。使用 `in_channel` 时需搭配 `reply_in_thread: false`（及 `require_mention: false`），纯文本回复即可继续任务。 |
+| `platforms.slack.extra.feedback_buttons` | `false` | 与 `rich_blocks` 同时启用时，在最终回复中附加 Slack 原生反馈控件。 |
+| `platforms.slack.extra.suggested_prompts` | `[]` | 最多四个用于 Agent/Assistant 私信入口的 `{title, message}` 提示；接受列表或 `{title, prompts}` 格式。 |
+| `platforms.slack.extra.assistant_thread_titles` | `true` | 为 `true` 时，使用用户首条消息为 Agent/Assistant 私信话题命名。 |
+| `platforms.slack.extra.allow_bots` | `"none"` | 控制来自其他 Slack 机器人的消息：`"none"` 忽略它们，`"mentions"` 仅在**该消息本身** @ 提及 Hermes 时接受机器人消息，`"all"` 接受所有消息。对于机器人间协作，使用 `"mentions"` 最安全。请参阅[接受其他机器人的消息](#接受其他机器人的消息allow_bots)。 |
+| `platforms.slack.extra.cron_continuable_surface` | `"thread"` | [可继续 cron 任务](../features/cron.md#flat-in-channel-continuation-slack)的投递方式。`"thread"` 为每次投递新建专用话题（默认）；`"in_channel"` 直接平铺投递到频道时间线。使用 `in_channel` 时需搭配 `reply_in_thread: false`（及 `require_mention: false`），纯文本回复即可继续任务。 |
+
+对应的环境变量为 `SLACK_ALLOW_BOTS=none|mentions|all`。两者均设置时，`platforms.slack.extra.allow_bots` 优先。若对等机器人无需显式提及即可相互回复，应避免使用 `all`，因为它们自己的回复策略仍可能形成循环。
+
+### 工作状态行
+
+agent 处理消息时，Slack 会在话题中机器人名称旁显示状态行。默认情况下 Hermes 将其设为 `is thinking...`；可通过 `typing_status_text` 自定义，例如名为 Ada 的小猫助手：
+
+```yaml
+platforms:
+  slack:
+    # 自定义工作状态行（默认："is thinking..."）。
+    typing_status_text: "is pouncing… 🐾"
+```
+
+| 键 | 默认值 | 描述 |
+|-----|---------|-------------|
+| `platforms.slack.typing_status_text` | `"is thinking..."` | agent 处理消息时显示的工作状态行文本。需要 `assistant:write` 权限范围——没有它，状态调用会静默失败，无论此项如何设置，Slack 都会渲染自己的通用占位文本。将 `typing_indicator: false` 设为该值可完全禁用状态行。 |
+
+:::note 状态显示的位置
+自定义状态显示在**回复编辑器下方的页脚**（“*BotName* is thinking…”），而非消息列表内联位置。AI 应用工作期间，Slack 在消息区域显示的内联 “Generating response…” / “Finding answers…” 行是 **Slack 自身轮换的指示器**——`assistant.threads.setStatus` 不控制它们，两者可同时出现。
+:::
+
+同一个键也会自定义 Google Chat 可见的工作状态标记消息（`platforms.google_chat.typing_status_text`，默认 `"Hermes is thinking…"`）——请注意，在 Google Chat 中它是一条真实发布的消息，随后会被修补为回复，而非临时状态。
+
+### 实时状态（按工具）
+
+默认情况下，状态行会在 agent 工作时**实时更新**：它不再固定为 `is thinking...`，而是显示 agent 当前正在做什么——`is running pytest tests/…`、`is reading docs/api.md…`、`is searching the web for slack api limits…`。在工具调用之间，它会恢复为静态文本。这沿用既有的状态刷新频率，因此不额外发起 Slack API 调用；即使 `tool_progress: off`（Slack 默认）也可工作——不同于进度气泡，状态行是临时的，不会在频道留下内容。
+
+通过 `display.live_status`（全局或按平台）控制：
+
+```yaml
+display:
+  platforms:
+    slack:
+      # full = 动词 + 参数（"is running pytest…"）[默认]
+      # verb = 仅动词（"is running…"）——隐藏命令/路径，
+      #        适用于共享或面向客户的频道
+      # off  = 静态文本（typing_status_text 或 "is thinking..."）
+      live_status: full
+```
+
+| 键 | 默认值 | 描述 |
+|-----|---------|-------------|
+| `display.live_status` | `"full"` | 按工具显示的实时状态行。`full` 显示动词和参数预览；`verb` 仅显示动词（避免在共享频道中泄露文件路径和命令）；`off` 恢复静态文本。与静态状态行相同，需要 `assistant:write` 权限范围。 |
 
 ### 会话隔离
 
@@ -350,6 +454,25 @@ slack:
   # Hermes 才会响应。
   strict_mention: false
 
+  # 忽略发给其他用户的消息：当频道或话题消息以 @ 提及
+  # 机器人以外的某人开头时（例如 "@rasha can you take this?"），
+  # 除非也提及机器人，否则保持静默。只有*前导*提及才算“发给”某人——
+  # 句中提及（"loop in @rasha"）仍会传给机器人。此项覆盖
+  # free_response_channels 和话题自动参与。选择启用；默认关闭。环境变量：SLACK_IGNORE_OTHER_USER_MENTIONS。
+  ignore_other_user_mentions: false
+
+  # 对话题回复要求显式 @mention，同时仍由 require_mention /
+  # free_response_channels 控制顶级频道消息。它比 strict_mention 更窄：
+  # 当自由回复机器人不应参与繁忙话题中的每条跟进时使用。
+  # 选择启用；默认关闭。环境变量：SLACK_THREAD_REQUIRE_MENTION。
+  thread_require_mention: false
+
+  # 按频道强制提及覆盖——与 free_response_channels 相反。列出的频道
+  # 始终要求显式 @mention，即使全局 require_mention 为 false 或频道可自由回复。
+  # 正在进行的对话仍会自动跟进（被提及的话题、活跃会话、机器人发起的话题）。
+  # 逗号分隔的 ID 或列表。环境变量：SLACK_REQUIRE_MENTION_CHANNELS。
+  require_mention_channels: ""
+
   # 触发机器人的自定义提及模式
   # （除默认 @mention 检测外）
   mention_patterns:
@@ -364,15 +487,121 @@ slack:
 在繁忙工作区中，如果 Slack 默认的"机器人记住此话题"行为让用户感到意外，请将此项设为 `true`——例如，在一个长技术支持话题中，机器人在开始时提供了帮助，而你希望它保持沉默，除非被明确 @ 提及。私信和活跃的交互会话不受影响。
 :::
 
-:::info
-Slack 支持两种模式：默认情况下需要 `@mention` 才能开始对话，但你可以通过 `SLACK_FREE_RESPONSE_CHANNELS`（逗号分隔的频道 ID）或 `config.yaml` 中的 `slack.free_response_channels` 为特定频道取消此限制。一旦机器人在话题中有活跃会话，后续话题回复无需提及。在私信中，机器人始终响应，无需提及。
+:::tip 何时使用 `ignore_other_user_mentions`
+当机器人通过话题自动参与或 `free_response_channels` 跟进繁忙话题、却插入人类彼此发言的消息时，将此项设为 `true`。它比 `strict_mention` 更精细：已参与话题中的普通跟进仍会得到回答；只有以 @ 提及其他人开头的消息会被跳过。**1:1 私信不受影响**；群组私信（MPIM）和频道都会应用它，符合下方的共享界面策略。广播 token（`@here`、`@channel`）和频道引用是面向整个房间，而非个人，因此绝不会被跳过。
 :::
+
+:::info
+Slack 支持两种模式：默认情况下需要 `@mention` 才能开始对话，但你可以通过 `SLACK_FREE_RESPONSE_CHANNELS`（逗号分隔的频道 ID）或 `config.yaml` 中的 `slack.free_response_channels` 为特定频道取消此限制。一旦机器人在话题中有活跃会话，后续话题回复无需提及。在**1:1 私信**中，机器人始终响应，无需提及。
+:::
+
+:::caution 群组私信（MPIM）是共享界面，而非 1:1 私信
+**1:1 私信**是与一个人的私人对话，因此免于提及要求。**群组私信（MPIM / 多人私信）** 是一个 *共享界面*——多人可以看到并触发机器人——因此它遵循与频道相同的操作控制：`require_mention`、`strict_mention`、`free_response_channels` 和 `allowed_channels` 均适用，且机器人仅在确实被 `@mention` 时才添加 `:eyes:`/`:white_check_mark:` 反应。要让机器人在特定群组私信中自由响应，请将其频道 ID（以 `G` 开头）添加到 `free_response_channels`。
+:::
+
+#### 应该选择哪个提及选项？
+
+这些门控选项可以组合——每项回答不同的问题：
+
+| 选项 | 所回答的问题 | 默认值 | 范围 |
+|--------|--------------------|---------|-------|
+| `require_mention` | **顶级频道消息**是否需要 @mention？ | `true` | 所有频道 |
+| `free_response_channels` | 哪些频道免于 `require_mention`？ | 无 | 列出的频道 |
+| `require_mention_channels` | 即使 `require_mention` 为 `false` 或频道可自由回复，哪些频道也始终需要 @mention？优先于两者。 | 无 | 列出的频道 |
+| `thread_require_mention` | 即使顶级消息不需要，**话题回复**是否仍需要 @mention？不会记住被提及的话题。 | `false` | 仅话题 |
+| `strict_mention` | 是否**每条**频道消息（顶级和话题）都需要新的 @mention？禁用所有自动跟进：被提及话题记忆、机器人回复跟进、活跃会话恢复。 | `false` | 所有频道和话题 |
+| `ignore_other_user_mentions` | 是否应跳过**以 @ 提及其他人开头**的消息（`@rasha can you take this?`）？覆盖自由回复和话题自动跟进；句中引用仍会传给机器人。 | `false` | 频道和群组私信 |
+
+经验法则：`strict_mention` 是最广泛的工具；`thread_require_mention` 可让繁忙话题安静下来而不影响顶级门控；`require_mention_channels` 可在自由回复机器人上重新收紧单个频道；`ignore_other_user_mentions` 只跳过明确发给其他人的消息。1:1 私信始终响应，且不受所有这些选项影响。
+
+### 接受其他机器人的消息（`allow_bots`）
+
+默认情况下，Hermes 会忽略其他 Slack 机器人或应用发布的所有消息（包括 Workflow Builder 发布的消息）。对于多 agent 工作区——多个 Hermes 实例或在同一频道协作的对等机器人——请通过 `allow_bots` 选择启用：
+
+```yaml
+platforms:
+  slack:
+    extra:
+      # "none"（默认）——忽略所有由机器人/应用创作的消息
+      # "mentions"       ——仅当该消息本身 @ 提及本机器人时
+      #                    接受机器人消息
+      # "all"            ——接受所有其他机器人（本机器人除外）
+      allow_bots: mentions
+```
+
+环境变量等价项：`SLACK_ALLOW_BOTS=none|mentions|all`（两者均设置时配置键优先）。未知值会被视为 `none`。
+
+`mentions` 模式的门控方式：
+
+- 仅当对等机器人消息**本身包含对本机器人的当前 `@mention`**时才会接受它——可以在其文本或 Block Kit 区块中。话题历史不计算在内：先前在话题中提及机器人、回复机器人的消息以及活跃的话题会话，均**不会**允许后续未提及的对等机器人消息。这是刻意设计——它能切断 agent 间的确认/状态循环。
+- 人类消息不受影响；正常提及门控仍适用。
+- Hermes 在所有模式中始终忽略自己的消息，以防止自回显循环。
+
+`mentions` 是机器人间协作的推荐模式：每个 agent 每轮都必须显式召唤另一个。除非每个对等机器人的回复策略都能防止循环，否则避免使用 `all`——两个回答所有消息的机器人会无限互相回答。检测涵盖带标签的机器人消息（`bot_id`、`subtype: bot_message`）、由应用发起的事件和未标记的机器人*用户*（通过 `users.info` 探测），因此会在各工作区中一致过滤对等 Hermes agent。
+
+对于严格的多机器人部署，请与 `require_mention: true` 和 `strict_mention: true` 搭配——请参阅下方的冒烟检查配置。
+
+### 反应触发器（`reaction_triggers`）
+
+默认情况下，表情反应会被确认并丢弃——机器人消息上的 👍 不会执行任何操作。设置 `slack.reaction_triggers` 可将反应路由进 agent 循环（需要 `reactions:read` 权限范围以及 Slack 应用 manifest 中的 `reaction_added`/`reaction_removed` 机器人事件订阅——请重新生成 `hermes slack manifest`）：
+
+```yaml
+slack:
+  # 选择启用。false/未设置（默认）= 确认并丢弃反应。
+  # true = 机器人*自己的消息*上的任何反应均会路由进 agent。
+  reaction_triggers: true
+  # 或显式表情白名单——仅这些名称会路由，且可针对任何消息
+  # （表情交接工作流，例如用 :task: 捕获）：
+  # reaction_triggers: [white_check_mark, thumbsup, task]
+  # 可选交接目标：在此频道（顶级）或话题（C123:<thread_ts>）中回复，
+  # 而非在被反应消息的话题中回复。
+  # reaction_trigger_target: C0123456789
+```
+
+环境变量等价项：`SLACK_REACTION_TRIGGERS`（`true`/`all` 或逗号分隔列表）和 `SLACK_REACTION_TRIGGER_TARGET`。
+
+行为：
+
+- 反应作为普通 agent 轮次到达，文本为 `reaction:added:👍` / `reaction:removed:👍`（常见 Slack 名称会转换为 Unicode；未知名称保持原样，例如 `reaction:added:custom-emoji`），并置于被反应消息的话题下，因此 agent 可以看到被反应的内容，且该轮次与回复一样进入同一会话。
+- 反应者成为该消息的用户，因此**用户授权和 `allowed_channels` 门控与输入消息完全相同**——随机用户的反应不能在其消息无法触发 agent 的位置触发 agent。
+- 使用 `reaction_triggers: true` 时，仅机器人**自己的**消息上的反应会路由（批准/确认流程）。使用显式表情白名单时，列出的表情可从任何消息路由。
+- 机器人自身的生命周期反应（`:eyes:` 等）绝不会反馈回来。
+- 独立于此选择启用项，每个人类反应都会为不需要 agent 轮次的观察者触发 `reaction:added`/`reaction:removed` [gateway hooks](../features/hooks.md#available-events)。
+
+### 对等 Agent 冒烟检查
+
+对于依赖每轮严格提及的多机器人 Slack 部署，请保持以下配置：
+
+```yaml
+slack:
+  require_mention: true
+  strict_mention: true
+  allow_bots: mentions
+  allowed_channels: ""
+```
+
+变更 gateway 配置、部署或重启后，运行此合成冒烟测试目标：
+
+```bash
+uv run --frozen pytest -q tests/gateway/test_slack_peer_agent_smoke.py -o addopts=''
+```
+
+此目标仅使用进程内合成 Slack 事件。它不会发送真实 Slack 消息，默认也不需要真实机器人 token。
+
+失败分类：
+
+- `config:`：`test_peer_agent_smoke_preflight_contract` 捕获了配置不匹配（`require_mention`、`strict_mention`、`allow_bots` 或 `allowed_channels`）。
+- `platform_connectivity:`：适配器/客户端未初始化，因此路由冒烟结果尚不可信。
+- `bot_identity:`：适配器从未解析其机器人用户 ID，因此当前消息提及检查无法工作。
+- `routing_logic:`：Slack 适配器在某项对等 agent 不变量上发生回归（人类提及路由、对等机器人忽略、显式对等提及准入或被动确认/状态/错误抑制）。
+
+若此目标通过但真实工作区仍错误路由消息，请在路由逻辑之外排查 Slack token/工作区连接性和运行时部署状态。
 
 ### 频道白名单（`allowed_channels`）
 
 将机器人限制在固定的 Slack 频道集合中——当机器人被邀请到许多频道但只应在少数频道中响应时很有用。设置后，不在此列表中的频道消息将被**静默忽略**，即使机器人被 `@mention`。
 
-**私信不受此过滤器影响**，因此授权用户始终可以通过私信联系机器人。
+**1:1 私信不受此过滤器影响**，因此授权用户始终可以通过私信联系机器人。**群组私信（MPIM）不受豁免**——与频道一样，MPIM 必须在白名单中（其 ID 以 `G` 开头），否则其消息将被丢弃。
 
 ```yaml
 slack:
@@ -460,6 +689,22 @@ SLACK_HOME_CHANNEL=C01234567890
 
 确保机器人已被**邀请到该频道**（`/invite @Hermes Agent`）。
 
+### Cron 投递目标
+
+Cron 任务（参见 [cron 指南](../features/cron.md#delivery-options)）可通过三种方式定位 Slack：
+
+| `deliver:` 值 | 投递位置 |
+|------------------|----------------|
+| `slack` | 主频道（`SLACK_HOME_CHANNEL`） |
+| `slack:C0123456789` | 由 ID 指定的频道 |
+| `slack:U0123456789` | 该用户的**私信**——裸用户 ID 会自动解析为私信会话（需要 `im:write` 权限范围） |
+
+即使 cron 进程不与 gateway 位于同一位置，投递仍可工作——Hermes 会回退为使用 `SLACK_BOT_TOKEN` 的独立 Web API 发送程序。cron 输出中的 `MEDIA:` 附件会作为原生 Slack 文件共享上传到相同目标。
+
+### 发送消息和媒体（`send_message`）
+
+agent 的 `send_message` 工具接受相同的目标形式：频道 ID（`C…`/`G…`）、私信会话（`D…`）或裸用户 ID（`U…`/`W…`）；后者会在每种发送路径中解析为用户私信，包括文本、媒体和交互式提示。`MEDIA:<path>` 附件（图片、PDF、文档）会作为原生文件共享上传；当一条短消息附带单个附件时，它会作为文件说明而非单独消息发送。缺失文件会按文件报告为警告，而不会导致整个发送失败。
+
 ---
 
 ## 多工作区支持
@@ -472,7 +717,7 @@ Hermes 可以使用单个 gateway 实例**同时连接多个 Slack 工作区**�
 
 ```bash
 # 多个 bot token——每个工作区一个
-SLACK_BOT_TOKEN=xoxb-workspace1-token,xoxb-workspace2-token,xoxb-workspace3-token
+SLACK_BOT_TOKEN=«redacted:xox…»,«redacted:xox…»,«redacted:xox…»
 
 # Socket Mode 仍使用单个 app-level token
 SLACK_APP_TOKEN=xapp-your-app-token
@@ -483,7 +728,7 @@ SLACK_APP_TOKEN=xapp-your-app-token
 ```yaml
 platforms:
   slack:
-    token: "xoxb-workspace1-token,xoxb-workspace2-token"
+    token: "«redacted:xox…»,«redacted:xox…»"
 ```
 
 ### OAuth Token 文件
@@ -499,7 +744,7 @@ platforms:
 ```json
 {
   "T01ABC2DEF3": {
-    "token": "xoxb-workspace-token-here",
+    "token": "«redacted:xox…»",
     "team_name": "My Workspace"
   }
 }
@@ -598,7 +843,7 @@ slack:
 5. ✅ 已添加 `groups:history` 权限范围（私有频道）
 6. ✅ 添加权限范围/事件后已**重新安装**应用
 7. ✅ 已**邀请**机器人加入频道（`/invite @Hermes Agent`）
-8. ✅ 你在消息中**@mention** 了机器人
+8. ✅ 你在消息中 **@mention** 了机器人
 
 ---
 
