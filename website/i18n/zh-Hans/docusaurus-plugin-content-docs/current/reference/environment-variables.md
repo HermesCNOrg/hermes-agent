@@ -251,6 +251,23 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 | `TERMINAL_LOCAL_PERSISTENT` | 为本地后端启用持久 shell（默认：`false`） |
 | `TERMINAL_SSH_PERSISTENT` | 覆盖 SSH 后端的持久 shell（默认：跟随 `TERMINAL_PERSISTENT_SHELL`） |
 
+## 出站代理（注入沙箱）
+
+这些环境变量**不会**在宿主机上设置——当 `proxy.enabled: true` 时，[出站代理](../user-guide/egress/iron-proxy.md)集成会将其注入 Docker 沙箱。在此版本中，Docker 是唯一已接线的后端。
+
+| 变量 | 描述 |
+|----------|-------------|
+| `HERMES_EGRESS_PROXY` | 出站代理处于活动状态时，在沙箱内设为 `1`。Agent 代码可检查此变量，以确认自身正运行在会拦截 TLS 的代理后方。 |
+| 提供商环境变量（`OPENROUTER_API_KEY`、`OPENAI_API_KEY` 等） | 设为不透明的代理 token，而不是真实的上游密钥，因此现有 SDK 可继续读取标准环境变量名。iron-proxy 会在网络边界将这些 token 换成真实的上游密钥。 |
+| `HERMES_PROXY_TOKEN_<ENV_NAME>` | 每个已铸造提供商映射的诊断别名。例如 `HERMES_PROXY_TOKEN_OPENROUTER_API_KEY=hermes-proxy-openrouter-…`。其 token 值与标准提供商环境变量相同。 |
+| `HTTPS_PROXY` / `HTTP_PROXY` | `HTTPS_PROXY` 指向 `http://host.docker.internal:<tunnel_port>`，用于 CONNECT/MITM。`HTTP_PROXY` 指向 `<tunnel_port + 1>`，用于纯 HTTP 转发。 |
+| `NO_PROXY` | 设为 `127.0.0.1,localhost,::1`，让沙箱内的回环开发服务器绕过代理。 |
+| `REQUESTS_CA_BUNDLE` / `SSL_CERT_FILE` / `CURL_CA_BUNDLE` / `NODE_EXTRA_CA_CERTS` | 指向沙箱内挂载的 Hermes 出站 CA 证书（`/etc/ssl/certs/hermes-egress-ca.crt`）。这使各语言运行时信任 iron-proxy 通过 MITM 签发的叶证书。 |
+| `NODE_OPTIONS` | 追加 `--use-openssl-ca`（保留现有标志），使 Node.js 通过其他 CA bundle 变量所控制的 OpenSSL 存储进行路由。这缩小了 [Node.js 非对称 CA 注意事项](../user-guide/egress/iron-proxy.md#nodejs-asymmetric-ca-caveat)所述问题的范围。 |
+| `HERMES_IRON_PROXY_NONCE` | 设置在 iron-proxy 守护进程自身（**不**在沙箱内）。`_pid_alive` 使用它来确认候选 PID 在 PID 回收后仍指向*我们*管理的二进制文件。 |
+
+当 `proxy.enabled: true` **且**守护进程正在运行时，Docker 终端后端会自动设置这些变量。你不需要自行设置；面向操作者的相关选项位于 `~/.hermes/config.yaml` 的 `proxy:` 部分——参见[出站代理 → 配置](../user-guide/egress/iron-proxy.md#configuration)。
+
 ## 消息平台
 
 | 变量 | 描述 |
@@ -299,6 +316,7 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 | `SLACK_APP_TOKEN` | Slack 应用级 token（`xapp-...`，Socket Mode 必需） |
 | `SLACK_ALLOWED_USERS` | 逗号分隔的 Slack 用户 ID |
 | `SLACK_ALLOW_ALL_USERS` | 允许任意 Slack 用户触发 bot（仅用于开发）。 |
+| `SLACK_ALLOW_BOTS` | 接受来自其他 Slack bot 的消息：`none`（默认）、`mentions` 或 `all`。Bot 始终忽略自身消息。 |
 | `SLACK_HOME_CHANNEL` | cron 投递的默认 Slack 频道 |
 | `SLACK_HOME_CHANNEL_NAME` | Slack 主频道的显示名称 |
 | `GOOGLE_CHAT_PROJECT_ID` | 托管 Pub/Sub 话题的 GCP 项目（回退到 `GOOGLE_CLOUD_PROJECT`） |
@@ -348,7 +366,7 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 | `TWILIO_PHONE_NUMBER` | E.164 格式的 Twilio 手机号码（与电话技能共享） |
 | `SMS_WEBHOOK_URL` | Twilio 签名验证的公共 URL——必须与 Twilio Console 中的 webhook URL 一致（必填） |
 | `SMS_WEBHOOK_PORT` | 入站 SMS 的 webhook 监听端口（默认：`8080`） |
-| `SMS_WEBHOOK_HOST` | webhook 绑定地址（默认：`0.0.0.0`） |
+| `SMS_WEBHOOK_HOST` | webhook 绑定地址（默认：`127.0.0.1`） |
 | `SMS_INSECURE_NO_SIGNATURE` | 设为 `true` 可禁用 Twilio 签名验证（仅用于本地开发——不适用于生产环境） |
 | `SMS_ALLOWED_USERS` | 允许聊天的逗号分隔 E.164 手机号码 |
 | `SMS_ALLOW_ALL_USERS` | 无需白名单允许所有 SMS 发送者 |
@@ -510,6 +528,8 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 | `HERMES_DESKTOP_HERMES_ROOT` | `hermes desktop --hermes-root` 使用的 Desktop 源码检出覆盖；检查优先级高于打包后的首次启动安装或 `PATH` 中已有的 `hermes`。 |
 | `HERMES_DESKTOP_IGNORE_EXISTING` | 设为 `1`，让 Desktop 在解析后端时忽略 `PATH` 中已有的 `hermes`。等同于 `hermes desktop --ignore-existing`。 |
 | `HERMES_DESKTOP_CWD` | Desktop 聊天会话的初始项目目录。由 `hermes desktop --cwd` 设置。 |
+| `HERMES_DESKTOP_PYTHON` | 后端所用 Python 解释器的绝对路径；Electron 为源码检出自动解析解释器之前会先检查此变量。工作树开发辅助工具用它（参见[从工作树运行 TUI 与 Desktop](../developer-guide/worktree-ui-dev.md)）复用共享虚拟环境。 |
+| `HERMES_DESKTOP_DEV_SERVER` | Electron shell 加载以代替打包 bundle 的 Vite 开发服务器 URL（例如 `http://127.0.0.1:5174`）。由 `npm run dev` 自动设置；仅与修改应用代码时有关。 |
 
 ### Microsoft Graph（Teams 会议）
 
@@ -680,8 +700,8 @@ Microsoft Teams 平台适配器（Bot Framework / Azure AD），不同于上方�
 | `HERMES_TELEGRAM_DISABLE_FALLBACK_IPS` | 禁用 DNS 失败时使用的硬编码 Cloudflare 回退 IP（`true`/`false`）。 |
 | `HERMES_DISCORD_TEXT_BATCH_DELAY_SECONDS` | 刷新排队 Discord 文本块前的宽限窗口（默认：`0.6`）。 |
 | `HERMES_DISCORD_TEXT_BATCH_SPLIT_DELAY_SECONDS` | Discord 消息超过长度限制时分块之间的延迟（默认：`2.0`）。 |
-| `HERMES_DISCORD_LIVENESS_INTERVAL_SECONDS` | `config.yaml` 中 `discord.liveness_interval_seconds` 的内部桥接。Discord REST 活跃探测间隔，用于检测死代理/NAT 后的僵尸客户端（默认：`60`；设为 `0` 可禁用）。请优先在 `config.yaml` 中设置。 |
-| `HERMES_DISCORD_LIVENESS_FAILURE_THRESHOLD` | `config.yaml` 中 `discord.liveness_failure_threshold` 的内部桥接。强制 Discord 重连前允许的连续探测失败次数（默认：`3`）。请优先在 `config.yaml` 中设置。 |
+| `HERMES_DISCORD_LIVENESS_INTERVAL_SECONDS` | `discord.websocket_liveness_interval_seconds` 的兼容/手动覆盖。对活动 Discord Gateway WebSocket 进行采样的间隔（默认：`15`；设为 `0` 可禁用）。请优先使用 `config.yaml` 中的键。 |
+| `HERMES_DISCORD_LIVENESS_FAILURE_THRESHOLD` | `discord.websocket_liveness_failure_threshold` 的兼容/手动覆盖。强制重新连接前 WebSocket 连续不健康的采样次数（默认：`2`）。请优先使用 `config.yaml` 中的键。 |
 | `HERMES_MATRIX_TEXT_BATCH_DELAY_SECONDS` / `_SPLIT_DELAY_SECONDS` | Matrix 等同于 Telegram 批处理旋钮。 |
 | `HERMES_FEISHU_TEXT_BATCH_DELAY_SECONDS` / `_SPLIT_DELAY_SECONDS` / `_MAX_CHARS` / `_MAX_MESSAGES` | 飞书批处理器调优——延迟、分块延迟、每条消息最大字符数、每批最大消息数。 |
 | `HERMES_FEISHU_MEDIA_BATCH_DELAY_SECONDS` | 飞书媒体刷新延迟。 |
@@ -720,7 +740,6 @@ Microsoft Teams 平台适配器（Bot Framework / Azure AD），不同于上方�
 | `HERMES_IGNORE_USER_CONFIG` | 跳过 `~/.hermes/config.yaml` 并使用内置默认值（`.env` 中的凭证仍会加载）。等同于 `--ignore-user-config`。 |
 | `HERMES_IGNORE_RULES` | 跳过 `AGENTS.md`、`SOUL.md`、`.cursorrules`、记忆和预加载技能的自动注入。等同于 `--ignore-rules`。 |
 | `HERMES_SAFE_MODE` | 故障排查模式：禁用**所有**自定义项——跳过插件发现、MCP 服务器加载和 shell hook 注册。由 `--safe-mode` 自动设置（同时也会设置上面两个 flag）。 |
-| `HERMES_MD_NAMES` | 自动注入的规则文件名逗号分隔列表（默认：`AGENTS.md,CLAUDE.md,.cursorrules,SOUL.md`）。 |
 | `HERMES_TOOL_PROGRESS` | 工具进度显示的已弃用兼容变量。优先使用 `config.yaml` 中的 `display.tool_progress`。 |
 | `HERMES_TOOL_PROGRESS_MODE` | 工具进度模式的已弃用兼容变量。优先使用 `config.yaml` 中的 `display.tool_progress`。 |
 | `HERMES_HUMAN_DELAY_MODE` | 响应节奏：`off`/`natural`/`custom` |
@@ -729,13 +748,17 @@ Microsoft Teams 平台适配器（Bot Framework / Azure AD），不同于上方�
 | `HERMES_QUIET` | 抑制非必要输出（`true`/`false`） |
 | `CODEX_HOME` | 启用 [Codex 应用服务器运行时](../user-guide/features/codex-app-server-runtime)时，覆盖 Codex CLI 读取其配置 + 认证的目录（默认：`~/.codex`）。Hermes 的迁移将托管块写入 `<CODEX_HOME>/config.toml`。 |
 | `HERMES_KANBAN_TASK` | kanban 调度器生成工作进程时设置（任务 UUID）。工作进程和生成的 `hermes-tools` MCP 子进程继承它，以便 kanban 工具正确门控。请勿手动设置。 |
+| `HERMES_ACP_SKIP_CONFIGURED_MCP` | [ACP 宿主](../user-guide/features/acp#host-integration)在其生成的 Hermes 子进程上设置。`1` 会在 ACP JSON-RPC 循环开始前跳过启动全局配置的 `config.yaml` MCP 服务器，适用于通过 `session/new` 自行传入会话 MCP 服务器的宿主。ACP 会话提供的服务器仍会注册；其他任何值均保留默认行为。请勿手动设置。 |
 | `HERMES_API_TIMEOUT` | LLM API 调用超时（秒，默认：`1800`） |
 | `HERMES_API_CALL_STALE_TIMEOUT` | 非流式调用无响应超时（秒，默认：`90`）。未设置时对本地提供商自动禁用，并可能针对超大上下文自动提高。也可通过 `config.yaml` 中的 `providers.<id>.stale_timeout_seconds` 或 `providers.<id>.models.<model>.stale_timeout_seconds` 配置。 |
 | `HERMES_STREAM_READ_TIMEOUT` | 流式 socket 读取超时（秒，默认：`120`）。对本地提供商自动增大到 `HERMES_API_TIMEOUT`。如果本地 LLM 在长代码生成期间超时，请增大此值。 |
 | `HERMES_STREAM_STALE_TIMEOUT` | 过期流检测超时（秒，默认：`180`）。对本地提供商自动禁用。在此窗口内无块到达时触发连接终止。 |
+| `HERMES_LOCAL_STREAM_STALE_TIMEOUT` | 本地提供商（Ollama、oMLX、llama-cpp）的过期流上限（秒，默认：`900`）。当基础过期超时采用默认值且检测到本地端点时，此有限上限会取代原先的无限禁用，因此卡死的本地服务器最终会触发检测器，而不是永久挂起。也可通过 `config.yaml` 中的 `agent.local_stream_stale_timeout` 配置。 |
 | `HERMES_STREAM_RETRIES` | 瞬时网络错误时的流中重连尝试次数（默认：`3`）。 |
 | `HERMES_STREAM_STALE_GIVEUP` | 跨轮次熔断器：连续发生指定次数的流式或非流式无响应终止且没有完成响应后，立即中止后续调用并返回可操作的错误，不再重复等待超时（默认：`5`，`0` 表示禁用）。任何已完成响应、`/model` 切换、启用回退或轮次开始时恢复主模型都会重置。 |
 | `HERMES_AGENT_TIMEOUT` | gateway 中运行 agent 的不活动超时（秒，默认：`1800`，即 30 分钟）。每次工具调用和流 token 时重置。设为 `0` 可禁用。 |
+| `HERMES_GATEWAY_MAX_STARTS` | 重生风暴熔断器：在窗口内允许 gateway（重新）启动的最大次数；超过后会执行指数退避休眠以打断风暴（默认：`5`，`0` 表示禁用）。也可通过 `config.yaml` 中的 `gateway.respawn_storm.max_starts` 配置。 |
+| `HERMES_GATEWAY_START_WINDOW_S` | 重生风暴熔断器的窗口秒数（默认：`120`）。也可通过 `config.yaml` 中的 `gateway.respawn_storm.window_seconds` 配置。 |
 | `HERMES_AGENT_TIMEOUT_WARNING` | Gateway：不活动超过此秒数后发送警告消息（默认：`HERMES_AGENT_TIMEOUT` 的 75%）。 |
 | `HERMES_AGENT_NOTIFY_INTERVAL` | Gateway：长时间运行的 agent 轮次中进度通知的间隔（秒）。 |
 | `HERMES_CHECKPOINT_TIMEOUT` | 文件系统检查点创建超时（秒，默认：`30`）。 |
@@ -750,7 +773,6 @@ Microsoft Teams 平台适配器（Bot Framework / Azure AD），不同于上方�
 | `HERMES_WRITE_SAFE_ROOT` | 可选目录前缀，**硬阻止** `write_file`/`patch` 写入列出的根目录之外的路径（无审批提示）。支持多个目录，使用 `os.pathsep` 分隔（Unix 为 `:`，Windows 为 `;`）。详见下方 [HERMES_WRITE_SAFE_ROOT](#hermes_write_safe_root)。 |
 | `HERMES_DISABLE_LAZY_INSTALLS` | 官方 Docker 镜像中自动设置的内部桥接变量，用于阻止运行时将依赖安装到不可变的 `/opt/hermes` 树。面向用户的等价配置是 `config.yaml` 中的 `security.allow_lazy_installs: false`；不要在 `.env` 中手动设置此变量。 |
 | `HERMES_DISABLE_FILE_STATE_GUARD` | 设为 `1` 可关闭 `patch`/`write_file` 上的"文件自上次读取后已更改"保护。 |
-| `HERMES_CORE_TOOLS` | 规范核心工具列表的逗号分隔覆盖（高级；极少需要）。 |
 | `HERMES_BUNDLED_SKILLS` | 启动时加载的内置技能列表的逗号分隔覆盖。 |
 | `HERMES_OPTIONAL_SKILLS` | 首次运行时自动安装的可选技能名称逗号分隔列表。 |
 | `HERMES_DEBUG_INTERRUPT` | 设为 `1` 可将详细的中断/取消追踪记录到 `agent.log`。 |
