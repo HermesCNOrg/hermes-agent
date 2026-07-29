@@ -23,7 +23,7 @@ Hermes 本身需要配置好 provider（提供商）和工具后端，API 服务
 ```bash
 API_SERVER_ENABLED=true
 API_SERVER_KEY=change-me-local-dev
-# 可选：仅当浏览器需要直接调用 Hermes 时
+# Optional: only if a browser must call Hermes directly
 # API_SERVER_CORS_ORIGINS=http://localhost:3000
 ```
 
@@ -44,7 +44,7 @@ hermes gateway
 将任何 OpenAI 兼容客户端指向 `http://localhost:8642/v1`：
 
 ```bash
-# 使用 curl 测试
+# Test with curl
 curl http://localhost:8642/v1/chat/completions \
   -H "Authorization: Bearer change-me-local-dev" \
   -H "Content-Type: application/json" \
@@ -206,7 +206,7 @@ OpenAI Responses API 格式。通过 `previous_response_id` 支持服务端对�
 
 ```bash
 curl \
-  -H "Authorization: Bearer ***" \
+  -H "Authorization: Bearer $API_SERVER_KEY" \
   "http://127.0.0.1:8642/api/model/options"
 ```
 
@@ -216,7 +216,7 @@ curl \
 
 ```bash
 curl \
-  -H "Authorization: Bearer ***" \
+  -H "Authorization: Bearer $API_SERVER_KEY" \
   "http://127.0.0.1:8642/api/model/options?refresh=1"
 ```
 
@@ -353,6 +353,10 @@ run 的工具调用进度、token 增量和生命周期事件的 Server-Sent Eve
 中断正在运行的 agent 轮次。端点立即返回 `{"status": "stopping"}`，同时 Hermes 要求活跃 agent 在下一个安全中断点停止。
 run 会保持 `stopping` 并继续被跟踪，直到 executor 支持的工作退出，然后进入 `cancelled`；停止请求不会隐藏仍在运行的 worker。
 
+### POST /v1/runs/\{run_id\}/approval
+
+为正在等待人工决定的 run 处理待定审批（例如，受审批策略约束的工具调用）。请求体携带审批决定；记录决定后，run 将恢复执行。此端点在 `/v1/capabilities` 中以 `run_approval` 功能公布，以便外部 UI 在显示审批提示之前检测支持情况。
+
 ## Jobs API（后台计划任务）
 
 服务器暴露了一个轻量级 jobs CRUD 接口，用于从远程客户端管理计划/后台 agent run。所有端点均受同一 bearer 认证保护。
@@ -389,6 +393,66 @@ run 会保持 `stopping` 并继续被跟踪，直到 executor 支持的工作退
 
 立即触发任务运行，不受计划限制。
 
+## Sessions API（通过 REST 控制 session）
+
+外部 UI 无需启动 dashboard，即可通过 REST 管理 Hermes session。所有端点均受 `API_SERVER_KEY` 保护，并位于 `/api/sessions/*` 下。
+
+| 方法 | 路径 | 描述 |
+|--------|------|-------------|
+| `GET` | `/api/sessions` | 列出 session（分页——`limit`、`offset`、`source`、`include_children`） |
+| `POST` | `/api/sessions` | 创建空 session |
+| `GET` | `/api/sessions/{id}` | 读取 session 元数据 |
+| `PATCH` | `/api/sessions/{id}` | 更新标题或 `end_reason` |
+| `DELETE` | `/api/sessions/{id}` | 删除 session |
+| `GET` | `/api/sessions/{id}/messages` | session 的消息历史 |
+| `POST` | `/api/sessions/{id}/fork` | 通过 `SessionDB` 沿袭关系创建 session 分支（与 CLI `/branch` 语义一致） |
+| `POST` | `/api/sessions/{id}/chat` | 同步运行一个 agent 轮次 |
+| `POST` | `/api/sessions/{id}/chat/stream` | 单轮的 SSE 封装——发出 `assistant.delta`、`tool.started`、`tool.completed`、`run.completed` 事件 |
+
+`/v1/capabilities` 通过 `session_*` 功能标志和 `endpoints.session_*` 条目公布完整接口，以便外部 UI 检测支持情况并安全回退。`chat` 和 `chat/stream` 载荷支持内联图像（支持多模态的路径）。
+
+```bash
+# fork a session and run one turn
+curl -X POST http://localhost:8642/api/sessions/$ID/fork \
+  -H "Authorization: Bearer $API_SERVER_KEY" \
+  -d '{"title": "explore alt path"}'
+
+# stream a turn over SSE
+curl -N -X POST http://localhost:8642/api/sessions/$ID/chat/stream \
+  -H "Authorization: Bearer $API_SERVER_KEY" \
+  -d '{"input": "what files changed in the last hour?"}'
+```
+
+## 技能与工具集发现
+
+`GET /v1/skills` 和 `GET /v1/toolsets` 让外部客户端能够通过 REST 确定性地枚举 agent 的能力，而不必询问模型。两者均为只读，并受 `API_SERVER_KEY` 保护。
+
+```bash
+curl http://localhost:8642/v1/skills \
+  -H "Authorization: Bearer $API_SERVER_KEY"
+# → [{"name": "github-pr-workflow", "description": "...", "category": "..."}, ...]
+
+curl http://localhost:8642/v1/toolsets \
+  -H "Authorization: Bearer $API_SERVER_KEY"
+# → [{"name": "core", "label": "...", "description": "...", "enabled": true,
+#     "configured": true, "tools": ["read_file", "write_file", ...]}, ...]
+```
+
+`/v1/skills` 返回技能中心内部使用的相同元数据。`/v1/toolsets` 返回为 `api_server` platform 解析的工具集，以及每个工具集展开后的具体 `tools` 列表。两者均在 `/v1/capabilities` 的 `endpoints.*` 下公布。
+
+## 长期记忆作用域（`X-Hermes-Session-Key`）
+
+Open WebUI 等多用户前端需要一个稳定的逐频道标识符来作用于长期记忆（Honcho 等），且该标识符必须**独立于** transcript 作用域的 `X-Hermes-Session-Id`（后者会在 `/new` 时轮换）。在 `/v1/chat/completions`、`/v1/responses` 或 `/v1/runs` 上传递 `X-Hermes-Session-Key`，Hermes 会将其一路传给 `AIAgent(gateway_session_key=...)`，Honcho 记忆 provider 在那里用它派生稳定作用域。
+
+```http
+POST /v1/chat/completions HTTP/1.1
+Authorization: Bearer ***
+X-Hermes-Session-Id: transcript-alpha
+X-Hermes-Session-Key: agent:main:webui:dm:user-42
+```
+
+规则：最多 256 个字符；控制字符（`\r`、`\n`、`\x00`）会被拒绝；该值会在响应（JSON + SSE）中原样返回。`/v1/capabilities` 通过 `"session_key_header": "X-Hermes-Session-Key"` 公布支持情况。若不提供此 key，Honcho 的 `per-session` 策略会为每个 `session_id` 生成不同作用域——这正是 Hermes 以前的行为。
+
 ## 系统 Prompt 处理
 
 当前端发送 `system` 消息（Chat Completions）或 `instructions` 字段（Responses API）时，hermes-agent 会将其**叠加在**核心系统 prompt 之上。你的 agent 保留所有工具、记忆和技能——前端的系统 prompt 只是添加额外指令。
@@ -408,9 +472,7 @@ Authorization: Bearer ***
 通过 `API_SERVER_KEY` 环境变量配置密钥。如果需要浏览器直接调用 Hermes，还需将 `API_SERVER_CORS_ORIGINS` 设置为明确的允许列表。
 
 :::warning 安全
-API 服务器提供对 hermes-agent 工具集的完整访问权限，**包括终端命令**。当绑定到非回环地址（如 `0.0.0.0`）时，**必须**设置 `API_SERVER_KEY`。同时保持 `API_SERVER_CORS_ORIGINS` 范围尽量小，以控制浏览器访问。
-
-默认绑定地址（`127.0.0.1`）仅供本地使用。浏览器访问默认禁用；仅为明确的可信来源启用。
+API 服务器提供对 hermes-agent 工具集的完整访问权限，**包括终端命令**。**每种部署都必须**设置 `API_SERVER_KEY`，包括默认绑定到 `127.0.0.1` 回环地址的部署。当你明确允许浏览器调用方时，请保持 `API_SERVER_CORS_ORIGINS` 范围狭窄，以控制浏览器访问。
 :::
 
 ## 配置
@@ -422,7 +484,7 @@ API 服务器提供对 hermes-agent 工具集的完整访问权限，**包括终
 | `API_SERVER_ENABLED` | `false` | 启用 API 服务器 |
 | `API_SERVER_PORT` | `8642` | HTTP 服务器端口 |
 | `API_SERVER_HOST` | `127.0.0.1` | 绑定地址（默认仅限本地） |
-| `API_SERVER_KEY` | _（无）_ | 认证用 Bearer token |
+| `API_SERVER_KEY` | _（必需）_ | 认证用 Bearer token |
 | `API_SERVER_CORS_ORIGINS` | _（无）_ | 逗号分隔的允许浏览器来源 |
 | `API_SERVER_MODEL_NAME` | _（profile 名称）_ | `/v1/models` 上的模型名称。默认为 profile 名称，默认 profile 则为 `hermes-agent`。 |
 
@@ -489,12 +551,12 @@ API_SERVER_CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 要为多个用户提供各自隔离的 Hermes 实例（独立的配置、记忆、技能），请使用 [profiles](/user-guide/profiles)：
 
 ```bash
-# 为每个用户创建 profile
+# Create a profile per user
 hermes profile create alice
 hermes profile create bob
 
-# 在不同端口上配置每个 profile 的 API 服务器。API_SERVER_* 是环境变量
-# （不是 config.yaml 键），因此将它们写入每个 profile 的 .env：
+# Configure each profile's API server on a different port. API_SERVER_* are env
+# vars (not config.yaml keys), so write them to each profile's .env:
 cat >> ~/.hermes/profiles/alice/.env <<EOF
 API_SERVER_ENABLED=true
 API_SERVER_PORT=8643
@@ -507,7 +569,7 @@ API_SERVER_PORT=8644
 API_SERVER_KEY=bob-secret
 EOF
 
-# 启动每个 profile 的 gateway
+# Start each profile's gateway
 hermes -p alice gateway &
 hermes -p bob gateway &
 ```
@@ -523,7 +585,7 @@ hermes -p bob gateway &
 
 - **响应存储** — 存储的响应（用于 `previous_response_id`）持久化在 SQLite 中，gateway 重启后仍然存在。最多存储 100 个响应（LRU 淘汰）。
 - **不支持文件上传** — 两个端点（`/v1/chat/completions` 和 `/v1/responses`）均支持内联图像，但不支持通过 API 上传文件（`file`、`input_file`、`file_id`）和非图像文档输入。
-- **model 字段仅为展示用途** — 请求中的 `model` 字段会被接受，但实际使用的 LLM 模型在服务端的 config.yaml 中配置。
+- **简单 OpenAI 客户端仍会看到一个别名**——`/v1/models` 公布稳定的 Hermes 别名（`hermes-agent` 或当前 profile 名称）。功能更丰富的客户端可以在请求中发送明确的 `provider` / `model_options` 覆盖。
 
 ## 代理模式
 
