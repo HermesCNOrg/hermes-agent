@@ -88,18 +88,21 @@ flowchart LR
 
 ```yaml
 checkpoints:
-  enabled: false              # 主开关（默认：false — 按需启用）
-  max_snapshots: 20           # 每个项目的最大检查点数（通过引用重写 + gc 强制执行）
-  max_total_size_mb: 500      # 存储总大小硬上限；超出时丢弃最旧的提交
-  max_file_size_mb: 10        # 跳过大于此值的单个文件
+  enabled: false              # master switch (default: false — opt-in)
+  max_snapshots: 20           # max checkpoints per project (enforced via ref rewrite + gc)
+  max_total_size_mb: 500      # hard cap on total store size; oldest commits dropped
+  max_file_size_mb: 10        # skip any single file larger than this
 
-  # 自动维护（默认开启）：启动时扫描 ~/.hermes/checkpoints/，
-  # 删除工作目录已不存在的项目条目（孤立项）或 last_touch 超过
-  # retention_days 的条目。通过 .last_prune 标记控制，
-  # 最多每 min_interval_hours 运行一次。
+  # Auto-maintenance (on by default): sweep ~/.hermes/checkpoints/ at startup
+  # and delete project entries whose last_touch is older than retention_days.
+  # Runs at most once per min_interval_hours, tracked via a .last_prune
+  # marker. This sweep never deletes "orphan" entries (working directory not
+  # found) — a missing workdir at startup is ambiguous (deleted project vs.
+  # an unmounted external volume / network share / VPN not yet up), so
+  # orphan cleanup is only ever done via the explicit
+  # `hermes checkpoints prune` command below, with a confirmation prompt.
   auto_prune: true
   retention_days: 7
-  delete_orphans: true
   min_interval_hours: 24
 ```
 
@@ -214,21 +217,21 @@ Hermes 在后台执行：
 
 ```text
 ~/.hermes/checkpoints/
-  ├── store/                 # 单一共享裸 git 仓库
-  │   ├── HEAD, objects/     # git 内部结构（跨项目共享）
-  │   ├── refs/hermes/<hash> # 每项目分支尖端
-  │   ├── indexes/<hash>     # 每项目 git 索引
+  ├── store/                 # single shared bare git repo
+  │   ├── HEAD, objects/     # git internals (shared across projects)
+  │   ├── refs/hermes/<hash> # per-project branch tip
+  │   ├── indexes/<hash>     # per-project git index
   │   ├── projects/<hash>.json  # workdir + created_at + last_touch
   │   └── info/exclude
-  ├── .last_prune            # 自动剪枝幂等性标记
-  └── legacy-<ts>/           # 归档的 v2 之前每项目影子仓库
+  ├── .last_prune            # auto-prune idempotency marker
+  └── legacy-<ts>/           # archived pre-v2 per-project shadow repos
 ```
 
 每个 `<hash>` 由工作目录的绝对路径派生。通常无需手动操作这些文件——使用 `hermes checkpoints status` / `prune` / `clear` 即可。
 
 ### 从 v1 迁移
 
-在 v2 重写之前，每个工作目录在 `~/.hermes/checkpoints/<hash>/` 下拥有独立的完整影子 git 仓库。该布局无法跨项目去重对象，且剪枝器有已知的空操作问题——存储会无限增长。
+在 v2 重写之前，每个工作目录在 `~/.hermes/checkpoints/<hash>/` 下拥有独立的完整影子 git 仓库。该布局无法跨项目去重对象，并且有一个文档中已说明不起作用的剪枝器——存储会无限增长。
 
 首次运行 v2 时，所有 v2 之前的影子仓库将被移入 `~/.hermes/checkpoints/legacy-<timestamp>/`，使新的单存储布局从干净状态开始。旧的 `/rollback` 历史仍可通过 `git` 手动检查 legacy 归档访问；确认不再需要后，运行：
 
@@ -240,7 +243,7 @@ hermes checkpoints clear-legacy
 
 ## 最佳实践
 
-- **仅在需要时启用检查点** — 使用 `hermes chat --checkpoints` 或在配置文件中设置 `enabled: true`。
+- **仅在需要时启用检查点** — 使用 `hermes chat --checkpoints`，或按 profile 设置 `enabled: true`。
 - **恢复前使用 `/rollback diff` 预览** — 查看将发生的变更，选择正确的检查点。
 - **使用 `/rollback` 而非 `git reset`** 来撤销 Agent 驱动的变更。
 - **定期检查 `hermes checkpoints status`**（如果你经常使用检查点）——显示哪些项目处于活跃状态以及存储占用情况。
