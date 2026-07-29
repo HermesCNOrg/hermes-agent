@@ -129,7 +129,7 @@ description: "Hermes 内置工具权威参考，按工具集分组"
 | `kanban_comment` | 在不改变任务状态的情况下向任务线程添加评论——适用于呈现中间发现。 | `HERMES_KANBAN_TASK` 或 `kanban` 工具集 |
 | `kanban_create` | 从当前任务派生子任务。由编排器和生成后续任务的 worker 使用。 | `HERMES_KANBAN_TASK` 或 `kanban` 工具集 |
 | `kanban_link` | 用父 → 子依赖边链接任务。 | `HERMES_KANBAN_TASK` 或 `kanban` 工具集 |
-| `kanban_unblock` | 将被阻塞的任务恢复为 `ready` 状态。仅限编排器；对调度器生成的任务 worker 隐藏。 | 含 `kanban` 工具集的 profile |
+| `kanban_unblock` | 当所有父任务均已完成时，将被阻塞的任务移至 `ready`；只要仍有任何父任务处于未完成状态，则移至 `todo`。仅限编排器；对调度器生成的任务 worker 隐藏。 | 含 `kanban` 工具集的 profile |
 
 ## `project` 工具集
 
@@ -215,7 +215,7 @@ description: "Hermes 内置工具权威参考，按工具集分组"
 
 | 工具 | 描述 | 所需环境 |
 |------|------|----------|
-| `x_search` | 使用 xAI 内置的 `x_search` Responses 工具搜索 X（Twitter）帖子、主页和话题串。用于获取 X 上的当前讨论、反应或观点，而非通用网页。默认关闭——通过 `hermes tools` → 🐦 X (Twitter) Search 选择启用。仅在配置了 xAI 凭据时注册 schema（check_fn 门控）。 | XAI_API_KEY **或** xAI Grok OAuth（SuperGrok / Premium+）登录 |
+| `x_search` | 使用 xAI 内置的 `x_search` Responses 工具搜索 X（Twitter）帖子、个人资料和话题串。这是只读的公开 X 内容发现工具，用于查找公开 X 上当前的讨论、反应或主张（而非通用网页）。它不能发帖、回复、点赞、发送私信、上传媒体、删除内容或检查已认证的 X 账户——这些操作需要单独的已认证 X API 接口（例如 `xurl` skill）。默认关闭——通过 `hermes tools` → 🐦 X (Twitter) Search 选择启用。仅在配置了 xAI 凭据时注册 schema（check_fn 门控）。 | XAI_API_KEY **或** xAI Grok OAuth（SuperGrok / Premium+）登录 |
 
 ## `tts` 工具集
 
@@ -233,7 +233,7 @@ description: "Hermes 内置工具权威参考，按工具集分组"
 
 ## `discord_admin` 工具集
 
-在 `hermes-discord` 平台工具集上注册。审核操作需要 bot 持有相应的 Discord 权限。
+在 `hermes-discord` 平台工具集上注册。管理操作需要 bot 持有相应的 Discord 权限。
 
 | 工具 | 描述 | 所需环境 |
 |------|------|----------|
@@ -241,7 +241,7 @@ description: "Hermes 内置工具权威参考，按工具集分组"
 
 ## `spotify` 工具集
 
-由内置 `spotify` 插件注册。需要 OAuth token——运行一次 `hermes spotify setup` 进行授权。
+由随附的 `spotify` 插件注册。需要 OAuth token——运行一次 `hermes auth spotify` 进行授权。
 
 | 工具 | 描述 | 所需环境 |
 |------|------|----------|
