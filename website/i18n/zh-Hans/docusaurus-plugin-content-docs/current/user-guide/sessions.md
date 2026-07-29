@@ -4,6 +4,8 @@ title: "Sessions（会话）"
 description: "会话持久化、恢复、搜索、管理及各平台会话跟踪"
 ---
 
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 # Sessions（会话）
 
 Hermes Agent 自动将每次对话保存为一个 session。Session 支持对话恢复、跨 session 搜索以及完整的对话历史管理。
@@ -123,7 +125,7 @@ Session ID 在退出 CLI session 时显示，也可通过 `hermes sessions list`
 
 恢复 session 时，Hermes 会在输入提示符前以样式化面板显示之前对话的紧凑摘要：
 
-<img className="docs-terminal-figure" src="/img/docs/session-recap.svg" alt="恢复 Hermes session 时显示的「上次对话」摘要面板的样式化预览。" />
+<img className="docs-terminal-figure" src={useBaseUrl('/img/docs/session-recap.svg')} alt="恢复 Hermes session 时显示的「上次对话」摘要面板的样式化预览。" />
 <p className="docs-figure-caption">恢复模式会在返回实时提示符前显示一个紧凑摘要面板，包含最近的用户和助手轮次。</p>
 
 摘要内容：
@@ -369,7 +371,7 @@ hermes sessions export --format md --model sonnet --min-messages 50 --redact
 hermes sessions export --format md --session-id 20250305_091523_a1b2c3d4 --delete-after-verified --yes
 ```
 
-Markdown/QMD 导出为每个 session 写入一个 `.md` 或 `.qmd` 文件，并附带一个 `manifest.jsonl`，记录文件路径、消息数量、lineage id 和 SHA-256。批量导出必须带至少一个过滤条件，不带过滤条件的批量导出会被拒绝。`--delete-after-verified` 仅限与 `--session-id` 搭配使用，且必须加 `--yes`。`--redact` 会在写入前从消息内容和工具输出中清除密钥（API key、token、凭据）— 任何打算分享的导出都建议加上。
+Markdown/QMD 导出会为每个导出的 session 写入一个 `.md` 或 `.qmd` 文件，并附带一个 `manifest.jsonl`，记录文件路径、消息数量、谱系 ID 和 SHA-256。批量导出必须带至少一个过滤条件；不带过滤条件的批量导出会被拒绝。`--delete-after-verified` 特意限定为只能与 `--session-id` 搭配使用，且必须加 `--yes`。由于删除父 session 也会删除其 delegate/subagent session，此模式会先将每个 delegate 分别导出到单独文件并完成验证，然后才会删除任何内容。如果 delegate 集合在导出期间发生变化，删除操作将被拒绝。`--redact` 会在写入前从消息内容和工具输出中清除密钥（API key、token、凭据）——任何打算分享的导出都建议加上。
 
 ### 删除 Session
 
@@ -396,22 +398,69 @@ hermes sessions rename 20250305_091523_a1b2c3d4 debugging auth flow
 ### 清理旧 Session
 
 ```bash
-# 删除 90 天前已结束的 session（默认）
+# 删除已结束且 90 天未活跃的 session（默认）
 hermes sessions prune
 
-# 自定义时间阈值
+# 自定义时长阈值——纯数字表示天数
 hermes sessions prune --older-than 30
 
-# 仅清理特定平台的 session
-hermes sessions prune --source telegram --older-than 60
+# 也支持时长：5h、30m、2d、1w
+hermes sessions prune --older-than 12h
+
+# 仅删除特定时间窗口内的 session（例如最近 5 小时内
+# 创建的一批测试 session）
+hermes sessions prune --newer-than 5h
+
+# 使用绝对时间戳指定窗口
+hermes sessions prune --after "2026-07-05 09:00" --before "2026-07-05 14:30"
+
+# 仅清理特定平台的 session（不限时长——任何过滤器都会
+# 禁用隐含的 90 天默认值）
+hermes sessions prune --source telegram
+hermes sessions prune --source cron --older-than 60   # 添加时间参数以缩小范围
+
+# 更多过滤器——全部以 AND 组合
+hermes sessions prune --newer-than 5h --title "smoke test"   # 标题子字符串
+hermes sessions prune --older-than 30 --max-messages 3        # 消息很少的 session
+hermes sessions prune --cwd ~/scratch --end-reason done       # 按 cwd / 结束原因
+hermes sessions prune --model gpt-5 --older-than 1w           # 按模型（子字符串）
+hermes sessions prune --provider openrouter --older-than 60   # 按计费 provider
+hermes sessions prune --branch feature/old-experiment         # 按 Git 分支
+hermes sessions prune --user 12345678 --chat-type group       # 按消息来源
+hermes sessions prune --max-tokens 500 --older-than 7         # 按 token 用量
+hermes sessions prune --max-cost 0.01 --max-tool-calls 0      # 低成本、无工具调用的运行
+
+# 预览将删除的内容，不实际删除
+hermes sessions prune --newer-than 5h --dry-run
 
 # 跳过确认
 hermes sessions prune --older-than 30 --yes
 ```
 
+时间值（`--older-than`、`--newer-than`、`--before`、`--after`）接受时长（`5h`、`30m`、`2d`、`1w`）、表示天数的纯数字，或 ISO 时间戳（`2026-07-05`、`2026-07-05 14:30`）。`--older-than`/`--before` 设置上限；`--newer-than`/`--after` 设置下限。`--older-than`/`--newer-than` 组合使用最近消息的活跃时间（空 session 则回退到 session 开始时间）；`--before`/`--after` 明确使用 session 开始时间。两组参数均可组合成一个时间窗口。
+
+属性过滤器包括：`--source`（平台，精确匹配）、`--title` / `--model` / `--branch`（不区分大小写的子字符串）、`--provider`（计费 provider，精确匹配）、`--end-reason`、`--user`、`--chat-id`、`--chat-type`（精确匹配）、`--cwd`（路径前缀），以及数值范围 `--min/--max-messages`、`--min/--max-tokens`（输入+输出）、`--min/--max-cost`（美元，优先使用实际值，否则回退到估算值）和 `--min/--max-tool-calls`。使用任何过滤器都会禁用隐含的 90 天默认值，因此 `hermes sessions prune --source cron` 或 `--model gpt-4o` 会匹配所有时长——请添加时间参数来缩小范围。只有完全不带参数的 `hermes sessions prune` 才保留 90 天截止条件。每次不带 `--yes` 的运行都会显示匹配数量以及匹配 session 中最早和最新的时间，然后请求确认。
+
+默认会跳过已归档的 session；传入 `--include-archived` 也可将其删除。
+
 :::info
 清理仅删除**已结束**的 session（已被显式结束或自动重置的 session）。活跃 session 永远不会被清理。
 :::
+
+### 批量归档 Session
+
+如果你只想让 session 不再出现在列表中，而不删除任何内容，`hermes sessions archive` 接受与 `prune` 相同的过滤器，但会改为软隐藏匹配的 session（设置的归档标志与在 Desktop/Dashboard UI 中归档单个 session 时相同——消息和搜索仍保持完整）：
+
+```bash
+# 归档最近 5 小时内的所有内容（例如 75 个 CI 冒烟测试 session）
+hermes sessions archive --newer-than 5h
+
+# 按标题子字符串归档，先预览
+hermes sessions archive --title "dry run" --dry-run
+hermes sessions archive --title "dry run" --yes
+```
+
+必须提供至少一个过滤器——不带参数的 `hermes sessions archive` 会拒绝归档你的全部历史记录。已归档的 session 不会出现在 `hermes sessions list` 和 `/resume` 中，但仍保留在数据库内，并可从 Desktop/Dashboard session 列表中取消归档。
 
 ### Session 统计
 
@@ -558,6 +607,14 @@ group_sessions_per_user: false
 
 SQLite 数据库使用 WAL 模式支持并发读取和单写入，非常适合 gateway 的多平台架构。
 
+:::warning `sessions.json` 不是 session 列表
+`~/.hermes/sessions/sessions.json` 是 **gateway 路由索引**——它将消息 session 键（`agent:main:<platform>:...`）映射到活跃 session ID。它只包含 gateway/消息平台条目，因此如果你运行了消息平台，只会看到这些条目（例如 `agent:main:whatsapp:dm:...`）。
+
+这是**正常现象**，并**不**表示你的 CLI session 丢失了。`hermes sessions list`、`/sessions` 和 dashboard 都读取 `state.db`，其中保存了**所有** session（CLI、TUI 和 gateway）。`~/.hermes/sessions/saved/*.json` 下的 `/save` 快照只是便捷导出，并不是该索引。
+
+如果 CLI session 确实没有出现在 `hermes sessions list` 中，原因是 `state.db` 未收到这些 session——请运行 `hermes sessions repair`，并留意 CLI 启动时是否出现 `⚠ Session store unavailable` 警告；该警告表示此次运行的 SQLite 持久化失败。
+:::
+
 :::note 遗留 JSONL 对话记录
 在 state.db 成为权威存储之前创建的 session 可能在 `~/.hermes/sessions/` 中留有
 `*.jsonl` 文件。Hermes 不再写入或读取这些文件。在确认对应 session 存在于
@@ -592,7 +649,7 @@ sessions:
   min_interval_hours: 24    # 清理间隔不短于此值
 ```
 
-活跃 session 永远不会被自动清理，无论时间多长。
+活跃 session 永远不会被自动清理，无论时长如何。已结束 session 的时长从其最新消息开始计算，因此最近使用过的长生命周期对话不会仅因开始时间早于保留窗口而被删除。
 
 ### 手动清理
 
