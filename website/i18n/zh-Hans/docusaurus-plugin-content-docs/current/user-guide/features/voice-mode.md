@@ -72,11 +72,11 @@ cd ~/.hermes/hermes-agent && uv pip install -e ".[all]"
 ```bash
 # macOS
 brew install portaudio ffmpeg opus
-brew install espeak-ng   # for NeuTTS
+brew install espeak-ng   # 用于 NeuTTS
 
 # Ubuntu/Debian
 sudo apt install portaudio19-dev ffmpeg libopus0
-sudo apt install espeak-ng   # for NeuTTS
+sudo apt install espeak-ng   # 用于 NeuTTS
 ```
 
 | 依赖项 | 用途 | 适用场景 |
@@ -159,11 +159,22 @@ hermes                # 启动交互式 CLI
 
 ### 流式 TTS
 
-启用 TTS 后，Agent 在生成文字的同时**逐句**朗读回复 — 无需等待完整响应：
+启用 TTS 后，Agent 在生成文字的同时**逐句**朗读回复 — 无需等待完整响应。这适用于**每一种 TTS 提供商**：
 
 1. 将文字增量缓冲为完整句子（最少 20 个字符）
-2. 去除 Markdown 格式和 `<think>` 块
-3. 实时逐句生成并播放音频
+2. 去除 Markdown 格式、表情符号和 `<think>` 块
+3. 实时逐句播放音频 — 具有分块 PCM API 的提供商（ElevenLabs、OpenAI）会流式传输原始音频，以获得最低的首词延迟；其他所有提供商（包括默认的 Edge）均会在每个句子完成时合成并播放该句
+
+同一条流水线运行于经典 CLI、TUI 和桌面应用中。在桌面语音对话中，随着模型生成文本，回复文本会**实时**馈送到每条回复的语音 WebSocket，因此语音与生成过程重叠 — 每条回复一个 socket 和一个音频时钟，没有逐句连接间隙。
+
+### 插话打断
+
+您可以在 Agent 说话过程中打断它：
+
+- **直接说话覆盖它** — 在连续语音模式下，语音活动监测器会在 Agent 说话时进行监听，并在您开始说话的瞬间停止播放，然后直接回到录音状态。检测器会根据播放本身校准其噪声基准，因此扬声器串音不会自行触发。可在 `config.yaml` 中通过 `voice.barge_in: false` 禁用。
+- **输入文字或按下录音键** — 在任何界面中，发送新消息或按下按键通话键都会立即停止播放。
+
+Agent **知道**自己被打断了：下一条消息会附带一条简短说明，告诉模型其语音回复被截断，因此它可以自然地作出反应（“真没礼貌！”），或从中断处继续，而不是毫无察觉。
 
 ### 幻觉过滤器
 
@@ -458,6 +469,8 @@ DISCORD_ALLOWED_USERS=...
 | **Groq** | `whisper-large-v3` | 快（约 1 秒） | 较好 | 免费额度 | 是 |
 | **OpenAI** | `whisper-1` | 快（约 1 秒） | 良好 | 付费 | 是 |
 | **OpenAI** | `gpt-4o-transcribe` | 中等（约 2 秒） | 最佳 | 付费 | 是 |
+| **Mistral** | `voxtral-mini-latest` | 快 | 良好 | 付费 | 是 |
+| **xAI** | `grok-stt` | 快 | 良好 | 付费 | 是 |
 
 提供商优先级（自动回退）：**本地** > **groq** > **openai**
 
@@ -484,6 +497,8 @@ PortAudio 未安装：
 brew install portaudio    # macOS
 sudo apt install portaudio19-dev  # Ubuntu
 ```
+
+如果您在 Linux 桌面环境的 Docker 内运行 Hermes，容器还需要访问主机音频套接字。有关兼容 PulseAudio/PipeWire 的设置，请参阅 [Docker 音频桥接](/user-guide/docker#optional-linux-desktop-audio-bridge) 说明。
 
 ### Bot 在 Discord 服务器频道中不响应
 
