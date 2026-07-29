@@ -198,6 +198,30 @@ OpenAI Responses API 格式。通过 `previous_response_id` 支持服务端对�
 
 将 agent 列为可用模型。广播的模型名称默认为 [profile](/user-guide/profiles) 名称（默认 profile 则为 `hermes-agent`）。大多数前端进行模型发现时需要此端点。
 
+`/v1/models` 有意保持为低成本的 OpenAI 兼容接口。它不会枚举 Hermes 可路由到的所有已认证 provider/模型组合，也不会提供定价或能力扩充信息。
+
+### GET /api/model/options
+
+了解 Hermes 的客户端可以请求与 dashboard 和 TUI 相同的精选 provider/模型目录。此路由使用 API 服务器的常规 Bearer 认证，返回 provider 条目、模型能力提示及不属于 OpenAI 兼容 `/v1/models` 响应的定价元数据：
+
+```bash
+curl \
+  -H "Authorization: Bearer ***" \
+  "http://127.0.0.1:8642/api/model/options"
+```
+
+该载荷与 dashboard“模型”页面及 TUI 的 `model.options` RPC 使用相同的基础数据。它返回已认证 provider、精选模型列表、逐模型定价和模型能力提示。
+
+对于自定义 provider，常规打开有意采取保守策略：Hermes 只探测**当前选定的**自定义端点，避免失效或离线的已保存端点阻塞选择器。显式刷新会改为完整探测，并清除 provider 模型缓存：
+
+```bash
+curl \
+  -H "Authorization: Bearer ***" \
+  "http://127.0.0.1:8642/api/model/options?refresh=1"
+```
+
+当 OpenAI 兼容客户端只需要一个模型名称以用于 chat/responses 请求时，使用 `/v1/models`。需要更丰富的 Hermes 专属选择器元数据的已认证 UI 应使用 `/api/model/options`。
+
 ### GET /v1/capabilities
 
 返回 API 服务器稳定接口的机器可读描述，供外部 UI、编排器和插件桥接使用。
@@ -220,6 +244,58 @@ OpenAI Responses API 格式。通过 `previous_response_id` 支持服务端对�
 ```
 
 在集成仪表板、浏览器 UI 或控制平面时使用此端点，以便它们能够发现当前运行的 Hermes 版本是否支持 runs、流式传输、取消和 session 连续性，而无需依赖私有 Python 内部实现。
+
+## 按请求选择模型
+
+已认证客户端可以在每个请求中覆盖 Hermes 的默认模型选择，方法是发送：
+
+- `model`——本轮的目标模型 ID
+- `provider`——为本轮解析凭据/运行时的 Hermes provider slug
+- `model_options`——请求范围的推理强度 / 服务层级控制
+
+这些字段均可用于：
+
+- `POST /v1/chat/completions`
+- `POST /v1/responses`
+- `POST /v1/runs`
+- `POST /api/sessions/{session_id}/chat`
+- `POST /api/sessions/{session_id}/chat/stream`
+
+优先级是确定的：
+
+1. 已有 session 的 `/model` 覆盖；
+2. 当请求 `model` 为已配置路由别名时，匹配静态 `gateway.platforms.api_server.model_routes` 映射；
+3. 未匹配路由别名时，请求直接指定的 `model` / `provider`；
+4. 全局 gateway 配置 / 环境默认值。
+
+无论最终选中哪个模型/provider，`model_options` 始终仅限当前请求。如果请求的 `provider` 与已配置的 `model_routes` 别名冲突，Hermes 会返回 `400`，而不会悄悄混用路由凭据与其他 provider。
+
+**OpenAI 兼容端点上的裸 `model` 值须显式启用。**通用 OpenAI 客户端常会硬编码模型名（如 `gpt-4o`），而现有部署依赖它们回退至 gateway 默认值。因此，在 `POST /v1/chat/completions` 和 `POST /v1/responses` 上，未附带 `provider` 的 `model` 值默认忽略，除非启用：
+
+```yaml
+gateway:
+  platforms:
+    api_server:
+      direct_model_requests: true
+```
+
+明确附带 `provider` 的请求，以及 Hermes 原生的 `/v1/runs` 与 session-chat 端点，无论此标志如何均会遵从请求的模型。
+
+示例：
+
+```json
+{
+  "model": "MiniMax-M3",
+  "provider": "minimax",
+  "model_options": {
+    "reasoning_effort": "high",
+    "service_tier": "priority"
+  },
+  "messages": [
+    {"role": "user", "content": "Summarize the repo status."}
+  ]
+}
+```
 
 ### GET /health
 
@@ -352,10 +428,20 @@ API 服务器提供对 hermes-agent 工具集的完整访问权限，**包括终
 
 ### config.yaml
 
+相同的设置也可以写在 `~/.hermes/config.yaml` 中嵌套的 `gateway.api_server:` 小节下：
+
 ```yaml
-# 暂不支持——请使用环境变量。
-# config.yaml 支持将在未来版本中推出。
+gateway:
+  api_server:
+    enabled: true
+    port: 8642
+    host: 127.0.0.1
+    key: your-secret-key
+    cors_origins: http://localhost:3000
+    model_name: my-hermes
 ```
+
+`port`、`key`、`host`、`cors_origins` 和 `model_name` 会自动桥接到该平台的 `extra` 设置中，行为与对应的 `API_SERVER_*` 环境变量完全一致。环境变量优先于 `config.yaml` 中的值。该配置块同样可以放在 `gateway.platforms.api_server:` 或顶层 `platforms.api_server:` 小节下。
 
 ## 安全响应头
 
