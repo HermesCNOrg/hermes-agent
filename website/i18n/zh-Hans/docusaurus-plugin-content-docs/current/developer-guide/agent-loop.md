@@ -6,7 +6,7 @@ description: "AIAgent 执行流程、API 模式、工具、回调及回退行为
 
 # Agent Loop 内部机制
 
-核心编排引擎是 `run_agent.py` 中的 `AIAgent` 类——这是一个大型文件（15k+ 行），负责处理从 prompt（提示词）组装到工具分发再到 provider 故障转移的所有逻辑。
+核心编排引擎是 `run_agent.py` 中的 `AIAgent` 类——这是一个大型文件，负责处理从提示词组装到工具分发再到 provider 故障转移的所有逻辑。
 
 ## 核心职责
 
@@ -181,7 +181,7 @@ for each tool_call in response.tool_calls:
 
 agent 通过 `IterationBudget` 追踪迭代次数：
 
-- 默认：90 次迭代（可通过 `agent.max_turns` 配置）
+- 默认：500 次迭代（可通过 `agent.max_turns` 配置）
 - 每个 agent 拥有独立预算。子 agent 获得独立预算，上限为 `delegation.max_iterations`（默认 50）——父 agent 与子 agent 的总迭代次数可超过父 agent 的上限
 - 达到 100% 时，agent 停止并返回已完成工作的摘要
 
