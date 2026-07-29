@@ -30,13 +30,26 @@ Hermes Agent 采用纵深防御安全模型。本页涵盖所有安全边界—�
 
 ```yaml
 approvals:
-  mode: smart     # smart | manual | off
-  timeout: 60     # 等待用户响应的秒数（默认：60）
+  mode: smart                     # smart | manual | off
+  timeout: 300                    # 等待用户响应的秒数（默认：300）
+  cron_mode: deny                 # deny | approve — cron 任务遇到危险命令时的处理方式
+  mcp_reload_confirm: true        # /reload-mcp 在使 MCP 工具缓存失效前询问
+  destructive_slash_confirm: true # /clear、/new、/reset、/undo 在丢弃状态前提示
 ```
+
+完整键集：
+
+| 键 | 默认值 | 控制内容 |
+|---|---|---|
+| `mode` | `smart` | 危险 shell 命令的审批策略——见下表。 |
+| `timeout` | `300` | Hermes 在审批回复超时前等待的秒数。 |
+| `cron_mode` | `deny` | [Cron 任务](./features/cron.md)在无头运行时触发危险命令提示的行为。`deny` 会阻止命令（Agent 必须另寻路径）；`approve` 会在 cron 上下文中自动批准所有命令。 |
+| `mcp_reload_confirm` | `true` | 为 true 时，`/reload-mcp` 会在重建 MCP 工具集前询问。重建会使提供商提示词缓存失效（工具 schema 位于系统提示词中），因此下一条消息会重新发送完整的输入 token。点击 **Always Approve** 的用户会将此键设为 `false`。 |
+| `destructive_slash_confirm` | `true` | 为 true 时，破坏性会话斜杠命令（`/clear`、`/new`、`/reset`、`/undo`）会在丢弃对话状态前提示。三选项对话框（Approve Once / Always Approve / Cancel）在 Telegram、Discord 和 Slack 上通过原生的“是/否”按钮路由；其他地方使用文本回退。点击 **Always Approve** 的用户会将此键设为 `false`。TUI 使用自己的模态覆盖层（在其中设置 `HERMES_TUI_NO_CONFIRM=1` 可退出）。 |
 
 | 模式 | 行为 |
 |------|----------|
-| **smart**（默认） | 使用辅助 LLM 评估风险。低风险命令（如 `python -c "print('hello')"`）仅对当前命令自动批准，真正危险的命令自动拒绝，不确定的情况升级为手动提示。 |
+| **smart**（默认） | 使用辅助 LLM 评估风险。低风险命令（如 `python -c "print('hello')"`）仅对当前命令自动批准。真正危险的命令会自动拒绝。不确定情况会升级为手动提示。 |
 | **manual** | 始终提示用户审批危险命令。 |
 | **off** | 禁用所有审批检查——等同于使用 `--yolo` 运行。所有命令无需提示即可执行。 |
 
@@ -73,7 +86,7 @@ YOLO 模式在 CLI 和 gateway 会话中均可使用。在内部，它会设置 
 YOLO 模式会禁用会话中**所有**危险命令安全检查——**但硬性黑名单除外**（见下文）。仅在完全信任所生成命令的情况下使用（例如，在一次性环境中经过充分测试的自动化脚本）。
 :::
 
-对于破坏性会话斜杠命令（`/clear`、`/new` / `/reset`、`/undo`、`/exit --delete`），CLI 在执行前也会提示确认。参见[斜杠命令——破坏性命令的确认提示](../reference/slash-commands.md#confirmation-prompts-for-destructive-commands)。
+对于破坏性会话斜杠命令（`/clear`、`/new` / `/reset`、`/undo`、`/quit --delete`——`/exit --delete` 是其别名），CLI 在执行前也会提示确认。参见[斜杠命令——破坏性命令的确认提示](../reference/slash-commands.md#confirmation-prompts-for-destructive-commands)。
 
 ### 硬性黑名单（始终生效的底线）
 
@@ -105,7 +118,7 @@ YOLO 模式会禁用会话中**所有**危险命令安全检查——**但硬性
 
 ```yaml
 approvals:
-  timeout: 60  # 秒（默认：60）
+  timeout: 300  # 秒（默认：300）
 ```
 
 ### 触发审批的条件
@@ -142,6 +155,10 @@ approvals:
 | `sed -i` / `sed --in-place` 作用于 `/etc/` | 就地编辑系统配置 |
 | `pkill`/`killall` hermes/gateway | 防止自我终止 |
 | `gateway run` 配合 `&`/`disown`/`nohup`/`setsid` | 防止在服务管理器外启动 gateway |
+| `docker stop/kill/restart`、`docker compose down/stop/kill/restart` | 容器生命周期（也会捕获全局标志和 `docker-compose`） |
+| `docker -H`/`--host`/`--context`、`DOCKER_HOST=`/`DOCKER_CONTEXT=` | Docker 守护进程重定向——命令会指向不同的（通常为远程的）守护进程 |
+| `docker context use` | 切换所有后续 docker 命令的默认守护进程 |
+| `podman --remote`/`-r`/`--url`/`--connection`/`--identity`、`CONTAINER_HOST=` | Podman 远程守护进程重定向 |
 
 :::info
 **容器绕过**：在 `docker`、`singularity`、`modal` 或 `daytona` 后端运行时，危险命令检查会被**跳过**，因为容器本身就是安全边界。容器内的破坏性命令不会危害宿主机。
@@ -192,6 +209,33 @@ command_allowlist:
 :::tip
 使用 `hermes config edit` 查看或删除永久允许列表中的模式。
 :::
+
+### 挖掘审批历史（`hermes approvals suggest`）
+
+与其在一个又一个会话中回答相同的提示，你可以将过去的审批决定挖掘为允许列表提案：
+
+```bash
+hermes approvals suggest            # 试运行——打印带编号的提案
+hermes approvals suggest --apply 1,3  # 将选项合并到 command_allowlist
+hermes approvals suggest --json     # 机器可读输出
+```
+
+此命令会扫描会话数据库（`~/.hermes/state.db`），找出实际执行的危险分类命令——即你已批准的命令——将其聚合成模式（`git push *`，或复合命令的危险类别键），并按审批频率排序：
+
+```
+Proposed command_allowlist additions (from approval history, last 90 days):
+
+  1. git push *    — approved 14x
+  2. docker restart/stop/kill (container lifecycle)    — approved 9x (class key)
+```
+
+安全规则：
+
+- **绝不会自动应用任何内容**——默认运行是只读的；只有显式的 `--apply N[,M...]` 才会写入 `config.yaml`。
+- **绝不会提议破坏性类别**，无论它们被批准过多少次：递归删除、`sudo`、磁盘/设备写入、凭据和系统配置编辑、管道到 shell、SQL DROP/TRUNCATE、进程终止以及每个硬性类别都被完全排除。即使 `rm -rf build/` 已批准 100 次，仍不会产生 `rm` 条目。
+- 已被现有 `command_allowlist` 覆盖的提案会被跳过。
+
+有用的标志：`--days N`（历史窗口，默认 90）、`--min-count N`（符合条件所需的最小审批次数，默认 2）、`--limit N` 和 `--db PATH`。
 
 ## 用户授权（Gateway）
 
