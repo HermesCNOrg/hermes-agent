@@ -41,7 +41,8 @@ hermes acp --bootstrap      # 打印适用于支持 ACP 的 IDE 的安装代码�
 
 ```
 prompt.submit           prompt.background       session.steer
-session.create          session.list            session.interrupt
+session.create          session.list            session.active_list
+session.activate        session.close           session.interrupt
 session.history         session.compress        session.branch
 session.title           session.usage           session.status
 clarify.respond         sudo.respond            secret.respond
@@ -52,9 +53,11 @@ delegation.status       subagent.interrupt      spawn_tree.save / list / load
 terminal.resize         clipboard.paste         image.attach
 ```
 
+`session.active_list`、`session.activate` 和 `session.close` 是 TUI 会话切换器使用的进程级实时会话控制方法。如需发现已保存的对话记录，请使用 `session.list` 或 `/resume`；仅在需要操作当前在 TUI gateway 进程中打开的会话时，才使用上述实时会话方法。
+
 ### 流式返回的事件
 
-`message.delta`、`message.complete`、`tool.start`、`tool.progress`、`tool.complete`、`approval.request`、`clarify.request`、`sudo.request`、`secret.request`、`gateway.ready`，以及会话生命周期和错误事件。
+`message.delta`、`message.complete`、`tool.start`、`tool.progress`、`tool.complete`、`approval.request`、`clarify.request`、`sudo.request`、`sudo.expire`、`secret.request`、`secret.expire`、`gateway.ready`，以及会话生命周期和错误事件。过期事件携带原始 `{ request_id }`；外部宿主应仅清除对应的待处理 prompt。
 
 ### Pi 风格 RPC 映射
 
@@ -92,10 +95,28 @@ POST /v1/runs/{id}/approval      解决待处理的审批
 POST /v1/runs/{id}/stop          中断运行
 GET  /v1/capabilities            机器可读的功能标志
 GET  /v1/models                  列出 hermes-agent
+GET  /api/model/options          具备 provider 感知能力的选择器清单
 GET  /health, /health/detailed
 ```
 
 配置、请求头（`X-Hermes-Session-Id`、`X-Hermes-Session-Key`）及前端接入：[API Server](../user-guide/features/api-server)。
+
+### 模型目录接口
+
+兼容 OpenAI 的 API 有意让 `GET /v1/models` 保持精简：它是前端所期待的兼容性端点，而不是完整的 Hermes provider/模型选择器目录。
+
+如果外部控制平面需要 Hermes 整理的 provider 行、各模型的定价或能力提示，请使用以下任一经过身份验证的选择器接口：
+
+- API server REST：使用 API-server bearer key 调用 `GET /api/model/options`
+- 仪表板后端 REST：使用 `X-Hermes-Session-Token` 调用 `GET /api/model/options`
+- TUI gateway RPC：`model.options`
+
+这些接口共享同一个负载构建器和相同的自定义 provider 探测策略：
+
+- 正常打开时：只探测当前自定义 provider，避免离线的已保存端点拖慢选择器。
+- 显式刷新（`refresh=1` 或 `refresh: true`）时：清除 provider-model 缓存并探测所有已保存的自定义 provider，使实时目录能够完全重新填充。
+
+面向 OpenAI 客户端的兼容性请使用 `/v1/models`。构建 Hermes 感知的模型选择器时，请使用 `/api/model/options` 或 `model.options`。
 
 ---
 
@@ -115,7 +136,7 @@ GET  /health, /health/detailed
 - **CLI / TUI：** `/model claude-sonnet-4` 或 `/model openrouter:anthropic/claude-sonnet-4.6`
 - **TUI gateway RPC：** 使用 `{"command": "/model claude-sonnet-4"}` 调用 `command.dispatch`
 - **ACP：** IDE 将 slash 命令作为 prompt 发送，agent 负责分发
-- **API server：** 在请求体中包含 `model` 字段，或设置 `X-Hermes-Model`
+- **API server：** 在请求体中包含 `model` 字段
 
 内置 provider 感知解析（相同的模型名称会根据当前 provider 自动选择正确格式）。参见 `hermes_cli/model_switch.py`。
 
