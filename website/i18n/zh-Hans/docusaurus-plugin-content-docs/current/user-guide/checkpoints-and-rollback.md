@@ -94,12 +94,14 @@ checkpoints:
   max_file_size_mb: 10        # 跳过大于此值的单个文件
 
   # 自动维护（默认开启）：启动时扫描 ~/.hermes/checkpoints/，
-  # 删除工作目录已不存在的项目条目（孤立项）或 last_touch 超过
-  # retention_days 的条目。通过 .last_prune 标记控制，
-  # 最多每 min_interval_hours 运行一次。
+  # 删除 last_touch 超过 retention_days 的项目条目。通过 .last_prune
+  # 标记控制，最多每 min_interval_hours 运行一次。此扫描绝不会删除
+  # “孤立”条目（找不到工作目录）——启动时工作目录缺失的含义不明确
+  # （项目已删除，还是外部卷/网络共享/VPN 尚未挂载），因此只能通过
+  # 下方显式的 `hermes checkpoints prune` 命令清理孤立项，
+  # 并且会要求确认。
   auto_prune: true
   retention_days: 7
-  delete_orphans: true
   min_interval_hours: 24
 ```
 
