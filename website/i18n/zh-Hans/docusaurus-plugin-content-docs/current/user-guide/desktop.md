@@ -65,7 +65,7 @@ desktop:
   repo_scan_exclude_paths: []
 ```
 
-- 将 `repo_scan_enabled` 设为 `false` 可完全停止文件系统扫描。该 profile 现有的磁盘发现缓存行会被清除；显式创建的项目及从有意发起的 Hermes 会话推断出的仓库仍然可用。
+- 将其设为 `repo_scan_enabled: false` 可完全停止文件系统扫描。该 profile 现有的磁盘发现缓存行会被清除；显式创建的项目及从有意发起的 Hermes 会话推断出的仓库仍然可用。
 - 将 `repo_scan_roots` 设为文件夹列表可限制扫描范围。空列表会保留默认的家目录扫描。
 - 将 `repo_scan_exclude_paths` 设为应跳过其完整子树的文件夹。
 
@@ -236,6 +236,12 @@ hermes serve --host 0.0.0.0 --port 9119
 - **连接被拒绝/超时**——后端绑定到了 `127.0.0.1`（默认值），或者防火墙/VPN 阻止了该端口。请绑定到 `0.0.0.0` 或 tailscale IP，并向可信网络开放该端口。
 
 如需从 Web 控制台角度了解相同设置，请参阅 [Web 控制台 → 将 Hermes Desktop 连接到远程后端](./features/web-dashboard.md#connecting-hermes-desktop-to-a-remote-backend)；环境变量目录位于[环境变量 → Web 控制台与 Hermes Desktop](../reference/environment-variables.md#web-dashboard--hermes-desktop)。
+
+## 扩展桌面应用
+
+桌面应用由贡献者共同推动——窗格、页面、侧边栏导航、状态栏项目、命令面板命令、快捷键和主题都通过同一个 SDK 注册，你也可以添加自己的扩展。插件是放在 `$HERMES_HOME/desktop-plugins/<id>/plugin.js` 中的单个 ESM 文件；应用会在数秒内加载它，并在每次保存时热重载。可在**设置 → 插件**中实时管理已安装的插件。
+
+完整参考请参阅[桌面插件 SDK](../developer-guide/desktop-plugin-sdk.md)。（这与 [Web 控制台插件系统](./features/extending-the-dashboard.md)相互独立。）
 
 ## 故障排查
 
