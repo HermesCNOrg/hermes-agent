@@ -8,6 +8,10 @@ description: "掌握 Hermes Agent 终端界面——命令、快捷键、人格�
 
 Hermes Agent 的 CLI 是一个完整的终端用户界面（TUI），而非 Web UI。它支持多行编辑、斜杠命令自动补全、对话历史、中断并重定向，以及流式工具输出。专为常驻终端的用户而生。
 
+:::tip 首次设置
+只需运行 `hermes setup --portal`，即可开始使用 `hermes chat`。请参阅 [Nous Portal](/integrations/nous-portal)。
+:::
+
 :::tip
 Hermes 还提供了一个现代 TUI，支持模态覆盖层、鼠标选择和非阻塞输入。使用 `hermes --tui` 启动——参见 [TUI](tui.md) 指南。
 :::
@@ -129,6 +133,7 @@ hermes -w -z "Fix issue #123"     # 在 worktree 中以单次查询模式运行
 | `/reasoning high` | 提高推理强度 |
 | `/title My Session` | 为当前会话命名 |
 | `/status` | 显示会话信息——模型/配置/token/时长——以及本地**会话摘要**块（近期轮次数、常用工具、涉及文件、最新用户 prompt + 助手回复）。纯本地计算，不调用 LLM。 |
+| `/context [all]` | 可视化上下文用量明细——字形方格图与按类别划分的 token 表（系统提示词 / 工具 / skills / 记忆 / 对话 / 可用空间）。`/context all` 还会添加各 skill 和工具集的成本。 |
 | `/sessions` | 在经典 CLI 中直接打开交互式会话选择器（与 TUI 使用同一界面）。输入过滤，方向键导航，Enter 恢复。 |
 
 完整的内置 CLI 和消息列表，参见[斜杠命令参考](../reference/slash-commands.md)。
@@ -235,14 +240,14 @@ personalities:
 
 当终端无法区分时，`Alt+Enter` 和 `Ctrl+J` 在所有终端中均可正常使用。**特别是在 Windows Terminal 中，`Alt+Enter` 被终端捕获（切换全屏），永远不会传递给 Hermes——请直接使用 `Ctrl+Enter`（传递为 `Ctrl+J`）或 `Ctrl+J` 来换行。**
 
-## 中断 Agent
+## 在轮次中重定向 Agent
 
-你可以在任意时刻中断 agent：
+当 agent 正在工作时，你可以发送更正，而无需开启新一轮：
 
-- **输入新消息 + Enter**，在 agent 工作时——中断并处理你的新指令
+- **输入新消息 + Enter**——使用你的更正重定向当前轮次
 - **`Ctrl+C`**——中断当前操作（2 秒内双击强制退出）
-- 正在进行的终端命令会立即被终止（SIGTERM，1 秒后 SIGKILL）
-- 中断期间输入的多条消息会合并为一条 prompt
+- 已完成并显示的工具工作和推理会保留在上下文中
+- 正在运行的工具会先到达安全边界，再应用更正
 
 ### 繁忙输入模式
 
@@ -250,7 +255,7 @@ personalities:
 
 | 模式 | 行为 |
 |------|----------|
-| `"interrupt"`（默认） | 你的消息中断当前操作并立即处理 |
+| `"interrupt"`（默认） | 你的消息重定向当前轮次。模型生成会重新开始，同时保留已显示的推理和已完成的工作；正在运行的工具会先完成。 |
 | `"queue"` | 你的消息被静默排队，在 agent 完成后作为下一轮发送 |
 | `"steer"` | 你的消息通过 `/steer` 注入当前运行，在下一次工具调用后到达 agent——不中断，不开启新轮次 |
 
@@ -260,7 +265,7 @@ display:
   busy_input_mode: "steer"   # 或 "queue" 或 "interrupt"（默认）
 ```
 
-`"queue"` 模式适合在不意外取消进行中工作的情况下准备后续消息。`"steer"` 模式适合在不中断的情况下在任务执行中途重定向 agent——例如在它还在编辑代码时说"顺便也检查一下测试"。未知值会回退到 `"interrupt"`。
+`"queue"` 模式会准备一个独立的后续轮次。`"steer"` 始终等待下一个工具结果边界。默认的 `"interrupt"` 模式会在模型生成期间更快响应，同时避免取消正在运行的工具。若要取消当前轮次及其前台工作，请使用 `/stop`。未知值会回退到 `"interrupt"`。
 
 `"steer"` 有两个自动回退：如果 agent 尚未启动，或附有图片，消息会回退到 `"queue"` 行为，确保内容不丢失。
 
@@ -274,7 +279,7 @@ display:
 ```
 
 :::tip 首次提示
-第一次在 Hermes 工作时按下 Enter，Hermes 会打印一行提示，说明 `/busy` 选项（`"(tip) Your message interrupted the current run…"`）。每次安装只触发一次——`config.yaml` 中 `onboarding.seen.busy_input_prompt` 下的标志会锁定它。删除该键可再次看到提示。
+第一次在 Hermes 工作时按下 Enter，Hermes 会打印一行提示，说明 `/busy` 选项。每次安装只触发一次；`config.yaml` 中的 `onboarding.seen.busy_input_prompt` 会记录它已显示。删除该键可再次看到提示。
 :::
 
 ### 挂起到后台
