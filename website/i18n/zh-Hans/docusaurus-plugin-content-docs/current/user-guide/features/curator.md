@@ -24,7 +24,7 @@ Curator 由空闲检查触发，而非 cron 守护进程。在 CLI 会话启动�
 若两个条件均满足，则会派生一个 `AIAgent` 的后台 fork——与内存/技能自我改进 nudge 使用的模式相同。该 fork 在自己的 prompt（提示词）缓存中运行，绝不触碰当前活跃的对话。
 
 :::info 首次运行行为
-在全新安装时（或 pre-curator 版本在 `hermes update` 后首次 tick 时），curator **不会立即运行**。首次观测会将 `last_run_at` 设为"当前时间"，并将第一次真正的运行推迟整整一个 `interval_hours`。这给了你一个完整的间隔时间来审查技能库、固定重要内容，或在 curator 真正触碰它之前完全退出。
+在全新安装时（或 pre-curator 版本在 `hermes update` 后首次 tick 时），curator **不会立即运行**。首次观测会将 `last_run_at` 设为"当前时间"，并将第一次真正的运行推迟整整一个 `interval_hours`。这给了你一个完整的间隔时间来审查技能库、固定重要内容，或在 curator 真正触碰它之前完全禁用此功能。
 
 如果你想在 curator 真正运行之前查看它*会*做什么，请运行 `hermes curator run --dry-run`——它会生成相同的审查报告，但不会修改技能库。
 :::
@@ -51,8 +51,8 @@ curator:
   min_idle_hours: 2
   stale_after_days: 30
   archive_after_days: 90
-  consolidate: false           # LLM 总括技能构建流程——需显式启用（默认仅清理）
-  prune_builtins: true         # 同时归档未使用的捆绑内置技能（hub 技能始终豁免）
+  consolidate: false           # LLM umbrella-building pass — opt-in (prune-only by default)
+  prune_builtins: true         # archive unused bundled built-in skills too (hub skills always exempt)
 ```
 
 若要完全禁用，设置 `curator.enabled: false`。若要保留始终开启的清理，同时启用 LLM 合并整理，请设置 `curator.consolidate: true`。
@@ -89,27 +89,27 @@ auxiliary:
 ## CLI
 
 ```bash
-hermes curator status         # 上次运行、计数、固定列表、LRU 前 5 项
-hermes curator run            # 立即触发一次运行（阻塞至完成）；除非 curator.consolidate: true，否则仅清理
-hermes curator run --consolidate # 本次强制启用 LLM 合并整理，覆盖配置默认值
-hermes curator run --background  # 即发即弃：在线程后台启动运行
-hermes curator run --dry-run  # 仅预览：报告但不作任何变更
-hermes curator backup         # 为 ~/.hermes/skills/ 创建手动快照
-hermes curator rollback       # 从最新快照恢复
-hermes curator rollback --list     # 列出可用快照
-hermes curator rollback --id <ts>  # 恢复指定快照
-hermes curator rollback -y         # 跳过确认提示
-hermes curator pause          # 停止运行，直至恢复
+hermes curator status         # last run, counts, pinned list, LRU top 5
+hermes curator run            # trigger a run now (blocks until done). Prune-only unless curator.consolidate: true
+hermes curator run --consolidate # force the LLM consolidation pass on for this run, overriding the config default
+hermes curator run --background  # fire-and-forget: start the run in a background thread
+hermes curator run --dry-run  # preview only — report without any mutations
+hermes curator backup         # take a manual snapshot of ~/.hermes/skills/
+hermes curator rollback       # restore from the newest snapshot
+hermes curator rollback --list     # list available snapshots
+hermes curator rollback --id <ts>  # restore a specific snapshot
+hermes curator rollback -y         # skip the confirmation prompt
+hermes curator pause          # stop runs until resumed
 hermes curator resume
-hermes curator pin <skill>    # 永不自动转换此技能状态
+hermes curator pin <skill>    # never auto-transition this skill
 hermes curator unpin <skill>
-hermes curator adopt <skill>    # 将一个未受管理的技能交给 curator
-hermes curator adopt --all-unmanaged   # 交出所有未受管理的技能
-hermes curator list-unmanaged   # 列出没有来源标记的技能
-hermes curator restore <skill>  # 将已归档技能移回活跃状态
-hermes curator list-archived    # 列出 ~/.hermes/skills/.archive/ 中当前已归档的技能
-hermes curator archive <skill>  # 立即手动归档一个技能
-hermes curator prune [--days N] # 批量归档空闲时间 >= N 天的 agent 创建技能（默认 90 天）
+hermes curator adopt <skill>    # hand an unmanaged skill to the curator
+hermes curator adopt --all-unmanaged   # hand over every unmanaged skill
+hermes curator list-unmanaged   # itemize skills with no provenance marker
+hermes curator restore <skill>  # move an archived skill back to active
+hermes curator list-archived    # list skills currently in ~/.hermes/skills/.archive/
+hermes curator archive <skill>  # manually archive a single skill now
+hermes curator prune [--days N] # bulk-archive agent-created skills idle >= N days (default 90)
 ```
 
 ## 备份与回滚
@@ -183,11 +183,11 @@ unmanaged (no provenance marker): 112 total
 因此，一个庞大的技能库看起来可能已被完全管理，但其中大多数实际上不可触及。`adopt` 通过**声明**弥补了这一空白：
 
 ```bash
-hermes curator list-unmanaged                    # 按原因逐项列出
-hermes curator adopt <name> [<name> ...]         # 交出指定技能
-hermes curator adopt --all-unmanaged --dry-run   # 预览完整列表
-hermes curator adopt --all-unmanaged             # 交出全部（会提示确认）
-hermes curator adopt --all-unmanaged --yes       # 跳过提示
+hermes curator list-unmanaged                    # itemize them, with reasons
+hermes curator adopt <name> [<name> ...]         # hand specific skills over
+hermes curator adopt --all-unmanaged --dry-run   # preview the full list
+hermes curator adopt --all-unmanaged             # hand over everything (prompts)
+hermes curator adopt --all-unmanaged --yes       # skip the prompt
 ```
 
 接管会写入后台审查 fork 所写的相同 `created_by: agent` 标记。它**不会**重置不活跃时钟：被接管的技能保留原有的 `last_activity_at`，因此把一个早已停止使用的技能库交给 curator 并不会获得新的 90 天窗口。预期长期闲置的已接管技能会在下次运行中变为 `stale`（或 `archived`）；这正是其目的。
@@ -199,7 +199,7 @@ hermes curator adopt --all-unmanaged --yes       # 跳过提示
 :::
 
 :::note 来源只能声明，不能推断
-接管被刻意设计为手动操作。遥测不能证明作者身份：一个被修补数千次的技能只能证明 agent **维护**它，不能证明 agent **编写**它——Hermes 经常代表你编辑用户编写的技能。自动采用“看起来像 agent 创建，就接管”的启发式规则最终会归档你亲手编写的内容。`adopt` 会拒绝捆绑、hub 安装、外部及受保护的内置技能，因为它们有不同于你的所有者。
+接管被刻意设计为手动操作。遥测不能证明作者身份：一个被修补数千次的技能只能证明 agent **维护**它，不能证明 agent **编写**它——Hermes 经常代表你编辑用户编写的技能。自动采用“看起来像 agent 创建，就接管”的启发式规则最终会归档你亲手编写的内容。`adopt` 会拒绝捆绑、hub 安装、外部及受保护的内置技能，因为它们有你之外的所有者。
 :::
 
 确属 agent 创建的技能遵循完整生命周期：
@@ -280,7 +280,7 @@ Curator 在 `~/.hermes/skills/.usage.json` 维护一个附属文件，每个技�
 
 ### 摘要中的重命名映射
 
-如果某次运行将多个技能合并到一个总括技能下（或合并了近似重复项），运行结束时打印的用户可见摘要会包含一个明确的重命名映射，显示 curator 应用的每个 `旧名称 → 新名称` 对。这是对逐技能状态转换行的补充，因此当一批重命名落地时，你可以一眼发现，无需对比 JSON 报告。该提示也会在 `hermes curator pin` 下显示，以便你在需要时立即固定新标签。
+如果某次运行将多个技能合并到一个总括技能下（或合并了近似重复项），运行结束时打印的用户可见摘要会包含一个明确的重命名映射，显示 curator 应用的每个 `old-name → new-name` 对。这是对逐技能状态转换行的补充，因此当一批重命名落地时，你可以一眼发现，无需对比 JSON 报告。该提示也会在 `hermes curator pin` 下显示，以便你在需要时立即固定新标签。
 
 ## 恢复已归档的技能
 
