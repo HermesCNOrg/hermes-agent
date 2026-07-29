@@ -8,7 +8,7 @@ description: "Hermes 内置工具权威参考，按工具集分组"
 
 本页记录 Hermes 的内置工具，按工具集分组。可用性因平台、凭据和已启用的工具集而异。
 
-**当前注册表快速统计：** 约 71 个工具 —— 10 个浏览器工具（核心）+ 2 个 CDP 门控浏览器工具、4 个文件工具、4 个 Home Assistant 工具、2 个终端工具、2 个 Web 工具、5 个 Feishu 工具、7 个 Spotify 工具（由内置 `spotify` 插件注册）、5 个 Yuanbao 工具、9 个 kanban 工具（在 kanban 调度器生成 agent 时注册）、2 个 Discord 工具，以及若干独立工具（`memory`、`clarify`、`delegate_task`、`execute_code`、`cronjob`、`session_search`、`skill_view`/`skill_manage`/`skills_list`、`text_to_speech`、`image_generate`、`video_generate`、`vision_analyze`、`video_analyze`、`send_message`、`todo`、`computer_use`、`process`）。
+**当前注册表快速统计：** 约 73 个工具 —— 10 个浏览器工具（核心）+ 2 个受 CDP 限制的浏览器工具、4 个文件工具、4 个 Home Assistant 工具、3 个终端工具（`terminal`、`process`、`read_terminal`）、2 个 Web 工具、5 个 Feishu 工具、7 个 Spotify 工具（由随附的 `spotify` 插件注册）、5 个 Yuanbao 工具、9 个 kanban 工具（在 kanban 调度器启动 agent 时注册）、3 个项目工具（桌面端/GUI 会话）、2 个 Discord 工具，以及若干独立工具（`memory`、`clarify`、`delegate_task`、`execute_code`、`cronjob`、`session_search`、`skill_view`/`skill_manage`/`skills_list`、`text_to_speech`、`image_generate`、`video_generate`、`vision_analyze`、`video_analyze`、`todo`、`computer_use`）。
 
 :::tip MCP 工具
 除内置工具外，Hermes 还可从 MCP 服务器动态加载工具。MCP 工具以 `mcp_<server>_` 为前缀（例如，`github` MCP 服务器的 `mcp_github_create_issue`）。配置方法见 [MCP 集成](/user-guide/features/mcp)。
@@ -35,7 +35,7 @@ description: "Hermes 内置工具权威参考，按工具集分组"
 
 | 工具 | 描述 | 所需环境 |
 |------|------|----------|
-| `browser_cdp` | 发送原始 Chrome DevTools Protocol 命令。用于高层 `browser_*` 工具未覆盖的浏览器操作的逃生舱口。参见 https://chromedevtools.github.io/devtools-protocol/ | CDP 端点 |
+| `browser_cdp` | 发送原始 Chrome DevTools Protocol 命令。作为高层 `browser_*` 工具未覆盖浏览器操作时的备用手段。参见 https://chromedevtools.github.io/devtools-protocol/ | CDP 端点 |
 | `browser_dialog` | 响应原生 JavaScript 对话框（alert / confirm / prompt / beforeunload）。先调用 `browser_snapshot`——待处理的对话框会出现在其 `pending_dialogs` 字段中。然后调用 `browser_dialog(action='accept'\|'dismiss')`。 | CDP 端点 |
 
 ## `clarify` 工具集
@@ -103,7 +103,7 @@ description: "Hermes 内置工具权威参考，按工具集分组"
 
 | 工具 | 描述 | 所需环境 |
 |------|------|----------|
-| `computer_use` | 通过 cua-driver 在后台控制 macOS 桌面——截图（SOM / vision / AX）、点击 / 拖拽 / 滚动 / 输入 / 按键 / 等待、`list_apps`、`focus_app`。**不会**抢占用户的光标或键盘焦点。适用于任何支持工具的模型。仅限 macOS。 | `cua-driver` 在 `$PATH` 中（通过 `hermes tools` 安装）。 |
+| `computer_use` | 通过 cua-driver 在后台控制桌面——截图（SOM / vision / AX）、点击 / 拖拽 / 滚动 / 输入 / 按键 / 等待、`list_apps`、`focus_app`。不会抢占用户的光标或键盘焦点。适用于任何支持工具调用的模型。支持 macOS、Windows 和 Linux。 | `$PATH` 中需有 `cua-driver`（通过 `hermes tools` 安装）。 |
 
 :::note
 **Honcho 工具**（`honcho_profile`、`honcho_search`、`honcho_context`、`honcho_reasoning`、`honcho_conclude`）不再是内置工具。它们通过 `plugins/memory/honcho/` 的 Honcho 记忆提供者插件提供。安装和使用方法见 [Memory Providers](../user-guide/features/memory-providers.md)。
@@ -113,7 +113,7 @@ description: "Hermes 内置工具权威参考，按工具集分组"
 
 | 工具 | 描述 | 所需环境 |
 |------|------|----------|
-| `image_generate` | 使用 FAL.ai 从文本 prompt（提示词）生成高质量图片。底层模型由用户配置（默认：FLUX 2 Klein 9B，生成时间低于 1 秒），agent 不可选择。返回单个图片 URL。使用… 显示。 | FAL_KEY |
+| `image_generate` | 通过用户配置的后端（FAL.ai、OpenAI、OpenAI Codex auth、xAI、Krea），根据文本 prompt 生成图片（文生图），或编辑/转换现有图片（图生图）。传入 `image_url` 可编辑图片，传入 `reference_image_urls` 可提供风格参考；两者均省略时则为文生图。模型由用户配置，agent 无法选择。返回单个图片 URL 或本地路径。 | FAL_KEY / OPENAI_API_KEY / Codex OAuth / xAI OAuth / KREA_API_KEY |
 
 ## `kanban` 工具集
 
@@ -131,17 +131,21 @@ description: "Hermes 内置工具权威参考，按工具集分组"
 | `kanban_link` | 用父 → 子依赖边链接任务。 | `HERMES_KANBAN_TASK` 或 `kanban` 工具集 |
 | `kanban_unblock` | 将被阻塞的任务恢复为 `ready` 状态。仅限编排器；对调度器生成的任务 worker 隐藏。 | 含 `kanban` 工具集的 profile |
 
+## `project` 工具集
+
+用于操作桌面端 [Projects](../user-guide/cli.md) 的工具——Projects 是有名称、可包含多个文件夹的工作区。启用 `project` 工具集时注册（主要用于桌面应用和 dashboard 界面）。
+
+| 工具 | 描述 | 所需环境 |
+|------|------|----------|
+| `project_create` | 创建一个桌面端 Project（有名称的工作区），并将当前聊天切换至该 Project。传入 `path` 可将其关联到某个代码仓库/文件夹。 | — |
+| `project_list` | 列出桌面端 Projects，并显示当前活跃的 Project。 | — |
+| `project_switch` | 切换至现有 Project（可通过名称、slug 或 id 指定）；同时将会话工作区移至该 Project 的主文件夹。 | — |
+
 ## `memory` 工具集
 
 | 工具 | 描述 | 所需环境 |
 |------|------|----------|
 | `memory` | 将重要信息保存到跨会话持久化的记忆中。你的记忆会在会话启动时出现在系统 prompt 中——这是你在对话之间记住用户信息和环境信息的方式。何时保存… | — |
-
-## `messaging` 工具集
-
-| 工具 | 描述 | 所需环境 |
-|------|------|----------|
-| `send_message` | 向已连接的消息平台发送消息，或列出可用目标。重要：当用户要求发送到特定频道或人员（而非仅平台名称）时，请先调用 `send_message(action='list')` 查看可用目标… | — |
 
 ## `session_search` 工具集
 
@@ -163,6 +167,7 @@ description: "Hermes 内置工具权威参考，按工具集分组"
 |------|------|----------|
 | `process` | 管理通过 `terminal(background=true)` 启动的后台进程。操作：`list`（显示所有）、`poll`（检查状态 + 新输出）、`log`（带分页的完整输出）、`wait`（阻塞直到完成或超时）、`kill`（终止）、`write`（发送…） | — |
 | `terminal` | 在 Linux 环境中执行 shell 命令。文件系统在调用之间持久化。对长时间运行的服务器设置 `background=true`。设置 `notify_on_complete=true`（配合 `background=true`）可在进程完成时自动收到通知——无需轮询。**不要**使用 `cat`/`head`/`tail`——使用 `read_file`。**不要**使用 `grep`/`rg`/`find`——使用 `search_files`。 | — |
+| `read_terminal` | 读取 Hermes 桌面 GUI 的应用内终端窗格（此聊天旁边的嵌入式 shell）当前显示的内容。仅适用于桌面应用。 | — |
 
 ## `todo` 工具集
 
