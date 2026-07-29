@@ -19,41 +19,41 @@ Hermes 还提供了一个现代 TUI，支持模态覆盖层、鼠标选择和非
 ## 运行 CLI
 
 ```bash
-# 启动交互式会话（默认）
+# Start an interactive session (default)
 hermes
 
-# 单次查询模式（非交互式）
+# Single query mode (non-interactive)
 hermes chat -q "Hello"
 
-# 使用指定模型
+# With a specific model
 hermes chat --model "anthropic/claude-sonnet-4"
 
-# 使用指定提供商
-hermes chat --provider nous        # 使用 Nous Portal
-hermes chat --provider openrouter  # 强制使用 OpenRouter
+# With a specific provider
+hermes chat --provider nous        # Use Nous Portal
+hermes chat --provider openrouter  # Force OpenRouter
 
-# 使用指定工具集
+# With specific toolsets
 hermes chat --toolsets "web,terminal,skills"
 
-# 启动时预加载一个或多个 skill
+# Start with one or more skills preloaded
 hermes -s hermes-agent-dev,github-auth
 hermes chat -s github-pr-workflow -q "open a draft PR"
 
-# 恢复之前的会话
-hermes --continue             # 恢复最近的 CLI 会话（-c）
-hermes --resume <session_id>  # 通过 ID 恢复指定会话（-r）
+# Resume previous sessions
+hermes --continue             # Resume the most recent CLI session (-c)
+hermes --resume <session_id>  # Resume a specific session by ID (-r)
 
-# 详细模式（调试输出）
+# Verbose mode (debug output)
 hermes chat --verbose
 
-# 隔离的 git worktree（用于并行运行多个 agent）
-hermes -w                         # 在 worktree 中以交互模式运行
-hermes -w -z "Fix issue #123"     # 在 worktree 中以单次查询模式运行
+# Isolated git worktree (for running multiple agents in parallel)
+hermes -w                         # Interactive mode in worktree
+hermes -w -z "Fix issue #123"     # Single query in worktree
 ```
 
 ## 界面布局
 
-<img className="docs-terminal-figure" src="/img/docs/cli-layout.svg" alt="Hermes CLI 布局的风格化预览，展示了横幅、对话区域和固定输入提示符。" />
+<img className="docs-terminal-figure" src="/docs/img/docs/cli-layout.svg" alt="Hermes CLI 布局的风格化预览，展示了横幅、对话区域和固定输入提示符。" />
 <p className="docs-figure-caption">Hermes CLI 横幅、对话流和固定输入提示符，以稳定的文档图示形式呈现，而非脆弱的文字艺术。</p>
 
 欢迎横幅一目了然地显示当前模型、终端后端、工作目录、可用工具和已安装的 skill。
@@ -90,6 +90,8 @@ hermes -w -z "Fix issue #123"     # 在 worktree 中以单次查询模式运行
 
 使用 `/usage` 查看详细分解，包括各类别费用（输入 vs 输出 token）。
 
+在 `openai-codex` 提供商上，`/usage` 还会显示你的 ChatGPT 账户中任何已存储的使用限额重置次数（“You have N resets banked - use /usage reset to activate”）。`/usage reset` 会兑换一次已存储的重置，完全恢复你的 5 小时和每周限额。当你的限额尚未用尽时，Hermes 会拒绝兑换（已存储的重置会恢复全部额度，因此提前使用会造成浪费）——若仍要兑换，请传入 `/usage reset --force`。
+
 ### 会话恢复显示
 
 恢复之前的会话时（`hermes -c` 或 `hermes --resume <id>`），横幅与输入提示符之间会出现一个"Previous Conversation"面板，显示对话历史的简洁摘要。详情及配置说明参见[会话——恢复时的对话摘要](sessions.md#conversation-recap-on-resume)。
@@ -112,7 +114,7 @@ hermes -w -z "Fix issue #123"     # 在 worktree 中以单次查询模式运行
 
 **多行粘贴预览。** 粘贴多行内容时，CLI 会显示一行简洁的单行预览（`[pasted: 47 lines, 1,842 chars — press Enter to send]`），而非将全部内容倾倒到滚动缓冲区。实际发送的仍是完整内容；这只是显示上的优化。
 
-**最终响应中的 Markdown 剥离。** CLI 会从 agent 的*最终*回复中剥离最冗长的 Markdown 围栏以及 `**粗体**` / `*斜体*` 包装，使其在终端中呈现为可读的纯文本，而非原始源码。代码块和列表会被保留。这不影响 gateway 平台或工具结果——它们保留 Markdown 以供原生渲染。
+**最终响应中的 Markdown 剥离。** CLI 会从 agent 的*最终*回复中剥离最冗长的 Markdown 围栏以及 `**bold**` / `*italic*` 包装，使其在终端中呈现为可读的纯文本，而非原始源码。代码块和列表会被保留。这不影响 gateway 平台或工具结果——它们保留 Markdown 以供原生渲染。
 
 ## 斜杠命令
 
@@ -132,7 +134,7 @@ hermes -w -z "Fix issue #123"     # 在 worktree 中以单次查询模式运行
 | `/voice tts` | 切换 Hermes 回复的语音播放 |
 | `/reasoning high` | 提高推理强度 |
 | `/title My Session` | 为当前会话命名 |
-| `/status` | 显示会话信息——模型/配置/token/时长——以及本地**会话摘要**块（近期轮次数、常用工具、涉及文件、最新用户 prompt + 助手回复）。纯本地计算，不调用 LLM。 |
+| `/status` | 显示会话信息——模型/profile/token/时长——以及本地**会话摘要**块（近期轮次数、常用工具、涉及文件、最新用户 prompt + 助手回复）。纯本地计算，不调用 LLM。 |
 | `/context [all]` | 可视化上下文用量明细——字形方格图与按类别划分的 token 表（系统提示词 / 工具 / skills / 记忆 / 对话 / 可用空间）。`/context all` 还会添加各 skill 和工具集的成本。 |
 | `/sessions` | 在经典 CLI 中直接打开交互式会话选择器（与 TUI 使用同一界面）。输入过滤，方向键导航，Enter 恢复。 |
 
@@ -184,7 +186,7 @@ Hermes 会在第一轮对话前将每个指定的 skill 加载到会话 prompt �
 /axolotl help me fine-tune Llama 3 on my dataset
 /github-pr-workflow create a PR for the auth refactor
 
-# 仅输入 skill 名称即可加载它，让 agent 询问你的需求：
+# Just the skill name loads it and lets the agent ask what you need:
 /excalidraw
 ```
 
@@ -207,7 +209,7 @@ personalities:
   helpful: "You are a helpful, friendly AI assistant."
   kawaii: "You are a kawaii assistant! Use cute expressions..."
   pirate: "Arrr! Ye be talkin' to Captain Hermes..."
-  # 添加你自己的！
+  # Add your own!
 ```
 
 ## 多行输入
@@ -262,7 +264,7 @@ personalities:
 ```yaml
 # ~/.hermes/config.yaml
 display:
-  busy_input_mode: "steer"   # 或 "queue" 或 "interrupt"（默认）
+  busy_input_mode: "steer"   # or "queue" or "interrupt" (default)
 ```
 
 `"queue"` 模式会准备一个独立的后续轮次。`"steer"` 始终等待下一个工具结果边界。默认的 `"interrupt"` 模式会在模型生成期间更快响应，同时避免取消正在运行的工具。若要取消当前轮次及其前台工作，请使用 `/stop`。未知值会回退到 `"interrupt"`。
@@ -319,7 +321,7 @@ CLI 在 agent 工作时显示动态反馈：
 ```yaml
 # ~/.hermes/config.yaml
 display:
-  tool_preview_length: 80   # 将工具预览截断为 80 个字符（0 = 无限制）
+  tool_preview_length: 80   # Truncate tool previews to 80 chars (0 = no limit)
 ```
 
 这在终端较窄或工具参数包含很长文件路径时非常有用。
@@ -342,12 +344,12 @@ Messages:       28 (5 user, 18 tool calls)
 恢复选项：
 
 ```bash
-hermes --continue                          # 恢复最近的 CLI 会话
-hermes -c                                  # 简写形式
-hermes -c "my project"                     # 恢复命名会话（谱系中最新的）
-hermes --resume 20260225_143052_a1b2c3     # 通过 ID 恢复指定会话
-hermes --resume "refactoring auth"         # 通过标题恢复
-hermes -r 20260225_143052_a1b2c3           # 简写形式
+hermes --continue                          # Resume the most recent CLI session
+hermes -c                                  # Short form
+hermes -c "my project"                     # Resume a named session (latest in lineage)
+hermes --resume 20260225_143052_a1b2c3     # Resume a specific session by ID
+hermes --resume "refactoring auth"         # Resume by title
+hermes -r 20260225_143052_a1b2c3           # Short form
 ```
 
 恢复会从 SQLite 中还原完整的对话历史。agent 能看到所有之前的消息、工具调用和响应——就像从未离开一样。
@@ -370,15 +372,15 @@ CLI 会话存储在 Hermes 的 SQLite 状态数据库 `~/.hermes/state.db` 中�
 长对话在接近上下文限制时会自动摘要：
 
 ```yaml
-# 在 ~/.hermes/config.yaml 中
+# In ~/.hermes/config.yaml
 compression:
   enabled: true
-  threshold: 0.50    # 默认在上下文限制的 50% 时压缩
+  threshold: 0.50    # Compress at 50% of context limit by default
 
-# 摘要模型在 auxiliary 下配置：
+# Summarization model configured under auxiliary:
 auxiliary:
   compression:
-    model: ""  # 留空则使用主聊天模型（默认）。或指定一个廉价快速的模型，如 "google/gemini-3-flash-preview"。
+    model: ""  # Leave empty to use the main chat model (default). Or pin a cheap fast model, e.g. "google/gemini-3-flash-preview".
 ```
 
 压缩触发时，中间轮次会被摘要，同时始终保留前 3 轮和后 20 轮。
