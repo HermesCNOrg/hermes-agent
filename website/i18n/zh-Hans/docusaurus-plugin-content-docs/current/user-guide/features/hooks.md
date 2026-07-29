@@ -81,6 +81,8 @@ async def handle(event_type: str, context: dict):
 | `agent:start` | Agent 开始处理消息 | `platform`、`user_id`、`session_id`、`message` |
 | `agent:step` | 工具调用循环的每次迭代 | `platform`、`user_id`、`session_id`、`iteration`、`tool_names` |
 | `agent:end` | Agent 完成处理 | `platform`、`user_id`、`session_id`、`message`、`response` |
+| `reaction:added` | 为机器人可见的消息添加了表情回应（目前为 Slack adapter）。需要 `reactions:read` scope 和 `reaction_added` bot event subscription；机器人必须是该频道的成员。 | `platform`、`reaction`、`user_id`、`item_user_id`、`item_type`、`channel_id`、`message_ts`、`team_id`、`event_ts`、`raw_event` |
+| `reaction:removed` | 从机器人可见的消息移除了表情回应。需要 `reaction_removed` bot event subscription。 | 与 `reaction:added` 的形状相同 |
 | `command:*` | 任意斜杠命令执行 | `platform`、`user_id`、`command`、`args` |
 
 #### 通配符匹配
@@ -814,7 +816,7 @@ def my_callback(session_id: str, platform: str, **kwargs):
 ```python
 def my_callback(parent_session_id: str, child_role: str | None,
                 child_summary: str | None, child_status: str,
-                duration_ms: int, **kwargs):
+                tool_call_history: list[dict], duration_ms: int, **kwargs):
 ```
 
 | 参数 | 类型 | 描述 |
@@ -823,6 +825,7 @@ def my_callback(parent_session_id: str, child_role: str | None,
 | `child_role` | `str \| None` | 子 agent 上设置的编排角色标签（若功能未启用则为 `None`） |
 | `child_summary` | `str \| None` | 子 agent 返回给父 agent 的最终响应 |
 | `child_status` | `str` | `"completed"`、`"failed"`、`"interrupted"` 或 `"error"` |
+| `tool_call_history` | `list[dict]` | 有序的仅元数据工具调用：`tool_name`、有界的 `tool_input`、`input_bytes`、`output_bytes` 和 `status`；不包含原始输入和输出 |
 | `duration_ms` | `int` | 运行子 agent 的挂钟时间，单位毫秒 |
 
 **触发位置：** `tools/delegate_tool.py` 中，`ThreadPoolExecutor.as_completed()` 排空所有子 future 后。触发被编排到父线程，因此 hook 作者无需考虑并发回调执行问题。
