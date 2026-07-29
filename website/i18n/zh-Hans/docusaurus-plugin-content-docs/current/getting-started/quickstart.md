@@ -6,11 +6,11 @@ description: "与 Hermes Agent 的第一次对话——从安装到开始聊天�
 
 # 快速入门
 
-本指南带你从零开始搭建一个能够应对实际使用的 Hermes 环境。完成安装、选择 provider（服务提供商）、验证对话正常运行，并了解出现问题时的处理方法。
+本指南带你从零开始搭建一个能够经受实际使用考验的 Hermes 环境。完成安装、选择 provider（服务提供商）、验证对话正常运行，并了解出现问题时的处理方法。
 
 ## 更喜欢看视频？
 
-**Onchain AI Garage** 制作了一套涵盖安装、配置和基本命令的 Masterclass 演示视频——如果你更习惯跟着视频操作，这是本页的绝佳补充。更多内容请查看完整的 [Hermes Agent 教程与使用案例](https://www.youtube.com/channel/UCqB1bhMwGsW-yefBxYwFCCg) 播放列表。
+**Onchain AI Garage** 制作了一套涵盖安装、配置和基本命令的 Masterclass 演示视频——如果你更习惯跟着视频操作，这是本页的良好补充。更多内容请查看完整的 [Hermes Agent 教程与使用案例](https://www.youtube.com/playlist?list=PLmpUb_PWAkDxewld5ZYyKifuHxgIbiq2d) 播放列表。
 
 <div style={{position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', maxWidth: '100%', marginBottom: '1.5rem'}}>
   <iframe
@@ -54,22 +54,24 @@ description: "与 Hermes Agent 的第一次对话——从安装到开始聊天�
 
 ### 不使用 Hermes Desktop：
 
-仅安装命令行版本（跟踪 main 分支）：
+仅安装命令行版本时，运行：
 
+#### Linux / macOS / WSL2 / Android（Termux）
 ```bash
-# Linux / macOS / WSL2 / Android (Termux)
 curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 ```
 
-安装脚本会在 `~/.hermes/hermes-agent` 创建一个受管理的隔离环境（独立的 uv 托管解释器和 venv），这是唯一受支持的安装方式 —— 包括开发用途。请勿使用 `pip install hermes-agent`。
+#### Windows（原生）
+
+在 PowerShell 中运行：
+```powershell
+iex (irm https://hermes-agent.nousresearch.com/install.ps1)
+```
 
 :::tip Android / Termux
 如果你在手机上安装，请参阅专门的 [Termux 指南](./termux.md)，其中包含经过测试的手动安装步骤、支持的扩展功能以及当前 Android 特有的限制。
 :::
 
-:::tip Windows 用户
-请先安装 [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install)，然后在 WSL2 终端中运行上述命令。
-:::
 
 安装完成后，重新加载 shell：
 
@@ -252,6 +254,8 @@ hermes config set terminal.backend docker    # Docker 隔离
 hermes config set terminal.backend ssh       # 远程服务器
 ```
 
+对于 Docker 沙箱，还可以启用**出口凭据注入代理**，使沙箱永远看不到真实 API 密钥——只能看到仅可在本地 TLS 拦截守护进程之后使用的不透明代理 token。参阅[出口代理](../user-guide/egress/iron-proxy.md)。使用 `hermes egress setup && hermes egress start` 配置和启动；`hermes setup terminal` 也会为 Docker 用户提供指引。Modal、SSH、Daytona 和 Singularity 尚未接入。
+
 ### 语音模式
 
 ```bash
@@ -266,12 +270,30 @@ uv pip install -e ".[voice]"
 
 ### Skills
 
+Skills 是按需加载的说明文档，用于教 Hermes 完成特定任务——部署到 Kubernetes、创建 GitHub PR、微调模型、搜索 GIF 等。每个 skill 都是包含名称、描述和分步流程的 `SKILL.md` 文件。Agent 可免费读取简短描述，只有任务确实需要时才加载完整内容，因此添加 skill 不会使每次请求都膨胀。
+
+Hermes 随附了已安装在 `~/.hermes/skills/` 中的内置 skill 目录。你可以从 Skills Hub 添加更多 skill，也可以编写自己的 skill。
+
+**从 Hub 浏览和安装：**
+
 ```bash
-hermes skills search kubernetes
-hermes skills install openai/skills/k8s
+hermes skills browse                      # 列出全部可用项
+hermes skills search kubernetes           # 按关键字查找 skill
+hermes skills install openai/skills/k8s   # 安装一个 skill（会先执行安全扫描）
 ```
 
-或在聊天会话中使用 `/skills`。
+安装参数是 Hub 中的 `source/path` slug——`openai/skills/k8s` 指 OpenAI 目录中的 `k8s` skill。`hermes skills browse` 会显示可用的准确 slug。
+
+**使用 skill**——每个已安装 skill 都会自动成为斜杠命令：
+
+```bash
+/k8s deploy the staging manifest          # 使用 skill 执行请求
+/k8s                                       # 加载 skill，让 Hermes 询问你的需求
+```
+
+这适用于 CLI 和所有已连接的消息平台。无需一开始就安装所有 skill——正常对话中任务匹配时，agent 会自行选择合适的内置 skill。
+
+关于编写自己的 skill、外部 skill 目录及完整 Hub 源列表，请参阅[Skills 系统](../user-guide/features/skills.md)。
 
 ### MCP 服务器
 
