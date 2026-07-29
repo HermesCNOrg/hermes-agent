@@ -6,13 +6,13 @@ description: "Hermes Agent 支持哪些操作系统、分发方式与功能。"
 
 # 平台支持
 
-Hermes Agent 支持多种平台和分发方式，但无法支持所有可能的安装方式。
+Hermes Agent 持续维护对许多平台和分发方式的支持，但我们无法支持所有可能的安装方式。
 
 ---
 
 ## 一级支持
 
-我们会尽力确保这些平台上的安装和更新不会损坏。一级平台的问题和回归是最高优先级，优先于其他平台。
+我们力求绝不破坏这些平台的安装和更新。一级平台的问题和回归是我们的第一优先事项，优先于其他平台。
 
 | 操作系统 / 架构 | 安装方式 | 说明 |
 | --- | --- | --- |
@@ -33,7 +33,7 @@ Hermes Agent 支持多种平台和分发方式，但无法支持所有可能的�
 | 操作系统 / 架构 | 安装方式 | 说明 |
 | --- | --- | --- |
 | **Android（Termux）**（aarch64） | [`install.sh`](./installation.md#linux--macos--wsl2--android-termux) | 少数功能[不可用](./termux.md#known-limitations-on-phones)。 |
-| **Nix**（macOS、Linux、NixOS） | [`install.sh`](./nix-setup.md) | 经常因 Node.js 打包问题而失效。祝你好运~！&lt;3 |
+| **Nix**（MacOS、Linux、NixOS） | [`install.sh`](./nix-setup.md) | 经常因 node.js 打包问题而出故障。祝你好运~！&lt;3 |
 
 ## 不支持
 
