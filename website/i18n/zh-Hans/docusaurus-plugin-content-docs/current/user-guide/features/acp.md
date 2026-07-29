@@ -12,7 +12,7 @@ Hermes Agent 可作为 ACP 服务器运行，让兼容 ACP 的编辑器通过 st
 - 工具活动
 - 文件差异
 - 终端命令
-- 审批 prompt（提示词）
+- 审批提示
 - 流式思考 / 响应块
 
 当你希望 Hermes 表现得像编辑器原生的编码 agent，而非独立 CLI 或消息机器人时，ACP 是合适的选择。
@@ -25,8 +25,8 @@ Hermes 使用专为编辑器工作流设计的精选 `hermes-acp` 工具集运�
 - 终端工具：`terminal`、`process`
 - 网页/浏览器工具
 - 记忆、待办事项、会话搜索
-- skills
-- `execute_code` 和 `delegate_task`
+- 技能
+- execute_code 和 delegate_task
 - 视觉
 
 它有意排除了不适合典型编辑器 UX 的功能，例如消息投递和 cronjob 管理。
@@ -61,7 +61,7 @@ hermes-acp
 python -m acp_adapter
 ```
 
-Hermes 将日志输出到 stderr，以保留 stdout 用于 ACP JSON-RPC 流量。
+Hermes 将日志写入 stderr，以便将 stdout 保留给 ACP JSON-RPC 流量。
 
 非交互式检查：
 
@@ -75,8 +75,8 @@ hermes acp --check
 浏览器工具（`browser_navigate`、`browser_click` 等）依赖 `agent-browser` npm 包和 Chromium，这些不包含在 Python wheel 中。通过以下命令安装：
 
 ```bash
-hermes acp --setup-browser           # 交互式（下载约 400 MB 前会提示确认）
-hermes acp --setup-browser --yes     # 非交互式接受下载
+hermes acp --setup-browser           # interactive (prompts before ~400 MB download)
+hermes acp --setup-browser --yes     # accept the download non-interactively
 ```
 
 这是独立命令。终端认证流程（`hermes acp --setup`）在模型选择后也会将浏览器引导作为后续问题提供，因此大多数用户无需直接运行 `--setup-browser`。
@@ -84,7 +84,7 @@ hermes acp --setup-browser --yes     # 非交互式接受下载
 具体操作：
 
 - 若缺少 Node.js 22 LTS，将其安装到 `~/.hermes/node/`
-- 将 `npm install -g agent-browser @askjo/camofox-browser` 安装到该前缀（无需 sudo — `npm` 的 `--prefix` 指向用户可写的 Hermes 管理 Node）
+- 使用 `npm install -g agent-browser @askjo/camofox-browser` 将其安装到该前缀（无需 sudo——`npm` 的 `--prefix` 指向由 Hermes 管理且用户可写的 Node）
 - 安装 Playwright Chromium，或在检测到系统 Chrome/Chromium 时使用已有版本
 
 该引导过程是幂等的——重复运行速度很快，已完成的步骤会被跳过。
@@ -156,13 +156,13 @@ Provider 解析使用 Hermes 的正常运行时解析器，因此 ACP 继承当�
 
 ## 宿主集成
 
-以下变量由 **ACP 宿主进程**（编辑器或其他 agent harness）设置在其启动的 Hermes 子进程上。它们不是用户配置；请勿手动写入 `.env` 或 `config.yaml`。
+以下变量由 **ACP 宿主进程**（编辑器或其他 agent 运行框架）为其启动的 Hermes 子进程设置。它们不是用户配置——请勿在 `.env` 或 `config.yaml` 中手动设置。
 
 | 变量 | 值 | 效果 |
 |----------|-------|--------|
 | `HERMES_ACP_SKIP_CONFIGURED_MCP` | `1` | 在 ACP JSON-RPC 循环开始前，跳过启动 `config.yaml` 中**全局配置的** MCP 服务器。 |
 
-Hermes 通常会在进入 ACP JSON-RPC 循环前启动 `config.yaml` 中配置的每台 MCP 服务器。如果宿主自行拥有 MCP——通过 `session/new` 显式传入该会话的服务器——就不需要全局启动；否则无关的缓慢或交互式 MCP 服务器可能延迟 `initialize`。仅将此标记设置为 `1` 可以跳过全局启动。
+Hermes 通常会在进入 ACP JSON-RPC 循环前启动 `config.yaml` 中配置的每个 MCP 服务器。如果宿主自行管理 MCP——通过 `session/new` 显式传入该会话的服务器——就不需要全局启动；否则，无关的缓慢或交互式 MCP 服务器可能会延迟 `initialize`。将此标记精确设置为 `1`，可让这样的宿主跳过全局启动。
 
 只会跳过全局 `config.yaml` 发现。**由 ACP 会话通过 `session/new` 提供的 MCP 服务器仍会注册**，因此宿主请求的能力不会丢失。其他任何值（未设置、空、`0`、`false`）均保留默认行为，避免看似为真的无关字符串悄然禁用 MCP。
 
@@ -186,7 +186,7 @@ ACP 会话将编辑器的 cwd 绑定到 Hermes 任务 ID，使文件和终端工
 
 ## 审批
 
-危险的终端命令可作为审批 prompt 路由回编辑器。ACP 审批选项比 CLI 流程更简单：
+危险的终端命令可作为审批提示路由回编辑器。ACP 审批选项比 CLI 流程更简单：
 
 - 允许一次
 - 始终允许
@@ -205,7 +205,7 @@ ACP 在*允许一次*和*始终允许*之间提供第三层：**允许本次会�
 | `allow_always` | 始终允许 | 所有未来会话 | 是（写入 Hermes 永久允许列表） |
 | `deny` | 拒绝 | 本次工具调用 | 否 |
 
-`allow_session` 是编辑器工作流的正确默认选项——你在任务期间信任 agent，但不想授予长期允许列表条目。安全权衡很直接：范围越广，编辑器打断你的次数越少，行为异常的 agent（或 prompt 注入）在被发现前能造成的损害也越大。对不熟悉的命令从 `allow_once` 开始；在看到 agent 多次正确运行相同模式后升级为 `allow_session`；将 `allow_always` 保留给你永远信任的真正幂等命令（例如 `git status`）。
+`allow_session` 是编辑器工作流的合适默认选项：你在任务期间信任 agent，但不想授予长期有效的允许列表条目。安全权衡很直接：范围越广，编辑器打断你的次数越少，行为异常的 agent（或提示注入）在被发现前能造成的损害也越大。对不熟悉的命令从 `allow_once` 开始；在看到 agent 多次正确运行相同模式后升级为 `allow_session`；只将 `allow_always` 用于你愿意永久信任且真正幂等的命令（例如 `git status`）。
 
 ACP 桥接将这些选项映射到 Hermes 的内部审批语义——`allow_always` 与 CLI 相同地写入永久允许列表条目，而 `allow_session` 仅影响当前 ACP 会话的进程内审批缓存。
 
