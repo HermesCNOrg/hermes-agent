@@ -85,7 +85,6 @@ curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 
 | 安装方式                                | 代码位置                       | `hermes` 二进制                          | 数据目录                              |
 | --------------------------------------- | ------------------------------ | ---------------------------------------- | ------------------------------------- |
-| pip install                             | Python site-packages           | `~/.local/bin/hermes`（console_scripts） | `~/.hermes/`                          |
 | 用户级（git 安装程序）                  | `~/.hermes/hermes-agent/`      | `~/.local/bin/hermes`（符号链接）        | `~/.hermes/`                          |
 | Root 模式（`sudo curl … \| sudo bash`） | `/usr/local/lib/hermes-agent/` | `/usr/local/bin/hermes`                  | `/root/.hermes/`（或 `$HERMES_HOME`） |
 
@@ -124,9 +123,7 @@ hermes setup --portal
 
 ## 前置条件
 
-**pip install：** 除 Python 3.11+ 外无其他前置条件，其余均自动处理。
-
-**Git 安装程序：** 唯一的前置条件是 **Git**。安装程序自动处理其余一切：
+**安装程序：** 在非 Windows 平台上，唯一的前置条件是 **Git**。在 Linux 上，还请确保已安装 `curl` 和 `xz-utils`（安装程序会将 Node.js 下载为 `.tar.xz` 归档）。桌面应用还需要 `g++`（Debian/Ubuntu 上为 `build-essential`）以编译原生模块。安装程序会自动处理其余一切：
 
 - **uv**（快速 Python 包管理器）
 - **Python 3.11**（通过 uv，无需 sudo）
@@ -135,11 +132,11 @@ hermes setup --portal
 - **ffmpeg**（TTS 的音频格式转换）
 
 :::info
-你**无需**手动安装 Python、Node.js、ripgrep 或 ffmpeg。安装程序会检测缺失的依赖并自动安装。只需确保 `git` 可用（`git --version`）。
+你**无需**手动安装 Python、Node.js、ripgrep 或 ffmpeg。安装程序会检测缺失的依赖并自动安装。只需确保 `git` 可用（`git --version`）。在 Linux 上，请确保已安装 `curl` 和 `xz-utils`（Debian/Ubuntu 可运行 `sudo apt install curl xz-utils`）。桌面应用还需安装 `build-essential`（`sudo apt install build-essential`）。
 :::
 
 :::tip Nix 用户
-如果你使用 Nix（在 NixOS、macOS 或 Linux 上），有专门的配置路径，包含 Nix flake、声明式 NixOS 模块和可选容器模式。请参阅 **[Nix & NixOS 配置](./nix-setup.md)** 指南。
+Nix **不再是明确支持的安装路径**（仅尽力支持）。如果你已在使用 Nix（NixOS、macOS 或 Linux），仍有专门的配置路径，包含 Nix flake、声明式 NixOS 模块和可选容器模式。请参阅 **[Nix & NixOS 配置](./nix-setup.md)** 指南。
 :::
 
 ---
@@ -204,4 +201,4 @@ hermes setup --portal
 
 ## 安装方式自动检测
 
-Hermes 会自动检测安装方式（`pip`、git 安装程序、Homebrew 或 NixOS），`hermes update` 会打印对应路径的更新命令。无需设置任何环境变量——检测基于安装目录结构（Python site-packages、`~/.hermes/hermes-agent/`、Homebrew 前缀或 Nix store 路径）。`hermes doctor` 也会在其环境摘要中显示检测到的安装方式。
+Hermes 会自动检测安装方式（git 安装程序、Docker 或 NixOS），`hermes update` 会打印对应路径的更新命令。无需设置任何环境变量——检测基于安装目录结构（`~/.hermes/hermes-agent/` 检出、Docker 镜像标记或 Nix store 路径）。`hermes doctor` 也会在其环境摘要中显示检测到的安装方式。
