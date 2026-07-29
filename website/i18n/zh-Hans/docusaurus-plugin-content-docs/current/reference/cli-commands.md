@@ -15,7 +15,6 @@ description: "Hermes 终端命令及命令族的权威参考"
 ```bash
 hermes [global-options] <command> [subcommand/options]
 ```
-
 ### 全局选项
 
 | 选项 | 说明 |
@@ -43,6 +42,7 @@ hermes [global-options] <command> [subcommand/options]
 | `hermes fallback` | 管理主模型出错时依次尝试的 fallback provider。 |
 | `hermes gateway` | 运行或管理消息 gateway 服务。 |
 | `hermes proxy` | 本地 OpenAI 兼容代理，附加 OAuth provider 凭据。参见 [订阅代理](../user-guide/features/subscription-proxy.md)。 |
+| `hermes egress` | 用于远程终端沙箱的出站凭据注入防火墙（iron-proxy）。默认禁用。参见 [Egress 代理](../user-guide/egress/iron-proxy.md)。 |
 | `hermes lsp` | 管理 Language Server Protocol 集成（为 write_file/patch 提供语义诊断）。 |
 | `hermes setup` | 全部或部分配置的交互式设置向导。 |
 | `hermes whatsapp` | 配置并配对 WhatsApp 桥接。 |
@@ -84,6 +84,7 @@ hermes [global-options] <command> [subcommand/options]
 | `hermes sessions` | 浏览、导出、修剪、重命名和删除会话。 |
 | `hermes insights` | 显示 token/费用/活动分析。 |
 | `hermes claw` | OpenClaw 迁移辅助工具。 |
+| `hermes import-agent` | 导入 Claude Code（`~/.claude`）或 Codex CLI（`~/.codex`）设置。 |
 | `hermes dashboard` | 启动用于管理配置、API 密钥和会话的 Web 控制台。 |
 | `hermes desktop`（别名 `gui`） | 构建并启动原生 Electron 桌面应用。 |
 | `hermes profile` | 管理 profile——多个隔离的 Hermes 实例。 |
@@ -97,7 +98,6 @@ hermes [global-options] <command> [subcommand/options]
 ```bash
 hermes chat [options]
 ```
-
 常用选项：
 
 | 选项 | 说明 |
@@ -133,7 +133,6 @@ hermes chat --worktree -q "Review this repo and open a PR"
 hermes chat --ignore-user-config --ignore-rules -q "Repro without my personal setup"
 hermes chat --safe-mode -q "Is this bug mine or Hermes'?"
 ```
-
 ### `hermes -z <prompt>` — 脚本化单次调用
 
 对于程序化调用方（shell 脚本、CI、cron、通过管道传入 prompt 的父进程），`hermes -z` 是最纯粹的单次入口：**单个 prompt 输入，最终响应文本输出，stdout 和 stderr 上不输出任何其他内容。** 无横幅、无 spinner、无工具预览、无 `Session:` 行——只有 agent 的最终回复纯文本。
@@ -142,10 +141,9 @@ hermes chat --safe-mode -q "Is this bug mine or Hermes'?"
 hermes -z "What's the capital of France?"
 # → Paris.
 
-# 父脚本可以干净地捕获响应：
+# Parent scripts can cleanly capture the response:
 answer=$(hermes -z "summarize this" < /path/to/file.txt)
 ```
-
 单次运行覆盖（不修改 `~/.hermes/config.yaml`）：
 
 | 标志 | 等效环境变量 | 用途 |
@@ -155,10 +153,9 @@ answer=$(hermes -z "summarize this" < /path/to/file.txt)
 
 ```bash
 hermes -z "…" --provider openrouter --model openai/gpt-5.5
-# 或：
+# or:
 HERMES_INFERENCE_MODEL=anthropic/claude-sonnet-4.6 hermes -z "…"
 ```
-
 相同的 agent、相同的工具、相同的 skill——只是剥离了所有交互式/装饰性层。如果你还需要在记录中包含工具输出，请改用 `hermes chat -q`；`-z` 专门用于"我只需要最终答案"的场景。
 
 ## `hermes model`
@@ -168,7 +165,6 @@ HERMES_INFERENCE_MODEL=anthropic/claude-sonnet-4.6 hermes -z "…"
 ```bash
 hermes model
 ```
-
 在以下情况使用此命令：
 - **添加新 provider**（OpenRouter、Anthropic、Copilot、DeepSeek、自定义等）
 - 登录基于 OAuth 的 provider（Anthropic、Copilot、Codex、Nous Portal）
@@ -190,33 +186,30 @@ hermes model
 无需离开会话即可在已配置的模型之间切换：
 
 ```
-/model                              # 显示当前模型和可用选项
-/model claude-sonnet-4              # 切换模型（自动检测 provider）
-/model zai:glm-5                    # 切换 provider 和模型
-/model custom:qwen-2.5              # 在自定义端点上使用模型
-/model custom                       # 从自定义端点自动检测模型
-/model custom:local:qwen-2.5        # 使用命名的自定义 provider
-/model openrouter:anthropic/claude-sonnet-4  # 切换回云端
+/model                              # Show current model and available options
+/model claude-sonnet-4              # Switch model (auto-detects provider)
+/model zai:glm-5                    # Switch provider and model
+/model custom:qwen-2.5              # Use model on your custom endpoint
+/model custom                       # Auto-detect model from custom endpoint
+/model custom:local:qwen-2.5        # Use a named custom provider
+/model openrouter:anthropic/claude-sonnet-4  # Switch back to cloud
 ```
-
-默认情况下，`/model` 的更改**仅对当前会话生效**。添加 `--global` 可将更改持久化到 `config.yaml`：
+默认情况下，`/model` 的更改**仅对当前会话生效**。添加 `--global` 可将更改持久化到 `config.yaml`（或设置 `model.persist_switch_by_default: true`，使每次切换都持久化）：
 
 ```
-/model claude-sonnet-4 --global     # 切换并保存为新默认值
+/model claude-sonnet-4 --global     # Switch and save as new default
 ```
-
 :::info 如果我只看到 OpenRouter 模型怎么办？
 如果你只配置了 OpenRouter，`/model` 将只显示 OpenRouter 模型。要添加其他 provider（Anthropic、DeepSeek、Copilot 等），请退出会话并从终端运行 `hermes model`。
 :::
 
-Provider 和 base URL 的更改会自动持久化到 `config.yaml`。从自定义端点切换走时，过时的 base URL 会被清除，以防止其泄漏到其他 provider。
+使用 `--global` 切换时，provider 和 base URL 的更改会与模型一起持久化到 `config.yaml`。从自定义端点切换走时，过时的 base URL 会被清除，以防止其泄漏到其他 provider。
 
 ## `hermes gateway`
 
 ```bash
 hermes gateway <subcommand>
 ```
-
 子命令：
 
 | 子命令 | 说明 |
@@ -239,6 +232,9 @@ hermes gateway <subcommand>
 |--------|-------------|
 | `--all` | 在 `start` / `restart` / `stop` 时：对**每个 profile** 的 gateway 执行操作，而不仅限于活跃的 `HERMES_HOME`。当你并行运行多个 profile 并希望在 `hermes update` 后全部重启时很有用。 |
 | `--no-supervise` | 在 `run` 时：在 s6-overlay Docker 镜像内部，跳过 s6 自动监管，退回到 pre-s6 前台语义——gateway 作为容器主进程运行，无自动重启。在 s6 镜像之外为空操作。等同于设置 `HERMES_GATEWAY_NO_SUPERVISE=1`。 |
+| `--external-supervisor` | 在 `run` 时：声明由封装程序提供的进程管理器负责管理前台 gateway。当 `sudo`、`env -i` 或其他封装程序移除了 launchd/systemd 的原生环境标记时使用。聊天内重启和更新会退出并返回该管理器，而不是生成脱离控制的替代进程。 |
+
+`--external-supervisor` 是一项重启策略约定：聊天内重启或服务重启更新会以状态码 `75` 退出，因此封装程序的 supervisor 必须在该非零退出后重新启动 gateway。对于 systemd，请使用 `Restart=on-failure` 或 `Restart=always`，且不要在 `RestartPreventExitStatus` 中包含 `75`；对于 launchd，请配置 `KeepAlive`，使其在非成功退出后重新启动。如果没有此策略，请求重启会使 gateway 保持停止状态。
 
 `hermes gateway enroll` 接受 `--token`、`--connector-url`、`--gateway-id` 和 `--wake-url`。它会使用注册 token 与 connector 交换凭据，并将得到的 `GATEWAY_RELAY_ID`、`GATEWAY_RELAY_SECRET`、`GATEWAY_RELAY_DELIVERY_KEY`、可选的 `GATEWAY_RELAY_URL`，以及（提供 `--wake-url` 时）`GATEWAY_RELAY_WAKE_URL` 写入当前 profile 的 `.env`。
 
@@ -251,7 +247,6 @@ hermes gateway <subcommand>
 ```bash
 hermes lsp <subcommand>
 ```
-
 管理 Language Server Protocol 集成。LSP 在后台运行真实的语言服务器（pyright、gopls、rust-analyzer 等），并将其诊断信息输入 `write_file` 和 `patch` 使用的写后检查。受 git 工作区检测限制——仅当 cwd 或编辑的文件位于 git worktree 内时，LSP 才会运行。
 
 子命令：
@@ -272,7 +267,6 @@ hermes lsp <subcommand>
 ```bash
 hermes setup [model|tts|terminal|gateway|tools|agent] [--non-interactive] [--reset] [--quick] [--reconfigure] [--portal]
 ```
-
 **最简便的方式：** `hermes setup --portal`——通过 OAuth 登录 Nous Portal，并一次性选择加入 [Tool Gateway](../user-guide/features/tool-gateway.md)。
 
 **首次运行：** 启动首次使用向导。
@@ -304,7 +298,6 @@ hermes setup [model|tts|terminal|gateway|tools|agent] [--non-interactive] [--res
 ```bash
 hermes portal [status|open|tools]
 ```
-
 检查 Nous Portal 认证、Tool Gateway 路由，并访问订阅页面。不带子命令时运行 `status`。
 
 | 子命令 | 说明 |
@@ -320,17 +313,16 @@ hermes portal [status|open|tools]
 ```bash
 hermes whatsapp
 ```
-
 运行 WhatsApp 配对/设置流程，包括模式选择和二维码配对。
 
 ## `hermes slack`
 
 ```bash
-hermes slack manifest              # 将 manifest 打印到 stdout
-hermes slack manifest --write      # 写入 ~/.hermes/slack-manifest.json
-hermes slack manifest --slashes-only  # 仅输出 features.slash_commands 数组
+hermes slack manifest              # print manifest to stdout
+hermes slack manifest --write      # write to ~/.hermes/slack-manifest.json
+hermes slack manifest --long-description-file AGENTS.md --write
+hermes slack manifest --slashes-only  # just the features.slash_commands array
 ```
-
 生成一个 Slack app manifest，将 `COMMAND_REGISTRY` 中的每条 gateway 命令（`/btw`、`/stop`、`/model` 等）注册为一等公民 Slack 斜杠命令——与 Discord 和 Telegram 保持一致。将输出粘贴到你的 Slack app 配置中：[https://api.slack.com/apps](https://api.slack.com/apps) → 你的 app → **Features → App Manifest → Edit**，然后点击 **Save**。如果 scope 或斜杠命令有变化，Slack 会提示重新安装。
 
 | 标志 | 默认值 | 用途 |
@@ -338,6 +330,8 @@ hermes slack manifest --slashes-only  # 仅输出 features.slash_commands 数组
 | `--write [PATH]` | stdout | 写入文件而非 stdout。裸 `--write` 写入 `$HERMES_HOME/slack-manifest.json`。 |
 | `--name NAME` | `Hermes` | Slack 中的机器人显示名称。 |
 | `--description DESC` | 默认简介 | Slack app 目录中显示的机器人描述。 |
+| `--long-description TEXT` | 未设置 | 内联设置 `display_information.long_description`（175–4,000 个字符）。与 `--slashes-only` 不兼容。 |
+| `--long-description-file PATH` | 未设置 | 从 UTF-8 文本文件读取长描述，并精确保留其内容。与 `--long-description` 互斥，且与 `--slashes-only` 不兼容。 |
 | `--slashes-only` | 关闭 | 仅输出 `features.slash_commands`，用于合并到手动维护的 manifest 中。 |
 
 `hermes update` 后重新运行 `hermes slack manifest --write` 以获取新增命令。
@@ -351,7 +345,6 @@ hermes send --to <target> --file <path>
 echo "message" | hermes send --to <target>
 hermes send --list [platform]
 ```
-
 无需启动 agent 或 gateway 循环，即可向已配置的消息平台发送单次消息。它复用 gateway 中已有的凭据（`~/.hermes/.env` + `~/.hermes/config.yaml`），因此运维脚本、cron 任务、CI hook 和监控 daemon 无需重新实现各平台的 REST 客户端，就能发送状态更新。
 
 对于使用 bot token 的平台（Telegram、Discord、Slack、Signal、SMS、WhatsApp-CloudAPI），无需运行 gateway——`hermes send` 会直接调用平台的 REST 端点。需要常驻适配器的 plugin 平台仍要求 gateway 处于运行状态。
@@ -376,13 +369,11 @@ hermes send --to telegram "MEDIA:/tmp/screenshot.png"
 hermes send --to telegram "Build chart for today MEDIA:/tmp/chart.png"   # with caption
 hermes send --to discord:#ops "MEDIA:/tmp/report.pdf"
 ```
-
 默认情况下，图片文件会作为照片发送（Telegram 等平台会重新压缩）。在消息中加入 `[[as_document]]`，即可改为不压缩的文件附件：
 
 ```bash
 hermes send --to telegram "[[as_document]] MEDIA:/tmp/screenshot.png"
 ```
-
 示例：
 
 ```bash
@@ -393,15 +384,12 @@ hermes send --to slack:#eng --subject "[CI]" --file build.log
 hermes send --list                  # all platforms
 hermes send --list telegram         # filter by platform
 ```
-
-
 ## `hermes secrets`
 
 ```bash
 hermes secrets bitwarden <subcommand>
 hermes secrets bw <subcommand>          # short alias
 ```
-
 在进程启动时从外部 secret manager 拉取 API 密钥，而不是将其存储在 `~/.hermes/.env` 中。目前支持 **Bitwarden Secrets Manager**。完整指南请参阅：[Bitwarden 集成](../user-guide/secrets/bitwarden.md)。
 
 `bitwarden`（别名 `bw`）子命令：
@@ -409,7 +397,8 @@ hermes secrets bw <subcommand>          # short alias
 | 子命令 | 说明 |
 |------------|-------------|
 | `setup` | 交互式向导：安装固定版本的 `bws` 二进制文件、保存 access token 并选择 project。非交互式使用时可传入 `--project-id`、`--access-token` 和 `--server-url`。 |
-| `status` | 显示当前配置、二进制路径/版本及最近一次拉取信息。 |
+| `status` | 显示当前配置、二进制路径/版本及 token 验证状态。 |
+| `token` | 轮换 access token：在保存到 `.env` 前，先通过 Bitwarden 验证新 token（被拒绝的 token 不会改变任何内容）。非交互式使用时接受 `--access-token`，使用 `--no-verify` 可跳过探测。 |
 | `sync` | 立即拉取 secret 并报告变更。添加 `--apply` 才会真正将 secret 导出到当前 shell 环境中（默认仅预览）。 |
 | `install` | 下载并验证固定版本的 `bws` 二进制文件。即使已有托管副本，`--force` 也会重新下载。 |
 | `disable` | 关闭 Bitwarden 集成。 |
@@ -420,7 +409,6 @@ hermes secrets bw <subcommand>          # short alias
 ```bash
 hermes migrate <type>
 ```
-
 诊断并（可选）重写当前 `config.yaml`，替换已退役模型或弃用设置的引用。任何重写前都会对原始 `config.yaml` 创建带时间戳的备份（可用 `--no-backup` 跳过）。
 
 | 子命令 | 说明 |
@@ -442,7 +430,6 @@ hermes migrate <type>
 ```bash
 hermes proxy <subcommand>
 ```
-
 运行本地 OpenAI 兼容 HTTP 服务器，将请求转发到通过 OAuth 认证的上游 provider（例如 Nous Portal、xAI）。外部应用可使用任意 bearer token 指向此代理；代理会在转发时附加你真实的 OAuth 凭据。完整指南请参阅[订阅代理](../user-guide/features/subscription-proxy.md)。
 
 | 子命令 | 说明 |
@@ -457,7 +444,6 @@ hermes proxy <subcommand>
 ```bash
 hermes security <subcommand>
 ```
-
 通过 [OSV.dev](https://osv.dev) 按需扫描漏洞。覆盖 Hermes venv（已安装的 PyPI distribution）、`~/.hermes/plugins/` 下 plugin 声明的 Python 依赖，以及 `config.yaml` 中固定版本的 `npx`/`uvx` MCP 服务器。不扫描全局安装的软件包或编辑器/浏览器扩展。
 
 | 子命令 | 说明 |
@@ -486,18 +472,17 @@ hermes security <subcommand>
 管理同一 provider 的密钥轮换凭据池。完整文档请参阅 [凭据池](/user-guide/features/credential-pools)。
 
 ```bash
-hermes auth                                              # 交互式向导
-hermes auth list                                         # 显示所有池
-hermes auth list openrouter                              # 显示特定 provider
-hermes auth add openrouter --api-key sk-or-v1-xxx        # 添加 API 密钥
-hermes auth add anthropic --type oauth                   # 添加 OAuth 凭据
-hermes auth remove openrouter 2                          # 按索引删除
-hermes auth reset openrouter                             # 清除冷却时间
-hermes auth status anthropic                             # 显示某 provider 的认证状态
-hermes auth logout anthropic                             # 登出并清除已存储的认证状态
-hermes auth spotify                                      # 通过 PKCE 将 Hermes 与 Spotify 认证
+hermes auth                                              # Interactive wizard
+hermes auth list                                         # Show all pools
+hermes auth list openrouter                              # Show specific provider
+hermes auth add openrouter --api-key sk-or-v1-xxx        # Add API key
+hermes auth add anthropic --type oauth                   # Add OAuth credential
+hermes auth remove openrouter 2                          # Remove by index
+hermes auth reset openrouter                             # Clear cooldowns
+hermes auth status anthropic                             # Show auth status for a provider
+hermes auth logout anthropic                             # Log out and clear stored auth state
+hermes auth spotify                                      # Authenticate Hermes with Spotify via PKCE
 ```
-
 子命令：`add`、`list`、`remove`、`reset`、`status`、`logout`、`spotify`。不带子命令调用时，启动交互式管理向导。
 
 ## `hermes status`
@@ -505,7 +490,6 @@ hermes auth spotify                                      # 通过 PKCE 将 Herme
 ```bash
 hermes status [--all] [--deep]
 ```
-
 | 选项 | 说明 |
 |--------|-------------|
 | `--all` | 以可分享的脱敏格式显示所有详情。 |
@@ -516,7 +500,6 @@ hermes status [--all] [--deep]
 ```bash
 hermes cron <list|create|edit|pause|resume|run|remove|status|tick>
 ```
-
 | 子命令 | 说明 |
 |------------|-------------|
 | `list` | 显示已调度的任务。 |
@@ -536,7 +519,6 @@ cron **trigger** 可通过 `cron.provider` 配置键替换。留空（默认）�
 ```bash
 hermes kanban [--board <slug>] <action> [options]
 ```
-
 多 profile、多项目协作看板。每个安装可托管多个看板（每个项目、仓库或领域一个）；每个看板是独立的队列，拥有自己的 SQLite 数据库和调度器作用域。新安装从名为 `default` 的单个看板开始，其数据库为 `~/.hermes/kanban.db`（向后兼容）；其他看板位于 `~/.hermes/kanban/boards/<slug>/kanban.db`。嵌入在 gateway 中的调度器每次 tick 扫描所有看板。
 
 **全局标志（适用于以下所有操作）：**
@@ -579,31 +561,87 @@ hermes kanban [--board <slug>] <action> [options]
 示例：
 
 ```bash
-# 创建第二个看板并在不切换的情况下向其添加任务。
+# Create a second board and put a task on it without switching away.
 hermes kanban boards create atm10-server --name "ATM10 Server" --icon 🎮
 hermes kanban --board atm10-server create "Restart server" --assignee ops
 
-# 切换活跃看板以供后续调用使用。
+# Switch the active board for subsequent calls.
 hermes kanban boards switch atm10-server
-hermes kanban list                  # 显示 atm10-server 的任务
+hermes kanban list                  # shows atm10-server tasks
 
-# 归档看板（可恢复）或硬删除。
+# Archive a board (recoverable) or hard-delete it.
 hermes kanban boards rm atm10-server
 hermes kanban boards rm atm10-server --delete
 ```
-
 看板解析顺序（优先级从高到低）：`--board <slug>` 标志 → `HERMES_KANBAN_BOARD` 环境变量 → `~/.hermes/kanban/current` 文件 → `default`。
 
 所有操作也可作为 gateway 中的斜杠命令使用（`/kanban …`），参数界面相同——包括 `boards` 子命令和 `--board` 标志。
 
 完整设计——与 Cline Kanban / Paperclip / NanoClaw / Gemini Enterprise 的对比、八种协作模式、四个用户故事、并发正确性证明——请参阅仓库中的 `docs/hermes-kanban-v1-spec.pdf` 或 [Kanban 用户指南](/user-guide/features/kanban)。
 
+## `hermes egress`
+
+用于远程终端沙箱的出站凭据注入防火墙。它封装了 [iron-proxy](https://github.com/ironsh/iron-proxy) daemon——这是一个执行 TLS 拦截的代理，会在网络边界将不透明代理 token 替换为真实的上游 API 凭据，因此沙箱永远不会持有真实密钥。默认禁用；设置和架构请参阅完整的 [Egress 代理](../user-guide/egress/iron-proxy.md)页面。
+
+```bash
+hermes egress install                  # download the pinned iron-proxy binary
+hermes egress install --force          # re-download even if already installed
+
+hermes egress setup                    # interactive wizard: CA, mappings, config
+hermes egress setup --tunnel-port N    # override the tunnel listener port (default 9090)
+hermes egress setup --from-bitwarden   # use Bitwarden Secrets Manager as credential source
+hermes egress setup --no-bitwarden     # explicitly switch back to env-based credentials
+hermes egress setup --rotate-tokens    # mint fresh proxy tokens (default preserves existing)
+
+hermes egress start                    # spawn the managed proxy daemon
+hermes egress stop                     # SIGTERM (then SIGKILL after 5s grace)
+hermes egress restart                  # stop (if running) then start — needed for secret changes
+hermes egress reload                   # hot-reload the ruleset in-place (no restart, no dropped
+                                       #   connections) via the loopback management API
+
+hermes egress status                   # binary + config + pid + listening + mappings
+hermes egress status --show-tokens     # print proxy tokens in full (default: redacted)
+
+hermes egress disable                  # flip proxy.enabled = false (does not stop a running proxy)
+hermes egress config                   # print the path to proxy.yaml for inspection
+```
+### 常见流程
+
+```bash
+# First-time setup
+export OPENROUTER_API_KEY=…
+hermes egress setup && hermes egress start
+hermes config set terminal.backend docker   # if not already
+
+# Switching credential source after the fact
+hermes egress setup --from-bitwarden       # env → bitwarden
+hermes egress setup --no-bitwarden         # bitwarden → env
+# (just `setup` without either flag preserves the existing mode)
+
+# Rotating all tokens (e.g. after a suspected token leak)
+hermes egress setup --rotate-tokens    # setup offers to restart the running daemon for you
+# (running sandboxes still hold old tokens; restart them too)
+
+# Adding a new upstream
+# Edit ~/.hermes/config.yaml proxy.extra_allowed_hosts: [api.example.com]
+hermes egress setup
+hermes egress restart                  # one-command apply (stop + start)
+```
+### 诊断快捷方式
+
+```bash
+hermes egress status                     # current state in one view
+cat ~/.hermes/proxy/proxy.yaml           # the rendered iron-proxy config
+tail -20 ~/.hermes/proxy/iron-proxy.log  # daemon-level diagnostics
+tail -f ~/.hermes/proxy/iron-proxy.log | jq  # daemon + per-request log (line-delimited JSON; v0.39 combines both streams)
+```
+常见故障模式和恢复方法见 [Egress 代理 → 故障排查](../user-guide/egress/iron-proxy.md#troubleshooting)。
+
 ## `hermes project`
 
 ```bash
 hermes project <create|list|show|add-folder|remove-folder|rename|set-primary|use|archive|restore|bind-board>
 ```
-
 Project 是用户命名的工作区，可以跨多个文件夹/仓库。它们为桌面端会话分组提供锚点；绑定 kanban 看板后，还会为任务提供确定性的 worktree + branch 约定。状态按 profile 隔离。
 
 | 子命令 | 说明 |
@@ -625,7 +663,6 @@ Project 是用户命名的工作区，可以跨多个文件夹/仓库。它们�
 ```bash
 hermes webhook <subscribe|list|remove|test>
 ```
-
 管理用于事件驱动 agent 激活的动态 webhook 订阅。需要在 config 中启用 webhook 平台——如未配置，将打印设置说明。
 
 | 子命令 | 说明 |
@@ -640,7 +677,6 @@ hermes webhook <subscribe|list|remove|test>
 ```bash
 hermes webhook subscribe <name> [options]
 ```
-
 | 选项 | 说明 |
 |--------|-------------|
 | `--prompt` | 带有 `{dot.notation}` payload 引用的 prompt 模板。 |
@@ -660,7 +696,6 @@ hermes webhook subscribe <name> [options]
 ```bash
 hermes doctor [--fix]
 ```
-
 | 选项 | 说明 |
 |--------|-------------|
 | `--fix` | 尽可能尝试自动修复。 |
@@ -670,7 +705,6 @@ hermes doctor [--fix]
 ```bash
 hermes dump [--show-keys]
 ```
-
 输出整个 Hermes 设置的紧凑纯文本摘要。专为复制粘贴到 Discord、GitHub issue 或 Telegram 寻求支持而设计——无 ANSI 颜色、无特殊格式，只有数据。
 
 | 选项 | 说明 |
@@ -729,7 +763,6 @@ config_overrides:
   display.streaming: True
 --- end dump ---
 ```
-
 ### 使用场景
 
 - 在 GitHub 上报告 bug——将 dump 粘贴到 issue 中
@@ -746,7 +779,6 @@ config_overrides:
 ```bash
 hermes debug share [options]
 ```
-
 将调试报告（系统信息 + 近期日志）上传到粘贴服务并获取可分享的 URL。适用于快速支持请求——包含帮助者诊断问题所需的一切信息。
 
 | 选项 | 说明 |
@@ -764,19 +796,17 @@ hermes debug share [options]
 ### 示例
 
 ```bash
-hermes debug share              # 上传调试报告，打印 URL
-hermes debug share --lines 500  # 包含更多日志行
-hermes debug share --expire 30  # 粘贴保留 30 天
-hermes debug share --nous       # 为 Nous 支持上传私有诊断包
-hermes debug share --local      # 在终端打印报告（不上传）
+hermes debug share              # Upload debug report, print URL
+hermes debug share --lines 500  # Include more log lines
+hermes debug share --expire 30  # Keep paste for 30 days
+hermes debug share --nous       # Upload a private diagnostics bundle for Nous support
+hermes debug share --local      # Print report to terminal (no upload)
 ```
-
 ## `hermes backup`
 
 ```bash
 hermes backup [options]
 ```
-
 创建 Hermes 配置、skill、会话和数据的 zip 归档。备份不包含 hermes-agent 代码库本身。
 
 | 选项 | 说明 |
@@ -796,18 +826,16 @@ hermes backup [options]
 ### 示例
 
 ```bash
-hermes backup                           # 完整备份到 ~/hermes-backup-*.zip
-hermes backup -o /tmp/hermes.zip        # 完整备份到指定路径
-hermes backup --quick                   # 仅状态快速快照
-hermes backup --quick --label "pre-upgrade"  # 带标签的快速快照
+hermes backup                           # Full backup to ~/hermes-backup-*.zip
+hermes backup -o /tmp/hermes.zip        # Full backup to specific path
+hermes backup --quick                   # Quick state-only snapshot
+hermes backup --quick --label "pre-upgrade"  # Quick snapshot with label
 ```
-
 ## `hermes checkpoints`
 
 ```bash
 hermes checkpoints [COMMAND]
 ```
-
 检查和管理 `~/.hermes/checkpoints/` 处的影子 git 存储——会话内 `/rollback` 命令的存储层。可随时安全运行；不需要 agent 正在运行。
 
 | 子命令 | 说明 |
@@ -831,13 +859,12 @@ hermes checkpoints [COMMAND]
 ### 示例
 
 ```bash
-hermes checkpoints                                  # 状态概览
-hermes checkpoints prune --retention-days 3         # 激进清理
-hermes checkpoints prune --max-size-mb 200          # 一次性收紧大小上限
-hermes checkpoints clear-legacy -f                  # 删除 v1 归档目录
-hermes checkpoints clear -f                         # 清除所有内容
+hermes checkpoints                                  # status overview
+hermes checkpoints prune --retention-days 3         # aggressive cleanup
+hermes checkpoints prune --max-size-mb 200          # tighten size cap once
+hermes checkpoints clear-legacy -f                  # drop v1 archive dirs
+hermes checkpoints clear -f                         # wipe everything
 ```
-
 完整架构和会话内命令，请参阅 [Checkpoints 与 `/rollback`](../user-guide/checkpoints-and-rollback.md)。
 
 ## `hermes import`
@@ -845,7 +872,6 @@ hermes checkpoints clear -f                         # 清除所有内容
 ```bash
 hermes import <zipfile> [options]
 ```
-
 将之前创建的 Hermes 备份恢复到 Hermes 主目录。归档中的所有文件会覆盖 Hermes 主目录中的现有文件；`--force` 仅跳过当目标已有 Hermes 安装时触发的确认提示。
 
 | 选项 | 说明 |
@@ -858,16 +884,14 @@ hermes import <zipfile> [options]
 
 ### 示例
 ```bash
-hermes import ~/hermes-backup-20260423.zip           # 覆盖现有配置前提示确认
-hermes import ~/hermes-backup-20260423.zip --force   # 不提示直接覆盖
+hermes import ~/hermes-backup-20260423.zip           # Prompts before overwriting existing config
+hermes import ~/hermes-backup-20260423.zip --force   # Overwrite without prompting
 ```
-
 ## `hermes logs`
 
 ```bash
 hermes logs [log_name] [options]
 ```
-
 查看、跟踪和过滤 Hermes 日志文件。所有日志存储在 `~/.hermes/logs/`（非默认 profile 存储在 `<profile>/logs/`）。
 
 ### 日志文件
@@ -895,37 +919,35 @@ hermes logs [log_name] [options]
 ### 示例
 
 ```bash
-# 查看 agent.log 的最后 50 行（默认）
+# View the last 50 lines of agent.log (default)
 hermes logs
 
-# 实时跟踪 agent.log
+# Follow agent.log in real time
 hermes logs -f
 
-# 查看 gateway.log 的最后 100 行
+# View the last 100 lines of gateway.log
 hermes logs gateway -n 100
 
-# 仅显示最近一小时的警告和错误
+# Show only warnings and errors from the last hour
 hermes logs --level WARNING --since 1h
 
-# 按特定会话过滤
+# Filter by a specific session
 hermes logs --session abc123
 
-# 从 30 分钟前开始跟踪 errors.log
+# Follow errors.log, starting from 30 minutes ago
 hermes logs errors --since 30m -f
 
-# 列出所有日志文件及其大小
+# List all log files with their sizes
 hermes logs list
 ```
-
 ### 过滤
 
 过滤器可以组合使用。当多个过滤器同时激活时，日志行必须通过**所有**过滤器才会显示：
 
 ```bash
-# 最近 2 小时内包含会话 "tg-12345" 的 WARNING+ 行
+# WARNING+ lines from the last 2 hours containing session "tg-12345"
 hermes logs --level WARNING --since 2h --session tg-12345
 ```
-
 当 `--since` 激活时，没有可解析时间戳的行会被包含（它们可能是多行日志条目的续行）。当 `--level` 激活时，没有可检测级别的行会被包含。
 
 ### 日志轮转
@@ -938,7 +960,6 @@ Hermes 使用 Python 的 `RotatingFileHandler`。旧日志会自动轮转——�
 ```bash
 hermes prompt-size [--platform <name>] [--json]
 ```
-
 报告新会话的固定 prompt 预算——即加入任何对话内容之前，每次 API 调用都会发送的内容。当下游适配器或代理的 prompt 预算小于模型 context window，或你想查看哪个区块（skill 索引、memory、profile）占用最多空间时，这项功能很有用。
 
 它会构建与 agent 实际使用相同的 system prompt，然后拆分为：
@@ -952,16 +973,15 @@ hermes prompt-size [--platform <name>] [--json]
 完全离线运行——不会调用 API，未配置凭据也可使用。
 
 ```bash
-# CLI 平台便于阅读的明细（默认）
+# Human-readable breakdown for the CLI platform (default)
 hermes prompt-size
 
-# 模拟消息平台的 prompt（platform hint 不同）
+# Simulate a messaging platform's prompt (different platform hint)
 hermes prompt-size --platform telegram
 
-# 供脚本使用的机器可读输出
+# Machine-readable output for scripts
 hermes prompt-size --json
 ```
-
 :::tip
 Skill 索引和 tool schema 的大小会随已安装 skill 和已启用工具的数量增长。要缩小 prompt，请禁用未使用的 toolset（`hermes tools`）或卸载不需要的 skill（`hermes skills`）。当前目录中的 context 文件（AGENTS.md、.cursorrules）也会计入总量。
 :::
@@ -971,7 +991,6 @@ Skill 索引和 tool schema 的大小会随已安装 skill 和已启用工具的
 ```bash
 hermes config <subcommand>
 ```
-
 子命令：
 
 | 子命令 | 说明 |
@@ -989,7 +1008,6 @@ hermes config <subcommand>
 ```bash
 hermes pairing <list|approve|revoke|clear-pending>
 ```
-
 | 子命令 | 说明 |
 |------------|-------------|
 | `list` | 显示待处理和已审批的用户。 |
@@ -1002,7 +1020,6 @@ hermes pairing <list|approve|revoke|clear-pending>
 ```bash
 hermes skills <subcommand>
 ```
-
 子命令：
 
 | 子命令 | 说明 |
@@ -1035,8 +1052,8 @@ hermes skills inspect official/security/1password
 hermes skills inspect skills-sh/vercel-labs/json-render/json-render-react
 hermes skills install official/migration/openclaw-migration
 hermes skills install skills-sh/anthropics/skills/pdf --force
-hermes skills install https://sharethis.chat/SKILL.md                     # 直接 URL（含引用的支持文件）
-hermes skills install https://example.com/SKILL.md --name my-skill        # frontmatter 无名称时覆盖名称
+hermes skills install https://sharethis.chat/SKILL.md                     # Direct URL (+ referenced support files)
+hermes skills install https://example.com/SKILL.md --name my-skill        # Override name when frontmatter has none
 hermes skills check
 hermes skills update
 hermes skills config
@@ -1046,7 +1063,6 @@ hermes skills opt-out                  # stop future bundled-skill seeding (noth
 hermes skills opt-out --remove --yes   # also delete UNMODIFIED bundled skills
 hermes skills opt-in --sync            # undo: remove marker and re-seed now
 ```
-
 注意：
 - `--force` 可以覆盖第三方/社区 skill 的非危险性策略阻止。
 - `--force` 不覆盖 `dangerous` 扫描结论。
@@ -1060,7 +1076,6 @@ hermes skills opt-in --sync            # undo: remove marker and re-seed now
 ```bash
 hermes bundles <subcommand>
 ```
-
 Skill bundle 将多个 skill 归组到一个 `/<bundle-name>` 斜杠命令下。调用 bundle 会将每个引用的 skill 加载到单个合并的用户消息中。存储位置：`~/.hermes/skill-bundles/<slug>.yaml`。YAML schema 和行为请参阅 [Skill Bundles](../user-guide/features/skills.md#skill-bundles)。
 
 子命令：
@@ -1086,7 +1101,6 @@ hermes bundles list
 hermes bundles show backend-dev
 hermes bundles delete backend-dev
 ```
-
 在聊天会话中，`/bundles` 列出已安装的 bundle，`/<bundle-name>` 加载某个 bundle。
 
 ## `hermes curator`
@@ -1094,7 +1108,6 @@ hermes bundles delete backend-dev
 ```bash
 hermes curator <subcommand>
 ```
-
 Curator 是一个辅助模型后台任务，定期审查 agent 创建的 skill，修剪过期的，合并重叠的，并归档过时的。捆绑和通过 hub 安装的 skill 不会被触及。归档可恢复；不会发生自动删除。
 
 | 子命令 | 说明 |
@@ -1130,7 +1143,6 @@ hermes moa list
 hermes moa configure [name]
 hermes moa delete <name>
 ```
-
 `hermes moa configure` 会为每个参考模型和 aggregator 复用 Hermes 的 provider → 模型选择器。预设是一种执行模式配置，不是主模型或 provider。
 
 ## `hermes fallback`
@@ -1138,7 +1150,6 @@ hermes moa delete <name>
 ```bash
 hermes fallback <subcommand>
 ```
-
 管理 fallback provider 链。当主模型因速率限制、过载或连接错误而失败时，按顺序尝试 fallback provider。
 
 | 子命令 | 说明 |
@@ -1155,7 +1166,6 @@ hermes fallback <subcommand>
 ```bash
 hermes hooks <subcommand>
 ```
-
 检查 `~/.hermes/config.yaml` 中声明的 shell 脚本 hook，针对合成 payload 测试它们，并管理 `~/.hermes/shell-hooks-allowlist.json` 处的首次使用同意许可名单。
 
 | 子命令 | 说明 |
@@ -1172,7 +1182,6 @@ hermes hooks <subcommand>
 ```bash
 hermes memory <subcommand>
 ```
-
 设置和管理外部 memory provider plugin。可用 provider：honcho、openviking、mem0、hindsight、holographic、retaindb、byterover、supermemory。同一时间只能有一个外部 provider 处于活跃状态。内置 memory（MEMORY.md/USER.md）始终处于活跃状态。
 
 子命令：
@@ -1192,7 +1201,6 @@ hermes memory <subcommand>
 ```bash
 hermes acp
 ```
-
 将 Hermes 作为 ACP（Agent Client Protocol）stdio 服务器启动，用于编辑器集成。
 
 相关入口：
@@ -1201,13 +1209,11 @@ hermes acp
 hermes-acp
 python -m acp_adapter
 ```
-
 首先安装支持：
 
 ```bash
 cd ~/.hermes/hermes-agent && uv pip install -e '.[acp]'
 ```
-
 参见 [ACP 编辑器集成](../user-guide/features/acp.md) 和 [ACP 内部原理](../developer-guide/acp-internals.md)。
 
 ## `hermes mcp`
@@ -1215,7 +1221,6 @@ cd ~/.hermes/hermes-agent && uv pip install -e '.[acp]'
 ```bash
 hermes mcp <subcommand>
 ```
-
 管理 MCP（Model Context Protocol）服务器配置，并将 Hermes 作为 MCP 服务器运行。
 
 | 子命令 | 说明 |
@@ -1238,7 +1243,6 @@ hermes mcp <subcommand>
 ```bash
 hermes plugins [subcommand]
 ```
-
 统一的 plugin 管理——通用 plugin、memory provider 和 context engine 集于一处。不带子命令运行 `hermes plugins` 会打开包含两个部分的复合交互界面：
 
 - **General Plugins** — 多选复选框，用于启用/禁用已安装的 plugin
@@ -1267,7 +1271,6 @@ Provider plugin 选择保存到 `config.yaml`：
 ```bash
 hermes tools [--summary]
 ```
-
 | 选项 | 说明 |
 |--------|-------------|
 | `--summary` | 打印当前已启用工具摘要并退出。 |
@@ -1279,7 +1282,6 @@ hermes tools [--summary]
 ```bash
 hermes computer-use <subcommand>
 ```
-
 子命令：
 
 | 子命令 | 说明 |
@@ -1297,7 +1299,6 @@ hermes computer-use <subcommand>
 ```bash
 hermes pets <list|install|select|show|off|scale|remove|doctor>
 ```
-
 [Petdex](https://github.com/crafter-station/petdex) 是面向 coding agent 的公开动画 sprite 宠物图库。安装宠物后，Hermes 会在 CLI、TUI 和桌面应用中显示它，并让它随 agent 活动做出反应。
 
 | 子命令 | 说明 |
@@ -1318,7 +1319,6 @@ hermes pets <list|install|select|show|off|scale|remove|doctor>
 ```bash
 hermes sessions <subcommand>
 ```
-
 子命令：
 
 | 子命令 | 说明 |
@@ -1337,7 +1337,6 @@ hermes sessions <subcommand>
 ```bash
 hermes insights [--days N] [--source platform]
 ```
-
 | 选项 | 说明 |
 |--------|-------------|
 | `--days <n>` | 分析最近 `n` 天（默认：30）。 |
@@ -1348,7 +1347,6 @@ hermes insights [--days N] [--source platform]
 ```bash
 hermes claw migrate [options]
 ```
-
 将 OpenClaw 设置迁移到 Hermes。从 `~/.openclaw`（或自定义路径）读取并写入 `~/.hermes`。自动检测旧版目录名（`~/.clawdbot`、`~/.moltbot`）和配置文件名（`clawdbot.json`、`moltbot.json`）。
 
 | 选项 | 说明 |
@@ -1378,28 +1376,43 @@ hermes claw migrate [options]
 ### 示例
 
 ```bash
-# 预览将迁移的内容
+# Preview what would be migrated
 hermes claw migrate --dry-run
 
-# 完整迁移（所有兼容设置，不含密钥）
+# Full migration (all compatible settings, no secrets)
 hermes claw migrate --preset full
 
-# 包含 API 密钥的完整迁移
+# Full migration including API keys
 hermes claw migrate --preset full --migrate-secrets
 
-# 仅迁移用户数据（不含密钥），覆盖冲突
+# Migrate user data only (no secrets), overwrite conflicts
 hermes claw migrate --preset user-data --overwrite
 
-# 从自定义 OpenClaw 路径迁移
+# Migrate from a custom OpenClaw path
 hermes claw migrate --source /home/user/old-openclaw
 ```
+## `hermes import-agent`
+
+```bash
+hermes import-agent [claude-code|codex] [options]
+```
+将 **Claude Code**（`~/.claude`）或 **OpenAI Codex CLI**（`~/.codex`）设置导入 Hermes。它把 `CLAUDE.md`/`AGENTS.md` 指令映射到 memory 条目，把 `Bash(...)` 权限允许/拒绝规则映射到 `command_allowlist`/`approvals.deny`，把 MCP 服务器映射到 `config.yaml` 中的 `mcp_servers`，并把 skill 目录导入 `~/.hermes/skills/`。应用前始终会先预览；绝不会导入 API 密钥和凭据。
+
+| 选项 | 说明 |
+| --- | --- |
+| `agent` | `claude-code` 或 `codex`（默认：自动检测）。 |
+| `--source <path>` | 自定义源目录（默认：`~/.claude` 或 `~/.codex`）。 |
+| `--dry-run` | 仅预览——不写入任何内容。 |
+| `--overwrite` | 替换冲突的 MCP 服务器/skill（默认：跳过）。 |
+| `--yes`, `-y` | 跳过确认提示。 |
+
+完整映射表请参阅**[导入指南](../user-guide/import-from-other-agents.md)**。
 
 ## `hermes serve`
 
 ```bash
 hermes serve [options]
 ```
-
 启动 Hermes **后端服务器**——[桌面应用](/user-guide/desktop)和远程客户端连接的 JSON-RPC/WebSocket gateway。它与 `hermes dashboard` 运行的是同一服务器，但采用**无界面模式**：绝不会打开浏览器 UI。桌面应用会启动自己的 `hermes serve` 后端；需要在远程主机上运行无界面后端时，可直接使用此命令。它接受下方 `hermes dashboard` 相同的 `--host` / `--port` / `--insecure` / `--skip-build` / `--stop` / `--status` 选项（绑定到非 loopback 地址时会启用相同的认证 gate）。需要 `[web]` extra；内嵌 Chat socket 在 POSIX 主机上还需要 `[pty]`。
 
 ## `hermes dashboard`
@@ -1407,7 +1420,6 @@ hermes serve [options]
 ```bash
 hermes dashboard [options]
 ```
-
 启动 Web 控制台——基于浏览器的界面，用于管理配置、API 密钥和监控会话。（如果只需没有浏览器 UI 的后端，例如桌面应用启动的后端，请使用上方的 [`hermes serve`](#hermes-serve)。）需要 `cd ~/.hermes/hermes-agent && uv pip install -e ".[web]"`（FastAPI + Uvicorn）。内嵌浏览器 Chat 标签页始终可用，但额外需要 `pty` extra（`cd ~/.hermes/hermes-agent && uv pip install -e ".[web,pty]"`）以及 POSIX PTY 环境（如 Linux、macOS 或 WSL2）。完整文档请参阅 [Web 控制台](/user-guide/features/web-dashboard)。
 
 | 选项 | 默认值 | 说明 |
@@ -1432,23 +1444,21 @@ hermes dashboard [options]
 | `--portal-url` | 覆盖注册所用的 Nous Portal base URL（默认为你登录的 Portal）。也可通过 `HERMES_DASHBOARD_PORTAL_URL` 设置。 |
 
 ```bash
-# 默认——在浏览器中打开 http://127.0.0.1:9119
+# Default — opens browser to http://127.0.0.1:9119
 hermes dashboard
 
-# 自定义端口，不打开浏览器
+# Custom port, no browser
 hermes dashboard --port 8080 --no-open
 
-# 从 profile 别名启动——路由到整机 dashboard，并在侧边栏
-# 切换器中预选该 profile（若已运行则附加到现有进程）
+# From a profile alias — routes to the machine dashboard with the
+# profile preselected in the sidebar switcher (attach if running)
 worker dashboard
 ```
-
 ## `hermes profile`
 
 ```bash
 hermes profile <subcommand>
 ```
-
 管理 profile——多个隔离的 Hermes 实例，每个实例拥有自己的 config、会话、skill 和主目录。
 
 | 子命令 | 说明 |
@@ -1479,13 +1489,11 @@ hermes profile install github.com/user/my-distro --alias
 hermes profile update work
 hermes -p work chat -q "Hello from work profile"
 ```
-
 ## `hermes completion`
 
 ```bash
 hermes completion [bash|zsh|fish]
 ```
-
 将 shell 补全脚本打印到 stdout。在 shell profile 中 source 输出内容，即可对 Hermes 命令、子命令和 profile 名称进行 Tab 补全。
 
 示例：
@@ -1500,13 +1508,11 @@ hermes completion zsh >> ~/.zshrc
 # Fish
 hermes completion fish > ~/.config/fish/completions/hermes.fish
 ```
-
 ## `hermes update`
 
 ```bash
 hermes update [--gateway] [--check] [--no-backup] [--backup] [--yes]
 ```
-
 拉取最新的 `hermes-agent` 代码并在受管理的 venv 中重新安装依赖，然后重新运行安装后 hook（MCP 服务器、skill 同步、补全安装）。可在运行中的安装上安全执行。使用 `--check` 查看你的检出是否落后于 `origin/main`，而不安装。
 
 `hermes update` 会拉取已配置的更新 branch（默认：`main`）。如果当前检出位于其他 branch，Hermes 可能会先切换到更新 branch 再拉取。如果你希望 branch 上的工作不进入更新时的自动 stash 流程，请先提交这些变更。
@@ -1515,8 +1521,8 @@ hermes update [--gateway] [--check] [--no-backup] [--backup] [--yes]
 |--------|-------------|
 | `--gateway` | 消息 `/update` 命令使用的内部模式。它通过基于文件的 IPC 处理提示和进度流，而不是从终端 stdin 读取。它不是 gateway 重启标志。 |
 | `--check` | 仅检查是否有可用更新，不拉取、不安装依赖，也不重启任何内容。 |
-| `--no-backup` | 即使 `config.yaml` 中启用了 `updates.pre_update_backup`，本次运行也跳过更新前备份。 |
-| `--backup` | 拉取前对 `HERMES_HOME`（config、auth、会话、skill、配对数据）创建带标签的更新前快照。默认**关闭**——以前始终备份会让大型 home 的每次更新多花数分钟。可在 `config.yaml` 中设置 `updates.pre_update_backup: true` 永久启用。 |
+| `--no-backup` | 本次运行跳过所有更新前备份（包括快速状态快照和完整 zip），无论 `updates.pre_update_backup` 的值如何。 |
+| `--backup` | 强制本次运行执行**完整**更新前备份：创建快速状态快照以及包含 `HERMES_HOME`（config、auth、会话、skill、配对数据）的完整 zip。默认模式为 `quick`——仅创建轻量级状态快照。可在 `config.yaml` 中通过 `updates.pre_update_backup: quick | full | off` 设置永久模式。 |
 | `--yes`, `-y` | 对 config 迁移和 stash 恢复等交互式提示自动回答 yes。API 密钥输入会跳过；请另行运行 `hermes config migrate`。 |
 
 附加行为：
@@ -1534,7 +1540,6 @@ hermes update [--gateway] [--check] [--no-backup] [--backup] [--yes]
 |---------|-------------|
 | `hermes version` | 打印版本信息。 |
 | `hermes update` | 拉取最新变更并重新安装依赖。 |
-| `hermes postinstall` | 内部 bootstrap。安装脚本完成 Hermes 配置后（或 `hermes update` 后）运行一次，用于安装 pip 无法提供的非 Python 依赖——Node.js runtime、headless browser、ripgrep、ffmpeg——然后在 profile 尚未配置时触发 `hermes setup`。可安全重复运行，具有幂等性。 |
 | `hermes uninstall [--full] [--gui] [--yes]` | 删除 Hermes，可选择删除所有 config/数据。`--gui` 仅删除桌面 Chat GUI，保留 agent；`--full` 还会删除 config/数据；`--yes` 跳过提示。 |
 
 ## 另请参阅
