@@ -120,7 +120,7 @@ hermes config set model.default anthropic/claude-sonnet-4.6
 
 ### 不要在 agent 任务中使用 Hermes-4
 
-Hermes-4-70B 和 Hermes-4-405B 在 Portal 上以大幅折扣提供，但它们是**对话/推理模型**，并非针对工具调用优化的模型。它们在多步骤 agent 循环中表现不佳。请通过 [Nous Chat](https://chat.nousresearch.com) 将它们用于对话/研究工作，或通过[订阅代理](/user-guide/features/subscription-proxy)从非 agent 工具中使用。对于 Hermes Agent 本身，请坚持使用上述前沿 agentic 模型。
+Hermes-4-70B 和 Hermes-4-405B 在 Portal 上以大幅折扣提供，但它们是**对话/推理模型**，并非针对工具调用优化的模型。它们在多步骤 agent 循环中表现不佳。请通过[订阅代理](/user-guide/features/subscription-proxy)从非 agent 工具中将它们用于对话或研究工作。对于 Hermes Agent 本身，请坚持使用上述前沿 agentic 模型。
 
 Portal 的[信息页面](https://portal.nousresearch.com/info)也有此说明——这是 Nous 官方指导，并非仅代表 Hermes 一方的意见。
 
@@ -135,6 +135,8 @@ hermes tools
 # → Browser          → "Browserbase"           （你自己的密钥）
 # → TTS              → "Nous Subscription"     （推荐）
 ```
+
+这些选项在你尚未登录 Nous Portal 时就已经出现在 `hermes tools` 中了——如果你选择"Nous Subscription"但没有活跃的会话，Hermes 会内联触发 Portal 登录（不会改变你的推理 provider 或其他工具设置）。
 
 使用以下命令验证你的混合配置：
 
@@ -161,8 +163,9 @@ hermes setup voice
 Portal 订阅对 [cron 定时任务](/user-guide/features/cron)和[批处理](/user-guide/features/batch-processing)的支持方式与交互式对话相同——OAuth refresh token 会自动复用。无需额外配置，直接安排 cron 任务，费用将计入你的订阅。
 
 ```bash
-hermes cron add "Daily AI news summary" "every day at 9am" \
-  "Search the web for top AI news and summarize the 5 most important stories"
+hermes cron create "every day at 9am" \
+  "Search the web for top AI news and summarize the 5 most important stories" \
+  --name "Daily AI news"
 ```
 
 该 cron 任务无人值守运行，调用模型、网页搜索和摘要生成，全部通过你的 Portal 订阅完成。
@@ -225,7 +228,7 @@ hermes auth add nous
 
 ### 我想要的模型不在 `/model` 选择器中
 
-Portal 目录镜像了 OpenRouter 的模型列表（300+ 个）。如果某个模型缺失，尝试直接输入 OpenRouter 风格的 slug：
+Portal 目录基于 OpenRouter 的模型列表（300+ 个），并补充了通过专有或备用提供商提供的模型。如果某个模型缺失，尝试直接输入 OpenRouter 风格的 slug：
 
 ```bash
 /model anthropic/claude-opus-4.6
