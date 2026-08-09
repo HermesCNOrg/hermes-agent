@@ -19,6 +19,8 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 | `HERMES_OPENROUTER_CACHE_TTL` | 缓存 TTL（秒，1-86400）。覆盖 config.yaml 中的 `openrouter.response_cache_ttl`。 |
 | `NOUS_BASE_URL` | 覆盖 Nous Portal base URL（极少使用；仅用于开发/测试） |
 | `NOUS_INFERENCE_BASE_URL` | 直接覆盖 Nous 推理端点 |
+| `AI_GATEWAY_API_KEY` | Vercel AI Gateway API 密钥（[ai-gateway.vercel.sh](https://ai-gateway.vercel.sh)） |
+| `AI_GATEWAY_BASE_URL` | 覆盖 AI Gateway base URL（默认：`https://ai-gateway.vercel.sh/v1`） |
 | `OPENAI_API_KEY` | 自定义 OpenAI 兼容端点的 API 密钥（与 `OPENAI_BASE_URL` 配合使用） |
 | `OPENAI_BASE_URL` | 自定义端点的 base URL（VLLM、SGLang 等） |
 | `LM_API_KEY` | LM Studio（`lmstudio` 提供商）的 API 密钥。本地服务器通常可使用占位值 |
@@ -70,6 +72,7 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 | `GOOGLE_API_KEY` | Google AI Studio API 密钥（[aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)） |
 | `GEMINI_API_KEY` | `GOOGLE_API_KEY` 的别名 |
 | `GEMINI_BASE_URL` | 覆盖 Google AI Studio base URL |
+| `VERTEX_CREDENTIALS_PATH` | Vertex AI（Gemini）所用 Google Cloud 服务帐号 JSON 的路径。Vertex 使用 OAuth2，而非静态 API 密钥。依次回退到 `GOOGLE_APPLICATION_CREDENTIALS`，再回退到 ADC（`gcloud auth application-default login`）。请在 `config.yaml` 的 `vertex:` 下设置项目/区域。 |
 | `ANTHROPIC_API_KEY` | Anthropic Console API 密钥（[console.anthropic.com](https://console.anthropic.com/)） |
 | `ANTHROPIC_BASE_URL` | 覆盖 Anthropic API base URL |
 | `ANTHROPIC_TOKEN` | 手动或旧版 Anthropic OAuth/setup-token 覆盖 |
@@ -79,6 +82,8 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 | `ALIBABA_CODING_PLAN_BASE_URL` | 覆盖 Qwen Coding Plan base URL |
 | `DEEPSEEK_API_KEY` | 直接访问 DeepSeek 的 API 密钥（[platform.deepseek.com](https://platform.deepseek.com/api_keys)） |
 | `DEEPSEEK_BASE_URL` | 自定义 DeepSeek API base URL |
+| `DEEPINFRA_API_KEY` | DeepInfra API 密钥（[deepinfra.com](https://deepinfra.com/dash/api_keys)） |
+| `DEEPINFRA_BASE_URL` | DeepInfra base URL 覆盖 |
 | `NOVITA_API_KEY` | NovitaAI API 密钥——面向 Model API、Agent Sandbox 和 GPU Cloud 的 AI 原生云（[novita.ai/settings/key-management](https://novita.ai/settings/key-management)） |
 | `NOVITA_BASE_URL` | 覆盖 NovitaAI base URL（默认：`https://api.novita.ai/openai/v1`） |
 | `NVIDIA_API_KEY` | NVIDIA NIM API 密钥——Nemotron 及开源模型（[build.nvidia.com](https://build.nvidia.com)） |
@@ -102,7 +107,7 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 | `HERMES_MODEL` | 在进程级别覆盖模型名称（供 cron 调度器使用；正常使用请优先在 `config.yaml` 中配置） |
 | `VOICE_TOOLS_OPENAI_KEY` | OpenAI 语音转文字和文字转语音提供商的首选 OpenAI 密钥 |
 | `HERMES_LOCAL_STT_COMMAND` | 可选的本地语音转文字命令模板。支持 `{input_path}`、`{output_dir}`、`{language}` 和 `{model}` 占位符 |
-| `HERMES_LOCAL_STT_LANGUAGE` | 传递给 `HERMES_LOCAL_STT_COMMAND` 或自动检测的本地 `whisper` CLI 回退的默认语言（默认：`en`） |
+| `HERMES_LOCAL_STT_LANGUAGE` | STT 的默认语言提示。没有在 `config.yaml` 中为相应提供商设置 `language` 时，供 `local`（faster-whisper）提供商、`HERMES_LOCAL_STT_COMMAND`、本地 `whisper` CLI 回退（默认：`en`）、Groq 和 xAI 使用。 |
 | `HERMES_HOME` | 覆盖 Hermes 配置目录（默认：`~/.hermes`）。同时限定 gateway PID 文件和 systemd 服务名称，允许多个安装并发运行 |
 | `HERMES_GIT_BASH_PATH` | **仅 Windows。** 覆盖终端工具的 `bash.exe` 发现路径。可指向任意 bash——完整 Git-for-Windows 安装、通过符号链接的 WSL bash、MSYS2、Cygwin。安装程序会自动将其设置为所配置的 PortableGit。参见 [Windows（原生）指南](../user-guide/windows-native.md#how-hermes-runs-shell-commands-on-windows) |
 | `HERMES_DISABLE_WINDOWS_UTF8` | **仅 Windows。** 设为 `1` 可禁用 UTF-8 stdio shim（`configure_windows_stdio()`），回退到控制台的本地代码页。用于排查编码问题；正常操作中极少需要 |
@@ -144,6 +149,7 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 | `FIRECRAWL_BROWSER_TTL` | Firecrawl 浏览器会话 TTL（秒，默认：300） |
 | `BROWSER_CDP_URL` | 本地浏览器的 Chrome DevTools Protocol（CDP）URL（通过 `/browser connect` 设置，例如 `ws://localhost:9222`） |
 | `CAMOFOX_URL` | Camofox 本地反检测浏览器 URL（默认：`http://localhost:9377`） |
+| `CAMOFOX_API_KEY` | 发送给远程/已认证 Camofox 服务器的可选 Bearer token，作为 Authorization 请求头。 |
 | `CAMOFOX_USER_ID` | 可选的外部管理 Camofox 用户 ID，用于共享可见会话 |
 | `CAMOFOX_SESSION_KEY` | 为 `CAMOFOX_USER_ID` 创建标签页时使用的可选 Camofox 会话密钥 |
 | `CAMOFOX_ADOPT_EXISTING_TAB` | 设为 `true` 可在创建新标签页前复用现有 Camofox 标签页 |
@@ -154,6 +160,7 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 | `KREA_API_KEY` | 用于 Krea 2 图像生成的 Krea API 密钥（[krea.ai](https://krea.ai/)） |
 | `GROQ_API_KEY` | Groq Whisper STT API 密钥（[groq.com](https://groq.com/)） |
 | `ELEVENLABS_API_KEY` | ElevenLabs 高级 TTS 语音（[elevenlabs.io](https://elevenlabs.io/)） |
+| `PORCUPINE_ACCESS_KEY` | Picovoice Porcupine 唤醒词引擎（[console.picovoice.ai](https://console.picovoice.ai/)）——仅用于 `wake_word.provider: porcupine`；默认的 openWakeWord 和 sherpa 引擎无需密钥。 |
 | `STT_GROQ_MODEL` | 覆盖 Groq STT 模型（默认：`whisper-large-v3-turbo`） |
 | `GROQ_BASE_URL` | 覆盖 Groq OpenAI 兼容 STT 端点 |
 | `STT_OPENAI_MODEL` | 覆盖 OpenAI STT 模型（默认：`whisper-1`） |
@@ -161,9 +168,25 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 | `GITHUB_TOKEN` | Skills Hub 的 GitHub token（更高 API 速率限制，技能发布） |
 | `HONCHO_API_KEY` | 跨会话用户建模（[honcho.dev](https://honcho.dev/)） |
 | `HONCHO_BASE_URL` | 自托管 Honcho 实例的 base URL（默认：Honcho 云）。本地实例无需 API 密钥 |
+| `HINDSIGHT_API_KEY` | 用于图感知持久记忆的 Hindsight API 密钥（[hindsight.vectorize.io](https://hindsight.vectorize.io)） |
+| `HINDSIGHT_API_URL` | Hindsight API 的 base URL（默认：`https://api.hindsight.vectorize.io`） |
 | `HINDSIGHT_TIMEOUT` | Hindsight 内存提供商 API 调用超时（秒，默认：`60`）。如果 Hindsight 实例在 `/sync` 或 `on_session_switch` 期间响应缓慢并出现超时，请增大此值，并检查 `errors.log`。 |
+| `MEM0_API_KEY` | 用于语义持久记忆的 Mem0 Platform API 密钥（[app.mem0.ai](https://app.mem0.ai)） |
+| `MEM0_MODE` | Mem0 后端模式：`platform`（默认）或 `oss`——参见[内存提供商](/user-guide/features/memory-providers)。 |
+| `MEM0_HOST` | 自托管 Mem0 服务器的 base URL（将插件从 Platform API 切换出去） |
+| `MEM0_USER_ID` | 覆盖 Mem0 存储记忆所使用的用户 ID |
+| `MEM0_AGENT_ID` | 覆盖 Mem0 标记记忆所使用的 agent ID |
+| `RETAINDB_API_KEY` | 用于持久记忆的 RetainDB API 密钥（[retaindb.com](https://retaindb.com)） |
+| `RETAINDB_BASE_URL` | 自托管 RetainDB 实例的 base URL（默认：`https://api.retaindb.com`） |
+| `OPENVIKING_API_KEY` | OpenViking API 密钥（本地开发模式可留空） |
+| `OPENVIKING_ENDPOINT` | OpenViking 服务器 URL（默认：`http://127.0.0.1:1933`） |
+| `BRV_API_KEY` | ByteRover API 密钥（可选，用于云同步——默认采用本地优先）（[app.byterover.dev](https://app.byterover.dev)） |
 | `SUPERMEMORY_API_KEY` | 支持 profile 召回和会话摄取的语义长期记忆（[supermemory.ai](https://supermemory.ai)） |
 | `DAYTONA_API_KEY` | Daytona 云沙箱（[daytona.io](https://daytona.io/)） |
+| `VERCEL_TOKEN` | Vercel Sandbox 访问 token（[vercel.com](https://vercel.com/)） |
+| `VERCEL_PROJECT_ID` | Vercel 项目 ID（与 `VERCEL_TOKEN` 一起使用时必需） |
+| `VERCEL_TEAM_ID` | Vercel 团队 ID（与 `VERCEL_TOKEN` 一起使用时必需） |
+| `VERCEL_OIDC_TOKEN` | Vercel 短期 OIDC token（仅用于开发的替代方案） |
 
 ### Skill API 密钥
 
@@ -207,15 +230,18 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 
 | 变量 | 描述 |
 |----------|-------------|
-| `TERMINAL_ENV` | 后端：`local`、`docker`、`ssh`、`singularity`、`modal`、`daytona` |
+| `TERMINAL_ENV` | 后端：`local`、`docker`、`ssh`、`singularity`、`modal`、`daytona`、`vercel_sandbox` |
 | `HERMES_DOCKER_BINARY` | 覆盖 Hermes 调用的容器二进制（例如 `podman`、`/usr/local/bin/docker`）。未设置时，Hermes 自动在 `PATH` 上发现 `docker` 或 `podman`。当两者都已安装且需要非默认选项，或二进制不在 `PATH` 中时使用。 |
 | `TERMINAL_DOCKER_IMAGE` | Docker 镜像（默认：`nikolaik/python-nodejs:python3.11-nodejs20`） |
 | `TERMINAL_DOCKER_FORWARD_ENV` | 显式转发到 Docker 终端会话的环境变量名 JSON 数组。注意：技能声明的 `required_environment_variables` 会自动转发——仅对未被任何技能声明的变量使用此项。 |
 | `TERMINAL_DOCKER_VOLUMES` | 额外的 Docker 卷挂载（逗号分隔的 `host:container` 对） |
+| `TERMINAL_DOCKER_ENV` | 要在 Docker 终端会话内设置的额外环境变量的 JSON 对象（例如 `{"FOO":"bar"}`）。 |
+| `TERMINAL_DOCKER_EXTRA_ARGS` | 额外 `docker run` 参数的 JSON 数组（例如 `["--memory","4g"]`）。 |
 | `TERMINAL_DOCKER_MOUNT_CWD_TO_WORKSPACE` | 高级选项：将启动时的 cwd 挂载到 Docker `/workspace`（`true`/`false`，默认：`false`） |
 | `TERMINAL_SINGULARITY_IMAGE` | Singularity 镜像或 `.sif` 路径 |
 | `TERMINAL_MODAL_IMAGE` | Modal 容器镜像 |
 | `TERMINAL_DAYTONA_IMAGE` | Daytona 沙箱镜像 |
+| `TERMINAL_VERCEL_RUNTIME` | Vercel Sandbox 运行时（`node24`、`node22`、`python3.13`） |
 | `TERMINAL_TIMEOUT` | 命令超时（秒） |
 | `TERMINAL_LIFETIME_SECONDS` | 终端会话最大生命周期（秒） |
 | `TERMINAL_CWD` | gateway/cron 终端会话的已弃用直接覆盖。请优先使用 `config.yaml` 中的 `terminal.cwd`；CLI 仍使用启动目录。 |
@@ -317,6 +343,7 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 | `SLACK_ALLOWED_USERS` | 逗号分隔的 Slack 用户 ID |
 | `SLACK_ALLOW_ALL_USERS` | 允许任意 Slack 用户触发 bot（仅用于开发）。 |
 | `SLACK_ALLOW_BOTS` | 接受来自其他 Slack bot 的消息：`none`（默认）、`mentions` 或 `all`。Bot 始终忽略自身消息。 |
+| `SLACK_THREAD_REQUIRE_MENTION` | 对 Slack 线程回复要求显式 @mention，同时保留顶层自由响应频道。 |
 | `SLACK_HOME_CHANNEL` | cron 投递的默认 Slack 频道 |
 | `SLACK_HOME_CHANNEL_NAME` | Slack 主频道的显示名称 |
 | `GOOGLE_CHAT_PROJECT_ID` | 托管 Pub/Sub 话题的 GCP 项目（回退到 `GOOGLE_CLOUD_PROJECT`） |
@@ -330,6 +357,9 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 | `GOOGLE_CHAT_MAX_BYTES` | Pub/Sub FlowControl 最大在途字节数（默认：`16777216`，16 MiB） |
 | `GOOGLE_CHAT_BOOTSTRAP_SPACES` | 启动时探测以解析 bot 自身 `users/{id}` 的逗号分隔额外空间 ID |
 | `GOOGLE_CHAT_DEBUG_RAW` | 设置任意值可在 DEBUG 级别记录脱敏的 Pub/Sub 信封（仅用于调试） |
+| `GOOGLE_CHAT_HTTP_EVENTS_URL` | Chat 消息事件的已认证 HTTP 端点（Pub/Sub 的替代方案） |
+| `GOOGLE_CHAT_HTTP_EVENTS_AUDIENCE` | Google 签名 HTTP 事件 Bearer token 的预期受众（默认使用 `GOOGLE_CHAT_HTTP_EVENTS_URL`） |
+| `GOOGLE_CHAT_HTTP_EVENTS_SERVICE_ACCOUNT_EMAIL` | HTTP 事件 Bearer token 的预期 Google 服务帐号电子邮件地址 |
 | `WHATSAPP_ENABLED` | 启用 WhatsApp 桥接（`true`/`false`） |
 | `WHATSAPP_MODE` | `bot`（独立号码）或 `self-chat`（给自己发消息） |
 | `WHATSAPP_ALLOWED_USERS` | 逗号分隔的手机号码（含国家代码，不含 `+`），或 `*` 允许所有发送者 |
@@ -473,8 +503,6 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 | `MATRIX_IGNORE_USER_PATTERNS` | 要忽略的 Matrix bridge/appservice ghost 用户 ID 正则表达式，逗号分隔 |
 | `MATRIX_PROCESS_NOTICES` | 处理入站 Matrix `m.notice` 事件（默认：`false`） |
 | `MATRIX_SESSION_SCOPE` | 项目房间的 Matrix 会话范围：`auto`、`room` 或 `thread`（默认：`auto`） |
-| `MATRIX_TOOLS_ALLOW_CROSS_ROOM` | 允许 Matrix 工具明确指定当前房间以外的房间（默认：`false`） |
-| `MATRIX_TOOLS_ALLOW_CROSS_ROOM_DESTRUCTIVE` | 允许跨房间执行 Matrix 删除/邀请类工具；要求 `MATRIX_TOOLS_ALLOW_CROSS_ROOM=true`（默认：`false`） |
 | `MATRIX_TOOLS_ALLOW_REDACTION` | 允许执行 Matrix 消息删除工具（默认：`false`） |
 | `MATRIX_TOOLS_ALLOW_INVITES` | 允许执行 Matrix 邀请工具（默认：`false`） |
 | `MATRIX_TOOLS_ALLOW_ROOM_CREATE` | 允许执行 Matrix 房间创建工具（默认：`false`） |
@@ -530,6 +558,7 @@ Hermes 从进程环境读取环境变量；对于由用户管理的密钥，还�
 | `HERMES_DESKTOP_CWD` | Desktop 聊天会话的初始项目目录。由 `hermes desktop --cwd` 设置。 |
 | `HERMES_DESKTOP_PYTHON` | 后端所用 Python 解释器的绝对路径；Electron 为源码检出自动解析解释器之前会先检查此变量。工作树开发辅助工具用它（参见[从工作树运行 TUI 与 Desktop](../developer-guide/worktree-ui-dev.md)）复用共享虚拟环境。 |
 | `HERMES_DESKTOP_DEV_SERVER` | Electron shell 加载以代替打包 bundle 的 Vite 开发服务器 URL（例如 `http://127.0.0.1:5174`）。由 `npm run dev` 自动设置；仅与修改应用代码时有关。 |
+| `HERMES_DESKTOP_CDP_PORT` | 覆盖渲染器为 DOM/CSS 检查工具在 `127.0.0.1` 暴露的 Chrome DevTools Protocol 端口（默认 `9222`）。开发服务器运行（`npm run dev`、`hgui`）会自动打开它；打包应用永远不会打开，且此处的任何值都不会改变这一点。设为 `off` 可在开发运行中禁用它。任何能访问该端口的实体都能在渲染器中执行代码。 |
 
 ### Microsoft Graph（Teams 会议）
 
@@ -662,6 +691,22 @@ Graph 事件（Teams 会议、日历、聊天等）的入站变更通知监听�
 | `PHOTON_DASHBOARD_HOST` | Photon Dashboard API 主机（默认 `https://app.photon.codes`）。 |
 | `PHOTON_SPECTRUM_HOST` | Photon Spectrum API 主机（默认 `https://spectrum.photon.codes`）。 |
 
+### Buzz（Nostr 社区）
+
+| 变量 | 描述 |
+|----------|-------------|
+| `BUZZ_RELAY_URL` | Buzz 社区 relay 的 base URL（例如 `https://mycommunity.communities.buzz.xyz`） |
+| `BUZZ_PRIVATE_KEY` | agent 的 Buzz 身份所用 Nostr 私钥（nsec 或十六进制）——唯一的 Buzz 密钥 |
+| `BUZZ_CREDENTIALS_FILE` | 保存 nsec 的 JSON 凭证文件（未设置 `BUZZ_PRIVATE_KEY` 时的回退） |
+| `BUZZ_CHANNELS` | 要监视的逗号分隔频道 UUID（默认：所有已加入的频道） |
+| `BUZZ_HOME_CHANNEL` | cron/通知投递所用的频道 UUID（默认：第一个受监视的频道） |
+| `BUZZ_ALLOWED_USERS` | 允许与 agent 交谈的逗号分隔 npub 或十六进制公钥 |
+| `BUZZ_ALLOW_ALL_USERS` | 允许任何社区成员与 agent 交谈（`true`/`false`） |
+| `BUZZ_TRANSPORT` | 入站传输方式：`auto`（WebSocket，轮询回退，默认）、`websocket` 或 `poll` |
+| `BUZZ_POLL_INTERVAL` | 入站轮询扫描间隔秒数（默认：`4`） |
+| `BUZZ_AUTH_TAG` | 用于 NIP-42 WebSocket 认证的可选 NIP-OA 所有者证明认证标签 JSON |
+| `BUZZ_CLI_PATH` | buzz CLI 二进制路径（默认：`PATH` 上的 `buzz`，然后是 `~/bin/buzz`） |
+
 ### Microsoft Teams（适配器）
 
 Microsoft Teams 平台适配器（Bot Framework / Azure AD），不同于上方的 [Microsoft Graph（Teams 会议）](#microsoft-graph-teams-meetings)集成。参见 [Teams 消息指南](/user-guide/messaging/teams)。
@@ -671,6 +716,7 @@ Microsoft Teams 平台适配器（Bot Framework / Azure AD），不同于上方�
 | `TEAMS_CLIENT_ID` | Azure AD 应用（Bot Framework）客户端 ID。 |
 | `TEAMS_CLIENT_SECRET` | Azure AD 应用客户端密钥。 |
 | `TEAMS_TENANT_ID` | 托管 bot 应用的 Azure AD 租户 ID。 |
+| `TEAMS_HOST` | Webhook 绑定主机（默认：未设置 → 双栈，所有 IPv4+IPv6 接口）。 |
 | `TEAMS_PORT` | Webhook 监听端口（Bot Framework 默认：`3978`）。 |
 | `TEAMS_ALLOWED_USERS` | 允许与 bot 交互的逗号分隔 Teams 用户 ID / UPN。 |
 | `TEAMS_ALLOW_ALL_USERS` | 允许任意 Teams 用户触发 bot（仅用于开发）。 |
@@ -740,8 +786,8 @@ Microsoft Teams 平台适配器（Bot Framework / Azure AD），不同于上方�
 | `HERMES_IGNORE_USER_CONFIG` | 跳过 `~/.hermes/config.yaml` 并使用内置默认值（`.env` 中的凭证仍会加载）。等同于 `--ignore-user-config`。 |
 | `HERMES_IGNORE_RULES` | 跳过 `AGENTS.md`、`SOUL.md`、`.cursorrules`、记忆和预加载技能的自动注入。等同于 `--ignore-rules`。 |
 | `HERMES_SAFE_MODE` | 故障排查模式：禁用**所有**自定义项——跳过插件发现、MCP 服务器加载和 shell hook 注册。由 `--safe-mode` 自动设置（同时也会设置上面两个 flag）。 |
-| `HERMES_TOOL_PROGRESS` | 工具进度显示的已弃用兼容变量。优先使用 `config.yaml` 中的 `display.tool_progress`。 |
-| `HERMES_TOOL_PROGRESS_MODE` | 工具进度模式的已弃用兼容变量。优先使用 `config.yaml` 中的 `display.tool_progress`。 |
+| `HERMES_TOOL_PROGRESS` | 自 config-v12 支持下限起不再受支持——该变量会被忽略。请使用 `config.yaml` 中的 `display.tool_progress`。 |
+| `HERMES_TOOL_PROGRESS_MODE` | 工具进度模式的已弃用兼容变量（gateway 仍将其作为回退读取）。优先使用 `config.yaml` 中的 `display.tool_progress`。 |
 | `HERMES_HUMAN_DELAY_MODE` | 响应节奏：`off`/`natural`/`custom` |
 | `HERMES_HUMAN_DELAY_MIN_MS` | 自定义延迟范围最小值（毫秒） |
 | `HERMES_HUMAN_DELAY_MAX_MS` | 自定义延迟范围最大值（毫秒） |
@@ -779,7 +825,6 @@ Microsoft Teams 平台适配器（Bot Framework / Azure AD），不同于上方�
 | `HERMES_DUMP_REQUESTS` | 将 API 请求载荷转储到日志文件（`true`/`false`） |
 | `HERMES_DUMP_REQUEST_STDOUT` | 将 API 请求载荷转储到 stdout 而非日志文件。 |
 | `HERMES_OAUTH_TRACE` | 设为 `1` 可记录 OAuth token 交换和刷新尝试。包含脱敏的时序信息。 |
-| `HERMES_OAUTH_FILE` | 覆盖 OAuth 凭证存储路径（默认：`~/.hermes/auth.json`）。 |
 | `HERMES_AGENT_HELP_GUIDANCE` | 为自定义部署在系统 prompt 中追加额外指导文本。 |
 | `HERMES_AGENT_LOGO` | 覆盖 CLI 启动时的 ASCII 横幅 logo。 |
 | `DELEGATION_MAX_CONCURRENT_CHILDREN` | 每个 `delegate_task` 批次的最大并行子 agent 数（默认：`3`，下限为 1，无上限）。也可通过 `config.yaml` 中的 `delegation.max_concurrent_children` 配置——config 值优先。 |
